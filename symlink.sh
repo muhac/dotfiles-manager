@@ -29,4 +29,7 @@ echo $SHELL_FOLDER
 cd $SHELL_FOLDER
 cd dotfiles
 
+find . -name ".DS_Store" -depth -exec rm {} \;
+
 stow vim --target=`echo ~`
+stow zsh --target=`echo ~`

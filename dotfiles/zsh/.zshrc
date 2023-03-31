@@ -18,6 +18,11 @@ export ZSH="$HOME/.oh-my-zsh"
 # ZSH_THEME="ys"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
+# p10k disabled for Warp
+if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
+  ZSH_THEME="ys"
+fi
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -115,3 +120,30 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
+if [ -e /Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda ]; then
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+fi
+
+
+if [[ ! "$(type jenvv)" == *"not found"* ]]; then
+# >>> jenv initialize >>>
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+# <<< jenv initialize <<<
+fi

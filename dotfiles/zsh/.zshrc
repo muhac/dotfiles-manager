@@ -140,7 +140,7 @@ unset __conda_setup
 fi
 
 
-if [[ ! "$(type jenvv)" == *"not found"* ]]; then
+if [[ ! "$(type jenv)" == *"not found"* ]]; then
 # >>> jenv initialize >>>
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"

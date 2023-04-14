@@ -106,7 +106,8 @@
     time                    # current time
     # =========================[ Line #2 ]=========================
     newline
-    history                 # command number for the current line
+    ud_history              # user defined custom history prompt
+    # history               # command number for the current line
     # ip                    # ip address and bandwidth usage for a specified network interface
     # public_ip             # public IP address
     # proxy                 # system-wide http/https/ftp proxy
@@ -139,7 +140,7 @@
   # Or for a specific segment in specific state:
   #
   #   POWERLEVEL9K_DIR_NOT_WRITABLE_ICON_BEFORE_CONTENT=false
-  typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=true
+  #typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=true
 
   # Add an empty line before each prompt.
   typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false # true
@@ -1604,6 +1605,12 @@
     # instant_prompt_example. This will give us the same `example` prompt segment in the instant
     # and regular prompts.
     prompt_example
+  }
+
+  function prompt_ud_history() {
+    local -i len=$#_p9k__prompt _p9k__has_upglob
+    _p9k_prompt_segment "$0" "grey50" "lightslategrey" 'SSH_ICON' 0 '' '%h'
+    (( _p9k__has_upglob )) || typeset -g "_p9k__segment_val_${_p9k__prompt_side}[_p9k__segment_index]"=$_p9k__prompt[len+1,-1]
   }
 
   # User-defined prompt segments can be customized the same way as built-in segments.

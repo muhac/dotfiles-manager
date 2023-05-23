@@ -1,0 +1,123 @@
+set nocompatible
+filetype on
+filetype indent on
+filetype plugin on
+filetype plugin indent on
+
+set t_Co=256
+set encoding=utf-8
+set autoread
+set autochdir
+"set mouse=a
+
+syntax on
+
+set number
+set relativenumber
+set wrap
+set showcmd
+set wildmenu
+set cursorline
+set laststatus=2
+set scrolloff=5
+"set spell
+
+set list
+set listchars=tab:▸\ ,trail:▫
+filetype indent on
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set matchpairs+=<:>
+set backspace=indent,eol,start
+
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+"search
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+exec "nohlsearch"
+noremap <esc> :noh<cr><esc>
+
+let mapleader=" "
+
+"map vv <Esc>
+inoremap vv <Esc>
+noremap <leader>v <C-v>
+
+"Colemak
+"map n h <Left>
+"map e j <Down>
+"map u k <Up>
+"map i l <Right>
+noremap n h
+noremap e j
+noremap u k
+noremap i l
+noremap E 5j
+noremap U 5k
+noremap N 0
+noremap I $
+
+"Remap HJKL
+"map h i insert
+"map j n next
+"map k u undo
+"map l line number
+noremap k u
+noremap h i
+noremap H I
+noremap j nzz
+noremap J Nzz
+
+"use s for split ops
+noremap s <nop>
+
+"split screen
+map sn :set nosplitright<CR>:vsplit<CR>
+map se :set splitbelow<CR>:split<CR>
+map su :set nosplitbelow<CR>:split<CR>
+map si :set splitright<CR>:vsplit<CR>
+
+"curser switch
+map ssn <C-w>h
+map sse <C-w>j
+map ssu <C-w>k
+map ssi <C-w>l
+
+"screen resize
+map srn :vertical resize+5<CR>
+map sre :res -5<CR>
+map sru :res +5<CR>
+map sri :vertical resize-5<CR>
+
+"rearrange screen
+map sv <C-w>t<C-w>H
+map sh <C-w>t<C-w>K
+
+"use t for split ops
+noremap t <nop>
+
+"tabs
+map tu :tabe<CR>
+map tn :-tabnext<CR>
+map ti :+tabnext<CR>
+
+"spell ckeck
+map sp :set spell!<CR>
+
+"switch line number format
+map l :set relativenumber<CR>
+map L :set norelativenumber<CR>
+
+"map S save
+"map Q quit
+"map R reload vimrc
+map S :write<CR>
+map T :quit<CR>
+map Q :quit!<CR>
+map R :source $MYVIMRC<CR>
+

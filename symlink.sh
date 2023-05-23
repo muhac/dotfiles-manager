@@ -19,7 +19,8 @@ echo $SHELL_FOLDER
 cd $SHELL_FOLDER
 cd dotfiles
 
-find . -name ".DS_Store" -depth -exec rm {} \;
+find . -name '.DS_Store' -type f -delete
 
-stow zsh --target=`echo ~`
-stow vim --target=`echo ~`
+stow zsh --target=`echo ~` --restow
+stow vim --target=`echo ~` --restow
+

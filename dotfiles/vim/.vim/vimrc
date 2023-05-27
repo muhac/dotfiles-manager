@@ -3,9 +3,11 @@ filetype on
 filetype indent on
 filetype plugin on
 filetype plugin indent on
+set autoindent
 
 set t_Co=256
 set encoding=utf-8
+set hidden
 set autoread
 set autochdir
 "set mouse=a
@@ -24,7 +26,6 @@ set scrolloff=5
 
 set list
 set listchars=tab:▸\ ,trail:▫
-filetype indent on
 set expandtab
 set tabstop=4
 set shiftwidth=4
@@ -40,13 +41,10 @@ set incsearch
 set ignorecase
 set smartcase
 exec "nohlsearch"
-noremap <esc> :noh<cr><esc>
+"noremap J :noh<cr><esc>
 
-let mapleader=" "
-
-"map vv <Esc>
-inoremap vv <Esc>
-noremap <leader>v <C-v>
+"imap vk to <Esc>
+inoremap vk <Esc>
 
 "Colemak
 "map n h <Left>
@@ -64,60 +62,86 @@ noremap I $
 
 "Remap HJKL
 "map h i insert
-"map j n next
-"map k u undo
-"map l line number
-noremap k u
+"map j e end of word
+"map k n next/previous
+"map l u undo/redo
+noremap j e
+noremap l u
+noremap L <C-r>
 noremap h i
 noremap H I
-noremap j nzz
-noremap J Nzz
+nnoremap k nzz
+nnoremap K Nzz
+vnoremap k <Esc>:noh<CR><Esc>
+vnoremap K <Esc>
 
-"use s for split ops
-noremap s <nop>
+let mapleader=" "
+"unused ops:
+"a  d .g  jk.m
+" o q  t  .x z
+
+"ender visual-block mode
+noremap <leader>b <C-v>
+
+"system clipboard copy/paste
+noremap <Leader>y "*y
+noremap <Leader>p "*p
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
 
 "split screen
-map sn :set nosplitright<CR>:vsplit<CR>
-map se :set splitbelow<CR>:split<CR>
-map su :set nosplitbelow<CR>:split<CR>
-map si :set splitright<CR>:vsplit<CR>
+map <leader>n :set nosplitright<CR>:vsplit<CR>
+map <leader>e :set splitbelow<CR>:split<CR>
+map <leader>u :set nosplitbelow<CR>:split<CR>
+map <leader>i :set splitright<CR>:vsplit<CR>
 
 "curser switch
-map ssn <C-w>h
-map sse <C-w>j
-map ssu <C-w>k
-map ssi <C-w>l
+map <leader>sn <C-w>h
+map <leader>se <C-w>j
+map <leader>su <C-w>k
+map <leader>si <C-w>l
 
 "screen resize
-map srn :vertical resize+5<CR>
-map sre :res -5<CR>
-map sru :res +5<CR>
-map sri :vertical resize-5<CR>
+map <leader>rn :vertical resize-5<CR>
+map <leader>re :res -5<CR>
+map <leader>ru :res +5<CR>
+map <leader>ri :vertical resize+5<CR>
 
 "rearrange screen
-map sv <C-w>t<C-w>H
-map sh <C-w>t<C-w>K
+map <leader>v <C-w>t<C-w>H
+map <leader>h <C-w>t<C-w>K
 
-"use t for split ops
+"use t for shortcuts
 noremap t <nop>
+"unused ops:
+". cdefgh  k  
+" opqr.. vwxyz
 
-"tabs
+"manage tabs
 map tu :tabe<CR>
 map tn :-tabnext<CR>
 map ti :+tabnext<CR>
 
-"spell ckeck
-map sp :set spell!<CR>
+"mark jump
+map tm `
+map tb ``
+map to %
 
-"switch line number format
-map l :set relativenumber<CR>
-map L :set norelativenumber<CR>
+"spell ckeck
+noremap tl :set spell!<CR>
+
+" line number format
+noremap tj :set relativenumber!<CR>
+
+"bring back some useful combinations
+nnoremap dt dt
+nnoremap ct ct
 
 "map S save
-"map Q quit
-"map R reload vimrc
-map S :write<CR>
-map T :quit<CR>
-map Q :quit!<CR>
-map R :source $MYVIMRC<CR>
+"map T quit
+nmap S :write<CR>
+nmap T :quit<CR>
+
+"reload vimrc
+noremap <leader>c :source $MYVIMRC<CR>
 

@@ -1,34 +1,41 @@
 " Source your .vimrc
-"source ~/.vimrc
-source ~/.vim/vimrc
+source ~/.vimrc
+"source ~/.vim/vimrc
 
-set encoding=utf-8
 set showmode
-set autoindent
 
-"" -- Suggested options --
-" Show a few lines of context around the cursor. Note that this makes the
-" text scroll if you mouse-click near the start or end of the window.
-set scrolloff=5
+"unused ops:
+"* ** .g  j*.m
+" * q  *  .* z
 
-Plug 'machakann/vim-highlightedyank'
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-bd-f)
 
-" Do incremental searching.
-set incsearch
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-bd-f2)
 
-" Don't use Ex mode, use Q for formatting.
-"map Q gq
+" Move to line
+map <Leader>l <Plug>(easymotion-bd-jk)
+nmap <Leader>l <Plug>(easymotion-bd-jk)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-bd-w)
 
 "" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
-noremap <leader>f :action ReformatCode<CR>
-noremap <leader>c :action CommentByLineComment<CR>
+noremap <leader>k :action ReformatCode<CR>
+noremap <leader>m :action CommentByLineComment<CR>
 noremap <leader>d :action Debug<CR>
-noremap <leader>r :action ContextRun<CR>
-noremap <leader>x :action RunClass<CR>
-noremap <leader>t :action Stop<CR>
+noremap <leader>x :action ContextRun<CR>
+noremap <leader>c :action RunClass<CR>
+noremap <leader>a :action Stop<CR>
+noremap <leader>t :action ActivateTerminalToolWindow<CR>
+noremap <leader>o :action Terminal.OpenInTerminal<CR>
 
-noremap st :action ActivateTerminalToolWindow<CR>
-noremap sh :action Terminal.OpenInTerminal<CR>
+"T unused ops:
+". cde*g*
+" opq*..  wxyz
 
 noremap tn :action PreviousTab<CR>
 noremap ti :action NextTab<CR>
@@ -40,5 +47,7 @@ noremap tr :action RecentFiles<CR>
 noremap tf :action FindInPath<CR>
 noremap th :action FileStructurePopup<CR>
 
-noremap R :action IdeaVim.ReloadVimRc.reload<CR>
-noremap Q :action CloseContent<CR>
+noremap T :action CloseContent<CR>
+
+noremap tv :action IdeaVim.ReloadVimRc.reload<CR>
+

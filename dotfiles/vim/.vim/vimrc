@@ -57,7 +57,7 @@ noremap u k
 noremap i l
 noremap E 5j
 noremap U 5k
-noremap N 0
+noremap N ^
 noremap I $
 
 "Remap HJKL
@@ -114,7 +114,7 @@ map <leader>h <C-w>t<C-w>K
 "use t for shortcuts
 noremap t <nop>
 "unused ops:
-". cdefgh  k  
+". cde gh  k  
 " opqr.. vwxyz
 
 "manage tabs
@@ -125,6 +125,7 @@ map ti :+tabnext<CR>
 "mark jump
 map tm `
 map tb ``
+map tf 0
 map to %
 
 "spell ckeck
@@ -136,6 +137,8 @@ noremap tj :set relativenumber!<CR>
 "bring back some useful combinations
 nnoremap dt dt
 nnoremap ct ct
+nnoremap di di
+nnoremap ci ci
 
 "map S save
 "map T quit

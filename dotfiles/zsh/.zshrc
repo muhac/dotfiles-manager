@@ -39,7 +39,7 @@ fi
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
@@ -78,6 +78,29 @@ fi
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# zsh-vi-mode settings
+# The plugin will auto execute this zvm_config function
+function zvm_config() {
+  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+  ZVM_VI_INSERT_ESCAPE_BINDKEY=vk
+  ZVM_VI_VISUAL_ESCAPE_BINDKEY=vk
+}
+# The plugin will auto execute this zvm_after_lazy_keybindings function
+function zvm_after_lazy_keybindings() {
+  bindkey -M vicmd n vi-backward-char
+  bindkey -M vicmd e vi-down-line-or-history
+  bindkey -M vicmd u vi-up-line-or-history
+  bindkey -M vicmd i vi-forward-char
+  bindkey -M vicmd N vi-first-non-blank
+  bindkey -M vicmd I vi-end-of-line
+  bindkey -M vicmd j vi-forward-word-end
+  bindkey -M vicmd J vi-forward-blank-word-end
+  bindkey -M vicmd h zvm_enter_insert_mode
+  bindkey -M vicmd H zvm_insert_bol
+  bindkey -M vicmd l undo
+  bindkey -M vicmd L redo
+}
+
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
@@ -86,6 +109,7 @@ fi
 plugins=(
     git
     z
+    zsh-vi-mode
     zsh-syntax-highlighting
     zsh-autosuggestions
 )
@@ -100,11 +124,11 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='vim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"

@@ -32,6 +32,7 @@ set shiftwidth=4
 set softtabstop=4
 set matchpairs+=<:>
 set backspace=indent,eol,start
+"set clipboard=unnamed
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
@@ -45,6 +46,12 @@ exec "nohlsearch"
 
 "imap vk to <Esc>
 inoremap vk <Esc>
+inoremap vv <C-o>
+
+nnoremap v <C-v>
+nnoremap <C-v> v
+vnoremap v <C-v>
+vnoremap <C-v> v
 
 "Colemak
 "map n h <Left>
@@ -75,13 +82,14 @@ nnoremap K Nzz
 vnoremap k <Esc>:noh<CR><Esc>
 vnoremap K <Esc>
 
+"break the undo blocks
+inoremap <C-u> <C-g>u<C-u>
+inoremap <C-w> <C-g>u<C-w>
+
 let mapleader=" "
 "unused ops:
-"a  d .g  jk.m
+"abcd .g  jk.m
 " o q  t  .x z
-
-"ender visual-block mode
-noremap <leader>b <C-v>
 
 "system clipboard copy/paste
 noremap <Leader>y "*y
@@ -89,62 +97,69 @@ noremap <Leader>p "*p
 noremap <Leader>Y "+y
 noremap <Leader>P "+p
 
-"split screen
-map <leader>n :set nosplitright<CR>:vsplit<CR>
-map <leader>e :set splitbelow<CR>:split<CR>
-map <leader>u :set nosplitbelow<CR>:split<CR>
-map <leader>i :set splitright<CR>:vsplit<CR>
-
 "curser switch
-map <leader>sn <C-w>h
-map <leader>se <C-w>j
-map <leader>su <C-w>k
-map <leader>si <C-w>l
+noremap <leader>n <C-w>h
+noremap <leader>e <C-w>j
+noremap <leader>u <C-w>k
+noremap <leader>i <C-w>l
+
+"split screen
+noremap <leader>sn :set nosplitright<CR>:vsplit<CR>
+noremap <leader>se :set splitbelow<CR>:split<CR>
+noremap <leader>su :set nosplitbelow<CR>:split<CR>
+noremap <leader>si :set splitright<CR>:vsplit<CR>
 
 "screen resize
-map <leader>rn :vertical resize-5<CR>
-map <leader>re :res -5<CR>
-map <leader>ru :res +5<CR>
-map <leader>ri :vertical resize+5<CR>
+noremap <leader>rn :vertical resize-5<CR>
+noremap <leader>re :res -5<CR>
+noremap <leader>ru :res +5<CR>
+noremap <leader>ri :vertical resize+5<CR>
 
 "rearrange screen
-map <leader>v <C-w>t<C-w>H
-map <leader>h <C-w>t<C-w>K
+noremap <leader>v <C-w>t<C-w>H
+noremap <leader>h <C-w>t<C-w>K
 
 "use t for shortcuts
-noremap t <nop>
 "unused ops:
-". cde gh  k  
-" opqr.. vwxyz
+". cdefg   k
+"  p r..   xyz
+nnoremap tc <nop>
+nnoremap td <nop>
+nnoremap te <nop>
+nnoremap tf <nop>
+nnoremap tg <nop>
+nnoremap tk <nop>
+nnoremap tp <nop>
+nnoremap tr <nop>
+nnoremap tx <nop>
+nnoremap ty <nop>
+nnoremap tz <nop>
 
 "manage tabs
-map tu :tabe<CR>
-map tn :-tabnext<CR>
-map ti :+tabnext<CR>
+nnoremap tu :tabe<CR>
+nnoremap tn :-tabnext<CR>
+nnoremap ti :+tabnext<CR>
 
 "mark jump
-map tm `
-map tb ``
-map tf 0
-map to %
+nnoremap tm `
+nnoremap tb ``
+nnoremap th 0
+nnoremap to %
 
-"spell ckeck
-noremap tl :set spell!<CR>
+"macros
+nnoremap tq qzqqz
+nnoremap tw @z
+
+"spell check
+nnoremap tl :set spell!<CR>
 
 " line number format
-noremap tj :set relativenumber!<CR>
+nnoremap tj :set relativenumber!<CR>
 
-"bring back some useful combinations
-nnoremap dt dt
-nnoremap ct ct
-nnoremap di di
-nnoremap ci ci
+"reload vimrc
+nnoremap tv :source $MYVIMRC<CR>
 
 "map S save
 "map T quit
-nmap S :write<CR>
-nmap T :quit<CR>
-
-"reload vimrc
-noremap <leader>c :source $MYVIMRC<CR>
-
+nnoremap S :write<CR>
+nnoremap T :quit<CR>

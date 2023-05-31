@@ -52,7 +52,10 @@ Plug 'mhinz/vim-signify'
 Plug 'preservim/nerdtree'
 
 "https://github.com/vim-ctrlspace/vim-ctrlspace
-Plug 'bugstep/vim-ctrlspace'
+Plug 'muhav/vim-ctrlspace'
+
+"https://github.com/junegunn/vim-peekabooS
+Plug 'junegunn/vim-peekaboo'
 
 call plug#end()
 "Reload .vimrc and :PlugInstall to install plugins.

@@ -4,6 +4,9 @@ source ~/.vimrc
 
 set showmode
 
+"Plugin IdeaVimExtension
+set keep-english-in-normal-and-restore-in-insert
+
 "unused ops:
 "* ** .g  j*.m
 " * q  *  .* z
@@ -37,17 +40,15 @@ noremap <leader>o :action Terminal.OpenInTerminal<CR>
 ". cde*g*
 " opq*..  wxyz
 
-noremap tn :action PreviousTab<CR>
-noremap ti :action NextTab<CR>
+nnoremap tn :action PreviousTab<CR>
+nnoremap ti :action NextTab<CR>
 
-noremap tt :action ShowNavBar<CR>
-noremap ts :action SearchEverywhere<CR>
-noremap ta :action GotoAction<CR>
-noremap tr :action RecentFiles<CR>
-noremap tf :action FindInPath<CR>
-noremap th :action FileStructurePopup<CR>
+nnoremap tt :action ShowNavBar<CR>
+nnoremap ts :action SearchEverywhere<CR>
+nnoremap ta :action GotoAction<CR>
+nnoremap tr :action RecentFiles<CR>
+nnoremap tf :action FindInPath<CR>
+
+nnoremap tv :action IdeaVim.ReloadVimRc.reload<CR>
 
 noremap T :action CloseContent<CR>
-
-noremap tv :action IdeaVim.ReloadVimRc.reload<CR>
-

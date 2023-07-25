@@ -151,10 +151,10 @@ nnoremap tq qzqqz
 nnoremap tw @z
 
 "spell check
-nnoremap tl :set spell!<CR>
+nnoremap tj :set spell!<CR>
 
 " line number format
-nnoremap tj :set relativenumber!<CR>
+nnoremap tl :set relativenumber!<CR>
 
 "reload vimrc
 nnoremap tv :source $MYVIMRC<CR>

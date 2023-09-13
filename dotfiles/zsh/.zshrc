@@ -20,7 +20,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # p10k disabled for Warp
 if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
-  ZSH_THEME="ys"
+  ZSH_THEME="skaro"
 fi
 
 # Set list of themes to pick from when loading at random
@@ -146,8 +146,10 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-if [ -e /Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda ]; then
 # >>> conda initialize >>>
+
+# MacBook Pro
+if [ -e /Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda ]; then
 
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -160,11 +162,29 @@ else
         export PATH="/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin:$PATH"
     fi
 fi
-unset __conda_setup
 
-# <<< conda initialize <<<
+unset __conda_setup
 fi
 
+# Pop OS
+if [ -e /home/muhan/anaconda3/bin/conda ]; then
+
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/muhan/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/muhan/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/muhan/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/muhan/anaconda3/bin:$PATH"
+    fi
+fi
+
+unset __conda_setup
+fi
+
+# <<< conda initialize <<<
 
 if [[ ! "$(type jenv)" == *"not found"* ]]; then
 # >>> jenv initialize >>>
@@ -182,4 +202,3 @@ if [[ ! "$(type nvim)" == *"not found"* ]]; then
     alias vim="nvim"
     alias vi="nvim"
 fi
-

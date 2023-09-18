@@ -193,12 +193,17 @@ export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+
 # <<< jenv initialize <<<
 fi
 
+# Haskell Environment
+export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 
 # use neovim if installed
 if [[ ! "$(type nvim)" == *"not found"* ]]; then
     alias vim="nvim"
     alias vi="nvim"
 fi
+

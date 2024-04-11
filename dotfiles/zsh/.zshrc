@@ -17,11 +17,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # ZSH_THEME="ys"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# p10k disabled for Warp
-if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
-  ZSH_THEME="skaro"
-fi
+# p10k update command:
+# git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -145,6 +142,66 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# p10k modifications for Warp
+if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
+  typeset -g POWERLEVEL9K_SHOW_RULER=false
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+    # =========================[ Line #1 ]=========================
+    os_icon                 # os identifier
+    user                    # username
+    dir                     # current directory
+    vcs                     # git status
+    prompt_char             # prompt symbol
+    ud_history              # user defined custom history prompt
+  )
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+    # =========================[ Line #1 ]=========================
+    status
+    command_execution_time
+    background_jobs
+    direnv
+    asdf
+    virtualenv
+    anaconda
+    pyenv
+    goenv
+    nodenv
+    nvm
+    nodeenv
+    rbenv
+    rvm
+    fvm
+    luaenv
+    jenv
+    plenv
+    perlbrew
+    phpenv
+    scalaenv
+    haskell_stack
+    kubecontext
+    terraform
+    aws
+    aws_eb_env
+    azure
+    gcloud
+    google_app_cred
+    toolbox
+    context
+    nordvpn
+    ranger
+    nnn
+    lf
+    xplr
+    vim_shell
+    midnight_commander
+    nix_shell
+    todo
+    timewarrior
+    taskwarrior
+    time
+  )
+  p10k reload
+fi
 
 # >>> conda initialize >>>
 

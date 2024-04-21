@@ -10,6 +10,7 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -142,7 +143,7 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# p10k modifications for Warp
+### p10k modifications for Warp - only 1 line
 if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
   typeset -g POWERLEVEL9K_SHOW_RULER=false
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
@@ -203,7 +204,7 @@ if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
   p10k reload
 fi
 
-# >>> conda initialize >>>
+### >>> conda initialize >>>
 
 # MacBook Pro
 if [ -e /Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda ]; then
@@ -241,19 +242,19 @@ fi
 unset __conda_setup
 fi
 
-# <<< conda initialize <<<
+### <<< conda initialize <<<
+### >>> jenv initialize >>>
 
 if [[ ! "$(type jenv)" == *"not found"* ]]; then
-# >>> jenv initialize >>>
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+# export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-
-# <<< jenv initialize <<<
 fi
+
+### <<< jenv initialize <<<
 
 # Haskell Environment
 export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"

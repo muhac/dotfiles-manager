@@ -1,0 +1,7 @@
+[user]
+	name = Muhan Li
+	email = limuhan@msn.com
+[core]
+	editor = nano
+[init]
+	defaultBranch = main

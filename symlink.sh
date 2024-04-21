@@ -1,30 +1,39 @@
 #!/bin/bash
 
-if [ "$(uname)" = "Darwin" ]; then
+if [[ "$(uname)" == "Darwin" ]]; then
     echo Mac OS
-    brew install stow
+    command -v brew >/dev/null 2>&1 || { echo >&2 "no brew!"; exit 1; }
+    command -v stow >/dev/null 2>&1 || brew install stow
 
-elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+elif [[ "$(uname -s)" == Linux* ]]; then
     echo Linux
-    apt install stow -y
+    command -v apt >/dev/null 2>&1 || { echo >&2 "no apt!"; exit 1; }
+    command -v stow >/dev/null 2>&1 || apt install stow -y
 
-elif [ "$(expr substr $(uname -s) 1 10)" = "MINGW32_NT" ]; then
+elif [[ "$(uname -s)" == MINGW32_NT* ]]; then
     echo Windows
+    echo Not supported
+    exit 1
+
+else
+    echo Unknown
+    exit 1
 fi
 
-echo $(stow --version)
+stow --version
 
 mkdir -p ~/.config
 
-SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-echo $SHELL_FOLDER
-cd $SHELL_FOLDER
-cd dotfiles
+SHELL_FOLDER=$(dirname "$(realpath "$0")")
+echo "$SHELL_FOLDER"
+cd "$SHELL_FOLDER/dotfiles" || exit 2
 
 find . -name '.DS_Store' -type f -delete
-find ~ -maxdepth 1 -type l -exec test ! -e {} \; -delete
-find ~/.config -maxdepth 1 -type l -exec test ! -e {} \; -delete
+find -L ~ -maxdepth 1 -type l -delete
+find -L ~/.config -maxdepth 1 -type l -delete
 
-stow zsh --target=`echo ~` --restow
-stow vim --target=`echo ~` --restow
+for dir in */ ; do
+    stow "${dir%/}" --target="$HOME" --restow
+done
 
+echo Done! "$(date)"

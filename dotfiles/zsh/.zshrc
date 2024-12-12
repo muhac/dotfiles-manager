@@ -265,3 +265,5 @@ if [[ ! "$(type nvim)" == *"not found"* ]]; then
     alias vi="nvim"
 fi
 
+# alias fuck
+eval $(thefuck --alias f)

@@ -74,7 +74,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM=$ZSH/../.oh-my-zsh-custom
 
 # zsh-vi-mode settings
 # The plugin will auto execute this zvm_config function
@@ -128,6 +128,12 @@ else
   export EDITOR='vim'
 fi
 
+# Use neovim if installed
+if [[ ! "$(type nvim)" == *"not found"* ]]; then
+    alias vim="nvim"
+    alias vi="nvim"
+fi
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -141,25 +147,32 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [[ -f ~/.p10k.zsh ]]; then
 
-### p10k modifications for Warp - only 1 line
+source ~/.p10k.zsh
+
+### p10k modifications for Warp
 if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
   typeset -g POWERLEVEL9K_SHOW_RULER=false
+
+: <<EOF
+  # No need any more - only 1 line prompt
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     os_icon                 # os identifier
     user                    # username
     dir                     # current directory
     vcs                     # git status
-    prompt_char             # prompt symbol
+    newline
     ud_history              # user defined custom history prompt
+    prompt_char             # prompt symbol
   )
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     status
     command_execution_time
     background_jobs
+    ud_spacing
     direnv
     asdf
     virtualenv
@@ -188,7 +201,6 @@ if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
     google_app_cred
     toolbox
     context
-    nordvpn
     ranger
     nnn
     lf
@@ -196,74 +208,72 @@ if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
     vim_shell
     midnight_commander
     nix_shell
-    todo
     timewarrior
     taskwarrior
     time
   )
+EOF
+
   p10k reload
-fi
+fi # End of p10k for Warp
+
+fi # End of p10k
 
 ### >>> conda initialize >>>
 
+__conda_avail=0
+__conda_dir=""
+
 # MacBook Pro
-if [ -e /Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda ]; then
+if [ -e '/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda' ]; then
+__conda_avail=1
+__conda_dir='/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3'
+fi
+
+if [ $__conda_avail -eq 1 ]; then
 
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_exe="$__conda_dir/bin/conda"
+__conda_setup="$($__conda_exe 'shell.zsh' 'hook' 2> /dev/null)"
+
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/etc/profile.d/conda.sh"
+    if [ -f "$__conda_dir/etc/profile.d/conda.sh" ]; then
+        . "$__conda_dir/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin:$PATH"
+        export PATH="$__conda_dir/bin:$PATH"
     fi
 fi
 
+unset __conda_exe
 unset __conda_setup
+
 fi
 
-# Pop OS
-if [ -e /home/muhan/anaconda3/bin/conda ]; then
-
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/muhan/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/muhan/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/muhan/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/muhan/anaconda3/bin:$PATH"
-    fi
-fi
-
-unset __conda_setup
-fi
+unset __conda_avail
+unset __conda_dir
 
 ### <<< conda initialize <<<
-### >>> jenv initialize >>>
+
+### >>> Java >>>
 
 if [[ ! "$(type jenv)" == *"not found"* ]]; then
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
+
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 
 fi
 
-### <<< jenv initialize <<<
+### <<< Java <<<
 
-# Haskell Environment
+### <<< Haskell <<<
 export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
+### >>> Haskell >>>
 
-# use neovim if installed
-if [[ ! "$(type nvim)" == *"not found"* ]]; then
-    alias vim="nvim"
-    alias vi="nvim"
-fi
-
-# alias fuck
-eval $(thefuck --alias f)
+### <<< nvbn/thefuck <<<
+[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
+### >>> nvbn/thefuck >>>

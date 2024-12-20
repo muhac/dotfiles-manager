@@ -1,0 +1,55 @@
+
+[submodule "dotfiles/vim/.vim/plugged/vim-airline-themes"]
+    path = dotfiles/vim/.vim/plugged/vim-airline-themes
+    url = https://github.com/vim-airline/vim-airline-themes.git
+[submodule "dotfiles/vim/.vim/plugged/vim-surround"]
+    path = dotfiles/vim/.vim/plugged/vim-surround
+    url = https://github.com/tpope/vim-surround.git
+[submodule "dotfiles/vim/.vim/plugged/vim-airline"]
+    path = dotfiles/vim/.vim/plugged/vim-airline
+    url = https://github.com/vim-airline/vim-airline.git
+[submodule "dotfiles/vim/.vim/plugged/vim-ctrlspace"]
+    path = dotfiles/vim/.vim/plugged/vim-ctrlspace
+    url = https://github.com/muhav/vim-ctrlspace.git
+[submodule "dotfiles/vim/.vim/plugged/vim-signify"]
+    path = dotfiles/vim/.vim/plugged/vim-signify
+    url = https://github.com/mhinz/vim-signify.git
+[submodule "dotfiles/vim/.vim/plugged/quick-scope"]
+    path = dotfiles/vim/.vim/plugged/quick-scope
+    url = https://github.com/unblevable/quick-scope.git
+[submodule "dotfiles/vim/.vim/plugged/vim-fugitive"]
+    path = dotfiles/vim/.vim/plugged/vim-fugitive
+    url = https://github.com/tpope/vim-fugitive.git
+[submodule "dotfiles/vim/.vim/plugged/gruvbox"]
+    path = dotfiles/vim/.vim/plugged/gruvbox
+    url = https://github.com/morhetz/gruvbox.git
+[submodule "dotfiles/vim/.vim/plugged/vim-highlightedyank"]
+    path = dotfiles/vim/.vim/plugged/vim-highlightedyank
+    url = https://github.com/machakann/vim-highlightedyank.git
+[submodule "dotfiles/vim/.vim/plugged/nerdtree"]
+    path = dotfiles/vim/.vim/plugged/nerdtree
+    url = https://github.com/preservim/nerdtree.git
+[submodule "dotfiles/vim/.vim/plugged/vim-snazzy"]
+    path = dotfiles/vim/.vim/plugged/vim-snazzy
+    url = https://github.com/connorholyday/vim-snazzy.git
+[submodule "dotfiles/vim/.vim/plugged/vim-peekaboo"]
+    path = dotfiles/vim/.vim/plugged/vim-peekaboo
+    url = https://github.com/junegunn/vim-peekaboo.git
+[submodule "dotfiles/vim/.vim/plugged/vim-easymotion"]
+    path = dotfiles/vim/.vim/plugged/vim-easymotion
+    url = https://github.com/easymotion/vim-easymotion.git
+[submodule "dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-autosuggestions"]
+    path = dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-autosuggestions
+    url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting"]
+    path = dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting
+    url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-vi-mode"]
+    path = dotfiles/zsh/.oh-my-zsh-custom/plugins/zsh-vi-mode
+    url = https://github.com/jeffreytse/zsh-vi-mode
+[submodule "dotfiles/zsh/.oh-my-zsh-custom/themes/powerlevel10k"]
+    path = dotfiles/zsh/.oh-my-zsh-custom/themes/powerlevel10k
+    url = https://github.com/romkatv/powerlevel10k.git
+[submodule "dotfiles/zsh/.oh-my-zsh"]
+    path = dotfiles/zsh/.oh-my-zsh
+    url = https://github.com/ohmyzsh/ohmyzsh.git

@@ -93,15 +93,39 @@ vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
 let mapleader=" "
-"unused ops:
-"abcd .g  jk.m
-" o q  t  .x z
+"Key bindings
+"a [ide-a] stop
+"b
+"c [ide-c] run class
+"d [ide-d] debug
+"e [vim-e] move to window down
+"f [vim-f] move to char [ide-f] move to file
+"g
+"h [vim-h] split screen horizontally
+"i [vim-i] move to window right
+"j
+"k [ide-k] refactor code
+"l [vim-l] move to line [ide-l] move to line
+"m [all-m] delete mark
+"n [vim-n] move to window left
+"o [ide-o] open terminal
+"p [all-p] paste clipboard
+"q [all-q] record macro
+"r [vim-r] resize screen
+"s [all-s] split screen
+"t [ide-t] move to terminal
+"u [vim-u] move to window up
+"v [vim-v] split screen vertically
+"w [vim-w] move to word [ide-w] move to word
+"x [ide-x] run
+"y [all-y] copy clipboard
+"z [ide-z] comment/uncomment code
 
 "system clipboard copy/paste
-noremap <Leader>y "*y
-noremap <Leader>p "*p
-noremap <Leader>Y "+y
-noremap <Leader>P "+p
+noremap <leader>y "*y
+noremap <leader>p "*p
+noremap <leader>Y "+y
+noremap <leader>P "+p
 
 "curser switch
 noremap <leader>n <C-w>h
@@ -126,9 +150,34 @@ noremap <leader>v <C-w>t<C-w>H
 noremap <leader>h <C-w>t<C-w>K
 
 "use t for shortcuts
-"unused ops:
-". cdefg   k
-"  p r..   xyz
+"Key bindings
+"a [vim-a] search file [ide-a] search action
+"b [all-b] jump back
+"c
+"d
+"e
+"f [ide-f] search global
+"g
+"h [all-h] jump to line start
+"i [vim-i] next tab [ide-i] next tab
+"j [all-j] toggle spell check
+"k
+"l [all-l] toggle line number
+"m [all-m] jump to modified line
+"n [vim-n] prev tab [ide-n] prev tab
+"o [all-o] jump to pair bracket
+"p
+"q [all-q] replay macro
+"r [ide-r] recent files
+"s [all-S] save [vim-s] search file [ide-s] search everywhere
+"t [vim-T] quit [vim-t] toggle NERDTree [ide-t] toggle file tree [ide-T] close tab
+"u [vim-u] new tab
+"v [vim-v] reload vimrc [ide-v] reload ideavimrc
+"w
+"x
+"y
+"z
+
 nnoremap tc <nop>
 nnoremap td <nop>
 nnoremap te <nop>
@@ -153,8 +202,8 @@ nnoremap th 0
 nnoremap to %
 
 "macros
-nnoremap tq qzqqz
-nnoremap tw @z
+nnoremap <leader>q qzqqz
+nnoremap tq @z
 
 "spell check
 nnoremap tj :set spell!<CR>
@@ -169,3 +218,113 @@ nnoremap tv :source $MYVIMRC<CR>
 "map T quit
 nnoremap S :write<CR>
 nnoremap T :quit<CR>
+
+"use only capital letters for marks
+"idea marks only support upper cases
+nnoremap ma mA
+nnoremap mb mB
+nnoremap mc mC
+nnoremap md mD
+nnoremap me mE
+nnoremap mf mF
+nnoremap mg mG
+nnoremap mh mH
+nnoremap mi mI
+nnoremap mj mJ
+nnoremap mk mK
+nnoremap ml mL
+nnoremap mm mM
+nnoremap mn mN
+nnoremap mo mO
+nnoremap mp mP
+nnoremap mq mQ
+nnoremap mr mR
+nnoremap ms mS
+nnoremap mt mT
+nnoremap mu mU
+nnoremap mv mV
+nnoremap mw mW
+nnoremap mx mX
+nnoremap my mY
+nnoremap mz mZ
+
+nnoremap 'a 'A
+nnoremap 'b 'B
+nnoremap 'c 'C
+nnoremap 'd 'D
+nnoremap 'e 'E
+nnoremap 'f 'F
+nnoremap 'g 'G
+nnoremap 'h 'H
+nnoremap 'i 'I
+nnoremap 'j 'J
+nnoremap 'k 'K
+nnoremap 'l 'L
+nnoremap 'm 'M
+nnoremap 'n 'N
+nnoremap 'o 'O
+nnoremap 'p 'P
+nnoremap 'q 'Q
+nnoremap 'r 'R
+nnoremap 's 'S
+nnoremap 't 'T
+nnoremap 'u 'U
+nnoremap 'v 'V
+nnoremap 'w 'W
+nnoremap 'x 'X
+nnoremap 'y 'Y
+nnoremap 'z 'Z
+
+nnoremap <Leader>ma :delmark A<CR>
+nnoremap <Leader>mb :delmark B<CR>
+nnoremap <Leader>mc :delmark C<CR>
+nnoremap <Leader>md :delmark D<CR>
+nnoremap <Leader>me :delmark E<CR>
+nnoremap <Leader>mf :delmark F<CR>
+nnoremap <Leader>mg :delmark G<CR>
+nnoremap <Leader>mh :delmark H<CR>
+nnoremap <Leader>mi :delmark I<CR>
+nnoremap <Leader>mj :delmark J<CR>
+nnoremap <Leader>mk :delmark K<CR>
+nnoremap <Leader>ml :delmark L<CR>
+nnoremap <Leader>mm :delmark M<CR>
+nnoremap <Leader>mn :delmark N<CR>
+nnoremap <Leader>mo :delmark O<CR>
+nnoremap <Leader>mp :delmark P<CR>
+nnoremap <Leader>mq :delmark Q<CR>
+nnoremap <Leader>mr :delmark R<CR>
+nnoremap <Leader>ms :delmark S<CR>
+nnoremap <Leader>mt :delmark T<CR>
+nnoremap <Leader>mu :delmark U<CR>
+nnoremap <Leader>mv :delmark V<CR>
+nnoremap <Leader>mw :delmark W<CR>
+nnoremap <Leader>mx :delmark X<CR>
+nnoremap <Leader>my :delmark Y<CR>
+nnoremap <Leader>mz :delmark Z<CR>
+
+nnoremap <Leader>mA :delmark A<CR>
+nnoremap <Leader>mB :delmark B<CR>
+nnoremap <Leader>mC :delmark C<CR>
+nnoremap <Leader>mD :delmark D<CR>
+nnoremap <Leader>mE :delmark E<CR>
+nnoremap <Leader>mF :delmark F<CR>
+nnoremap <Leader>mG :delmark G<CR>
+nnoremap <Leader>mH :delmark H<CR>
+nnoremap <Leader>mI :delmark I<CR>
+nnoremap <Leader>mJ :delmark J<CR>
+nnoremap <Leader>mK :delmark K<CR>
+nnoremap <Leader>mL :delmark L<CR>
+nnoremap <Leader>mM :delmark M<CR>
+nnoremap <Leader>mN :delmark N<CR>
+nnoremap <Leader>mO :delmark O<CR>
+nnoremap <Leader>mP :delmark P<CR>
+nnoremap <Leader>mQ :delmark Q<CR>
+nnoremap <Leader>mR :delmark R<CR>
+nnoremap <Leader>mS :delmark S<CR>
+nnoremap <Leader>mT :delmark T<CR>
+nnoremap <Leader>mU :delmark U<CR>
+nnoremap <Leader>mV :delmark V<CR>
+nnoremap <Leader>mW :delmark W<CR>
+nnoremap <Leader>mX :delmark X<CR>
+nnoremap <Leader>mY :delmark Y<CR>
+nnoremap <Leader>mZ :delmark Z<CR>

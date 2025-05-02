@@ -270,10 +270,22 @@ fi
 
 ### <<< Java <<<
 
-### <<< Haskell <<<
-export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### >>> Haskell >>>
+export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
+### <<< Haskell <<<
 
-### <<< nvbn/thefuck <<<
-[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
 ### >>> nvbn/thefuck >>>
+[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
+### <<< nvbn/thefuck <<<
+
+### >>> Docker CLI >>>
+if [[ -d ~/.docker/completions ]]; then
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/limuhan/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+fi
+### <<< Docker CLI <<<

@@ -154,66 +154,6 @@ source ~/.p10k.zsh
 ### p10k modifications for Warp
 if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
   typeset -g POWERLEVEL9K_SHOW_RULER=false
-
-: <<EOF
-  # No need any more - only 1 line prompt
-  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    # =========================[ Line #1 ]=========================
-    os_icon                 # os identifier
-    user                    # username
-    dir                     # current directory
-    vcs                     # git status
-    newline
-    ud_history              # user defined custom history prompt
-    prompt_char             # prompt symbol
-  )
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    # =========================[ Line #1 ]=========================
-    status
-    command_execution_time
-    background_jobs
-    ud_spacing
-    direnv
-    asdf
-    virtualenv
-    anaconda
-    pyenv
-    goenv
-    nodenv
-    nvm
-    nodeenv
-    rbenv
-    rvm
-    fvm
-    luaenv
-    jenv
-    plenv
-    perlbrew
-    phpenv
-    scalaenv
-    haskell_stack
-    kubecontext
-    terraform
-    aws
-    aws_eb_env
-    azure
-    gcloud
-    google_app_cred
-    toolbox
-    context
-    ranger
-    nnn
-    lf
-    xplr
-    vim_shell
-    midnight_commander
-    nix_shell
-    timewarrior
-    taskwarrior
-    time
-  )
-EOF
-
   p10k reload
 fi # End of p10k for Warp
 
@@ -279,7 +219,7 @@ export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### <<< nvbn/thefuck <<<
 
 ### >>> Docker CLI >>>
-if [[ -d ~/.docker/completions ]]; then
+if [[ -d /Users/limuhan/.docker/completions ]]; then
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/limuhan/.docker/completions $fpath)

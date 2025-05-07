@@ -1,5 +1,10 @@
 #!/bin/bash
 
+USERNAME=$(whoami)
+echo "Hello, $USERNAME!"
+
+echo -n "Operating System: "
+
 if [[ "$(uname)" == "Darwin" ]]; then
     echo Mac OS
     command -v brew >/dev/null 2>&1 || { echo >&2 "no brew!"; exit 1; }
@@ -22,18 +27,35 @@ fi
 
 stow --version
 
-mkdir -p ~/.config
-
+## Check if the script is run from the correct directory
 SHELL_FOLDER=$(dirname "$(realpath "$0")")
 echo "$SHELL_FOLDER"
 cd "$SHELL_FOLDER/dotfiles" || exit 2
 
-find . -name '.DS_Store' -type f -delete
-find -L ~ -maxdepth 1 -type l -delete
-find -L ~/.config -maxdepth 1 -type l -delete
+## Update the submodules
+git submodule init
+git submodule update --remote --recursive
 
+## This is the config directory
+mkdir -p "$HOME/.config"
+
+## Clean up the old symlinks
+find . -name '.DS_Store' -type f -delete
+find -L "$HOME" -maxdepth 1 -type l -delete
+find -L "$HOME/.config" -maxdepth 1 -type l -delete
+
+## Stow the directories
 for dir in */ ; do
+
+    ## Skip unwanted directories
+    if [[ ! "$USERNAME" =~ "muhan" && "${dir%/}" == "git" ]]; then
+        echo "- Skipping $dir"
+        continue
+    fi
+
+    echo "Processing $dir"
     stow "${dir%/}" --target="$HOME" --restow
 done
 
-echo Done! "$(date)"
+echo Done!
+echo "$(date)"

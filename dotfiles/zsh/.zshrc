@@ -165,9 +165,9 @@ __conda_avail=0
 __conda_dir=""
 
 # MacBook Pro
-if [ -e '/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda' ]; then
-__conda_avail=1
-__conda_dir='/Users/limuhan/Public/ProgrammingEnvironment/Python/Anaconda3'
+if [ -e "$HOME/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda" ]; then
+  __conda_avail=1
+  __conda_dir="$HOME/Public/ProgrammingEnvironment/Python/Anaconda3"
 fi
 
 if [ $__conda_avail -eq 1 ]; then
@@ -219,10 +219,10 @@ export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### <<< nvbn/thefuck <<<
 
 ### >>> Docker CLI >>>
-if [[ -d /Users/limuhan/.docker/completions ]]; then
+if [[ -d "$HOME/.docker/completions" ]]; then
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/limuhan/.docker/completions $fpath)
+fpath=("$HOME/.docker/completions" $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions

@@ -159,6 +159,19 @@ fi # End of p10k for Warp
 
 fi # End of p10k
 
+
+### >>> Pyenv >>>
+
+if [[ ! "$(type pyenv)" == *"not found"* ]]; then
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+fi
+
+### <<< Pyenv <<<
+
 ### >>> conda initialize >>>
 
 __conda_avail=0
@@ -195,6 +208,9 @@ unset __conda_avail
 unset __conda_dir
 
 ### <<< conda initialize <<<
+
+
+
 
 ### >>> Java >>>
 

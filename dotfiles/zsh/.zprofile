@@ -7,7 +7,8 @@ fi
 # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/bottles
 
 # Added by Toolbox App
-export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"export PATH="$PATH:/usr/local/bin"
+export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH="$PATH:/usr/local/bin"
 
 # Created by pipx
 export PATH="$PATH:$HOME/.local/bin"

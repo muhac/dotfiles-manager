@@ -159,6 +159,9 @@ fi # End of p10k for Warp
 
 fi # End of p10k
 
+### >>> nvbn/thefuck >>>
+[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
+### <<< nvbn/thefuck <<<
 
 ### >>> Pyenv >>>
 
@@ -177,7 +180,6 @@ fi
 __conda_avail=0
 __conda_dir=""
 
-# MacBook Pro
 if [ -e "$HOME/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda" ]; then
   __conda_avail=1
   __conda_dir="$HOME/Public/ProgrammingEnvironment/Python/Anaconda3"
@@ -209,9 +211,6 @@ unset __conda_dir
 
 ### <<< conda initialize <<<
 
-
-
-
 ### >>> Java >>>
 
 if [[ ! "$(type jenv)" == *"not found"* ]]; then
@@ -229,10 +228,6 @@ fi
 ### >>> Haskell >>>
 export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### <<< Haskell <<<
-
-### >>> nvbn/thefuck >>>
-[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
-### <<< nvbn/thefuck <<<
 
 ### >>> Docker CLI >>>
 if [[ -d "$HOME/.docker/completions" ]]; then

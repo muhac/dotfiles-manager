@@ -1,3 +1,69 @@
+P10K_ALTERNATIVE=0
+[[ "$(type starship)" == *"not found"* ]] || P10K_ALTERNATIVE=1
+
+# zsh-vi-mode settings
+# The plugin will auto execute this zvm_config function
+function zvm_config() {
+  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+  ZVM_VI_INSERT_ESCAPE_BINDKEY=vk
+  ZVM_VI_VISUAL_ESCAPE_BINDKEY=vk
+}
+# The plugin will auto execute this zvm_after_lazy_keybindings function
+function zvm_after_lazy_keybindings() {
+  bindkey -M vicmd n vi-backward-char
+  bindkey -M vicmd e vi-down-line-or-history
+  bindkey -M vicmd u vi-up-line-or-history
+  bindkey -M vicmd i vi-forward-char
+  bindkey -M vicmd N vi-first-non-blank
+  bindkey -M vicmd I vi-end-of-line
+  bindkey -M vicmd j vi-forward-word-end
+  bindkey -M vicmd J vi-forward-blank-word-end
+  bindkey -M vicmd h zvm_enter_insert_mode
+  bindkey -M vicmd H zvm_insert_bol
+  bindkey -M vicmd l undo
+  bindkey -M vicmd L redo
+}
+
+if [ $P10K_ALTERNATIVE -ne 0 ]; then
+
+### >>> starship >>>
+[[ $P10K_ALTERNATIVE -eq 1 ]] && eval "$(starship init zsh)"
+
+# Enable ls colors on macOS
+export CLICOLOR=1
+export LSCOLORS=GxfxbxdxCxegedabagacad
+
+# History configuration
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt HIST_IGNORE_DUPS      # 忽略重复
+setopt HIST_IGNORE_SPACE     # 空格开头不记录
+setopt SHARE_HISTORY         # 多终端共享历史
+
+# Directory options
+setopt AUTO_CD               # 直接输入目录名进入
+setopt AUTO_PUSHD            # cd 自动 pushd
+setopt PUSHD_IGNORE_DUPS     # pushd 忽略重复
+setopt INTERACTIVE_COMMENTS  # 允许命令行注释
+setopt NO_BEEP               # 关闭蜂鸣
+
+# Common aliases
+alias l='ls -CF'
+alias la='ls -ACF'
+alias ll='ls -lah'
+
+# Completion system
+autoload -Uz compinit && compinit
+
+# Load plugins manually for starship
+source ~/.oh-my-zsh-custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.oh-my-zsh-custom/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+### <<< starship <<<
+else # if no alternative to $P10K_ALTERNATIVE
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -76,29 +142,6 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=$ZSH/../.oh-my-zsh-custom
 
-# zsh-vi-mode settings
-# The plugin will auto execute this zvm_config function
-function zvm_config() {
-  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
-  ZVM_VI_INSERT_ESCAPE_BINDKEY=vk
-  ZVM_VI_VISUAL_ESCAPE_BINDKEY=vk
-}
-# The plugin will auto execute this zvm_after_lazy_keybindings function
-function zvm_after_lazy_keybindings() {
-  bindkey -M vicmd n vi-backward-char
-  bindkey -M vicmd e vi-down-line-or-history
-  bindkey -M vicmd u vi-up-line-or-history
-  bindkey -M vicmd i vi-forward-char
-  bindkey -M vicmd N vi-first-non-blank
-  bindkey -M vicmd I vi-end-of-line
-  bindkey -M vicmd j vi-forward-word-end
-  bindkey -M vicmd J vi-forward-blank-word-end
-  bindkey -M vicmd h zvm_enter_insert_mode
-  bindkey -M vicmd H zvm_insert_bol
-  bindkey -M vicmd l undo
-  bindkey -M vicmd L redo
-}
-
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
@@ -159,6 +202,8 @@ fi # End of p10k for Warp
 
 fi # End of p10k
 
+fi # End of !$P10K_ALTERNATIVE
+
 ### >>> nvbn/thefuck >>>
 [[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
 ### <<< nvbn/thefuck <<<
@@ -168,6 +213,7 @@ fi # End of p10k
 if [[ ! "$(type pyenv)" == *"not found"* ]]; then
 
 export PATH="$HOME/.pyenv/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
@@ -228,6 +274,12 @@ fi
 ### >>> Haskell >>>
 export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### <<< Haskell <<<
+
+### >>> Golang >>>
+if [[ ! "$(type go)" == *"not found"* ]]; then
+export PATH="$PATH:$(go env GOPATH)/bin"
+fi
+### <<< Golang <<<
 
 ### >>> Docker CLI >>>
 if [[ -d "$HOME/.docker/completions" ]]; then

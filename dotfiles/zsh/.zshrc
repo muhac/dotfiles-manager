@@ -292,3 +292,10 @@ compinit
 
 fi
 ### <<< Docker CLI <<<
+
+# bun completions
+[ -s "/Users/muhan.li/.bun/_bun" ] && source "/Users/muhan.li/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

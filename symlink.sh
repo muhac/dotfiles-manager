@@ -12,7 +12,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 elif [[ "$(uname -s)" == Linux* ]]; then
     echo Linux
-    command -v apt-get >/dev/null 2>&1 || { echo >&2 "no apt-get!"; exit 1; }
+    if command -v apt-get >/dev/null 2>&1; then
+        APT="apt-get"
+    elif command -v apt >/dev/null 2>&1; then
+        APT="apt"
+    else
+        echo >&2 "no apt/apt-get!"; exit 1
+    fi
     command -v stow >/dev/null 2>&1 || {
         if [[ "$EUID" -eq 0 ]]; then
             SUDO=""
@@ -22,7 +28,7 @@ elif [[ "$(uname -s)" == Linux* ]]; then
             echo >&2 "sudo is required to install stow when not running as root."
             exit 1
         fi
-        ${SUDO} apt-get update && ${SUDO} apt-get install -y stow
+        ${SUDO} ${APT} update && ${SUDO} ${APT} install -y stow
     }
 
 elif [[ "$(uname -s)" == MINGW32_NT* ]]; then

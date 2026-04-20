@@ -5,6 +5,13 @@ REPO_URL="${REPO_URL:-__REPO_URL__}"
 BRANCH="${BRANCH:-main}"
 CLONE_DIR="$HOME/.dotfiles"
 
+if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "__REPO_URL__" ]; then
+  echo >&2 "Error: REPO_URL is not set."
+  echo >&2 "Run this installer via the published curl/Pages URL so the repository URL is embedded,"
+  echo >&2 "or run it locally with REPO_URL set explicitly, for example:"
+  echo >&2 "  REPO_URL=https://github.com/<owner>/<repo>.git ./install.sh"
+  exit 1
+fi
 command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed."; exit 1; }
 
 if [ -d "$CLONE_DIR/.git" ]; then

@@ -28,7 +28,7 @@ fi
 stow --version
 
 ## Check if the script is run from the correct directory
-SHELL_FOLDER=$(dirname "$(realpath "$0")")
+SHELL_FOLDER=$(cd "$(dirname "$0")" && pwd)
 echo "$SHELL_FOLDER"
 cd "$SHELL_FOLDER/dotfiles" || exit 2
 

@@ -46,6 +46,7 @@ jobs:
           echo "Running symlink.sh..."
           bash "\$CLONE_DIR/symlink.sh"
           EOF
+          chmod +x _site/install.sh
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

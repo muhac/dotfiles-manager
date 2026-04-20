@@ -12,8 +12,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 elif [[ "$(uname -s)" == Linux* ]]; then
     echo Linux
-    command -v apt >/dev/null 2>&1 || { echo >&2 "no apt!"; exit 1; }
-    command -v stow >/dev/null 2>&1 || apt install stow -y
+    command -v apt-get >/dev/null 2>&1 || { echo >&2 "no apt-get!"; exit 1; }
+    command -v stow >/dev/null 2>&1 || { sudo apt-get update -y && sudo apt-get install -y stow; }
 
 elif [[ "$(uname -s)" == MINGW32_NT* ]]; then
     echo Windows

@@ -1,0 +1,58 @@
+name: Test symlink.sh
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run symlink.sh
+        run: bash symlink.sh
+
+      - name: Verify symlinks
+        run: |
+          FAILED=0
+          check() {
+            if [ -L "$1" ]; then
+              echo "OK  $1"
+            else
+              echo "MISSING  $1"
+              FAILED=1
+            fi
+          }
+
+          # zsh
+          check "$HOME/.zshrc"
+          check "$HOME/.zshenv"
+          check "$HOME/.zprofile"
+          check "$HOME/.p10k.zsh"
+          check "$HOME/.condarc"
+          check "$HOME/.config/starship.toml"
+
+          # vim
+          check "$HOME/.vimrc"
+          check "$HOME/.ideavimrc"
+          check "$HOME/.config/nvim/init.vim"
+
+          # nano
+          check "$HOME/.nanorc"
+
+          # ghostty
+          check "$HOME/.config/ghostty/config"
+
+          # git is skipped (runner username is not muhan)
+
+          [ "$FAILED" -eq 0 ] || exit 1

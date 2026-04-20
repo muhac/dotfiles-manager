@@ -46,13 +46,13 @@ jobs:
           # vim
           check "$HOME/.vimrc"
           check "$HOME/.ideavimrc"
-          check "$HOME/.config/nvim/init.vim"
+          check "$HOME/.config/nvim"
 
           # nano
           check "$HOME/.nanorc"
 
           # ghostty
-          check "$HOME/.config/ghostty/config"
+          check "$HOME/.config/ghostty"
 
           # git is skipped (runner username is not muhan)
 

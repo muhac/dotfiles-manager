@@ -20,7 +20,7 @@ jobs:
       - name: Run install.sh
         env:
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
         run: bash install.sh
 
       - name: Verify symlinks

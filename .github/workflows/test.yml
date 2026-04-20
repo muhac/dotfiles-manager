@@ -19,7 +19,7 @@ jobs:
 
       - name: Run install.sh
         env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+          REPO_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.clone_url || format('{0}/{1}', github.server_url, github.repository) }}
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: bash install.sh
 

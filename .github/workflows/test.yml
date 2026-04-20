@@ -1,4 +1,4 @@
-name: Test symlink.sh
+name: Test install.sh
 
 on:
   push:
@@ -14,13 +14,14 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout with submodules
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
-      - name: Run symlink.sh
-        run: bash symlink.sh
+      - name: Run install.sh
+        env:
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: bash install.sh
 
       - name: Verify symlinks
         run: |

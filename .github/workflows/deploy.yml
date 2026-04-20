@@ -1,4 +1,4 @@
-name: Deploy install.sh to GitHub Pages
+name: Deploy install.sh
 
 on:
   push:

@@ -12,8 +12,24 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 elif [[ "$(uname -s)" == Linux* ]]; then
     echo Linux
-    command -v apt >/dev/null 2>&1 || { echo >&2 "no apt!"; exit 1; }
-    command -v stow >/dev/null 2>&1 || apt install stow -y
+    if command -v apt-get >/dev/null 2>&1; then
+        APT="apt-get"
+    elif command -v apt >/dev/null 2>&1; then
+        APT="apt"
+    else
+        echo >&2 "no apt/apt-get!"; exit 1
+    fi
+    command -v stow >/dev/null 2>&1 || {
+        if [[ "$EUID" -eq 0 ]]; then
+            SUDO=""
+        elif command -v sudo >/dev/null 2>&1; then
+            SUDO="sudo"
+        else
+            echo >&2 "sudo is required to install stow when not running as root."
+            exit 1
+        fi
+        ${SUDO} ${APT} update && ${SUDO} ${APT} install -y stow
+    }
 
 elif [[ "$(uname -s)" == MINGW32_NT* ]]; then
     echo Windows
@@ -28,7 +44,7 @@ fi
 stow --version
 
 ## Check if the script is run from the correct directory
-SHELL_FOLDER=$(dirname "$(realpath "$0")")
+SHELL_FOLDER=$(cd "$(dirname "$0")" && pwd)
 echo "$SHELL_FOLDER"
 cd "$SHELL_FOLDER/dotfiles" || exit 2
 

@@ -10,8 +10,8 @@ command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed.
 if [ -d "$CLONE_DIR/.git" ]; then
   echo "Repo already exists at $CLONE_DIR, pulling latest..."
   git -C "$CLONE_DIR" fetch origin
-  git -C "$CLONE_DIR" checkout "$BRANCH"
-  git -C "$CLONE_DIR" pull --recurse-submodules
+  git -C "$CLONE_DIR" checkout -B "$BRANCH" "origin/$BRANCH"
+  git -C "$CLONE_DIR" pull --recurse-submodules origin "$BRANCH"
 elif [ -d "$CLONE_DIR" ]; then
   echo >&2 "Error: $CLONE_DIR already exists but is not a git repo. Please remove it first."
   exit 1

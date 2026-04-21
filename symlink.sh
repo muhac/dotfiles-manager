@@ -55,6 +55,11 @@ git submodule update --remote --recursive
 ## This is the config directory
 mkdir -p "$HOME/.config"
 
+## Files that should never be overwritten (kept as-is if they already exist)
+NO_OVERWRITE=(
+    .gitconfig
+)
+
 ## Clean up the old symlinks
 find . -name '.DS_Store' -type f -delete
 find -L "$HOME" -maxdepth 1 -type l -delete
@@ -70,7 +75,37 @@ for dir in */ ; do
     fi
 
     echo "Processing $dir"
-    stow "${dir%/}" --target="$HOME" --restow
+
+    ## Back up any real files/dirs that would conflict with stow.
+    ## Files in NO_OVERWRITE are left alone — stow will warn about them.
+    if [[ -d "${dir%/}/.config" ]]; then
+        # --no-folding: stow creates intermediate dirs itself; only leaf files conflict
+        FIND_ARGS=(-not -type d)
+    else
+        # regular stow: top-level entries are symlinked directly; files and dirs can conflict
+        FIND_ARGS=(-mindepth 1 -maxdepth 1)
+    fi
+    while IFS= read -r -d '' src; do
+        rel="${src#${dir%/}/}"
+        target="$HOME/$rel"
+        filename="$(basename "$rel")"
+        skip=0
+        for f in "${NO_OVERWRITE[@]}"; do
+            [[ "$filename" == "$f" ]] && skip=1 && break
+        done
+        if [[ $skip -eq 1 ]]; then
+            [[ -e "$target" && ! -L "$target" ]] && echo "  Skipping (no-overwrite): $target"
+        elif [[ -e "$target" && ! -L "$target" ]]; then
+            echo "  Backing up $target -> $target.bak"
+            mv "$target" "$target.bak"
+        fi
+    done < <(find "${dir%/}" "${FIND_ARGS[@]}" -print0)
+
+    if [[ -d "${dir%/}/.config" ]]; then
+        stow "${dir%/}" --target="$HOME" --restow --no-folding || true
+    else
+        stow "${dir%/}" --target="$HOME" --restow || true
+    fi
 done
 
 echo Done!

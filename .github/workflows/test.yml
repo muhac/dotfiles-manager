@@ -27,7 +27,7 @@ jobs:
         run: |
           FAILED=0
           check() {
-            if [ -L "$1" ]; then
+            if [ -L "$1" ] || [ -d "$1" ]; then
               echo "OK  $1"
             else
               echo "MISSING  $1"

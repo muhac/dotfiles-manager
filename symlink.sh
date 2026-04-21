@@ -43,8 +43,13 @@ mkdir -p "$HOME/.config"
 
 ## Clean up the old symlinks
 find . -name '.DS_Store' -type f -delete
-find -L "$HOME" -maxdepth 1 -type l -delete
-find -L "$HOME/.config" -maxdepth 1 -type l -delete
+CLEAN_BROKEN_LINKS="${CLEAN_BROKEN_LINKS:-1}"
+if [[ "$CLEAN_BROKEN_LINKS" == "1" ]]; then
+    find -L "$HOME" -maxdepth 1 -type l -delete
+    find -L "$HOME/.config" -maxdepth 1 -type l -delete
+else
+    echo "Skipping broken symlink cleanup (CLEAN_BROKEN_LINKS=$CLEAN_BROKEN_LINKS)"
+fi
 
 ## Link a dotfiles package:
 ##   - .config items: link individual files (shared dir, never link the dir itself)
@@ -68,8 +73,16 @@ link_package() {
 
         local target="$HOME/$name"
         if [[ -e "$target" && ! -L "$target" ]]; then
-            echo "  Backing up: $target -> ${target}.bak"
-            mv "$target" "${target}.bak"
+            local ts backup_idx backup_path
+            ts="$(date +%Y%m%d-%H%M%S)"
+            backup_idx=0
+            backup_path="${target}.bak.${ts}"
+            while [[ -e "$backup_path" ]]; do
+                backup_idx=$((backup_idx + 1))
+                backup_path="${target}.bak.${ts}.${backup_idx}"
+            done
+            echo "  Backing up: $target -> $backup_path"
+            mv "$target" "$backup_path"
         fi
         [[ -L "$target" ]] && rm -f "$target"
         ln -sf "$src_item" "$target"

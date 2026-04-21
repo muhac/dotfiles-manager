@@ -7,41 +7,27 @@ echo -n "Operating System: "
 
 if [[ "$(uname)" == "Darwin" ]]; then
     echo Mac OS
-    command -v brew >/dev/null 2>&1 || { echo >&2 "no brew!"; exit 1; }
-    command -v stow >/dev/null 2>&1 || brew install stow
 
 elif [[ "$(uname -s)" == Linux* ]]; then
     echo Linux
-    if command -v apt-get >/dev/null 2>&1; then
-        APT="apt-get"
-    elif command -v apt >/dev/null 2>&1; then
-        APT="apt"
-    else
-        echo >&2 "no apt/apt-get!"; exit 1
-    fi
-    command -v stow >/dev/null 2>&1 || {
-        if [[ "$EUID" -eq 0 ]]; then
-            SUDO=""
-        elif command -v sudo >/dev/null 2>&1; then
-            SUDO="sudo"
-        else
-            echo >&2 "sudo is required to install stow when not running as root."
-            exit 1
-        fi
-        ${SUDO} ${APT} update && ${SUDO} ${APT} install -y stow
-    }
 
-elif [[ "$(uname -s)" == MINGW32_NT* ]]; then
+elif [[ "$(uname -s)" == MINGW* ]]; then
     echo Windows
-    echo Not supported
-    exit 1
+    ## Symlinks on Windows require Developer Mode or admin privileges.
+    ## Test by attempting to create a temporary symlink.
+    _test_link=$(mktemp -u)
+    if ! ln -sf "$0" "$_test_link" 2>/dev/null; then
+        echo >&2 "Symlink creation failed. Please enable Developer Mode in Windows Settings"
+        echo >&2 "(Settings -> Privacy & Security -> For developers -> Developer Mode)"
+        echo >&2 "or re-run this script as Administrator."
+        exit 1
+    fi
+    rm -f "$_test_link"
 
 else
     echo Unknown
     exit 1
 fi
-
-stow --version
 
 ## Check if the script is run from the correct directory
 SHELL_FOLDER=$(cd "$(dirname "$0")" && pwd)
@@ -55,15 +41,53 @@ git submodule update --remote --recursive
 ## This is the config directory
 mkdir -p "$HOME/.config"
 
-## Files that should never be overwritten (kept as-is if they already exist)
-NO_OVERWRITE=(
-    .gitconfig
-)
-
 ## Clean up the old symlinks
 find . -name '.DS_Store' -type f -delete
 find -L "$HOME" -maxdepth 1 -type l -delete
 find -L "$HOME/.config" -maxdepth 1 -type l -delete
+
+## Link a dotfiles package:
+##   - .config items: link individual files (shared dir, never link the dir itself)
+##   - other top-level items: link the whole file/dir, backing up real ones first
+link_package() {
+    local pkg="$1"
+    local src_base="$(pwd)/$pkg"
+
+    ## Top-level items (non-.config): one symlink per item
+    while IFS= read -r src_item; do
+        local name="${src_item#$src_base/}"
+
+        ## .config is handled separately below
+        [[ "$name" == ".config" ]] && continue
+
+        ## Skip .gitconfig if the machine already has its own
+        if [[ "$name" == ".gitconfig" && -f "$HOME/$name" && ! -L "$HOME/$name" ]]; then
+            echo "  Skipping $name (local config exists)"
+            continue
+        fi
+
+        local target="$HOME/$name"
+        if [[ -e "$target" && ! -L "$target" ]]; then
+            echo "  Backing up: $target -> ${target}.bak"
+            mv "$target" "${target}.bak"
+        fi
+        [[ -L "$target" ]] && rm -f "$target"
+        ln -sf "$src_item" "$target"
+        echo "  Linked: ~/$name"
+    done < <(find "$src_base" -maxdepth 1 -mindepth 1 | sort)
+
+    ## .config items: link individual files so multiple packages can share ~/.config
+    if [[ -d "$src_base/.config" ]]; then
+        while IFS= read -r src_file; do
+            local rel="${src_file#$src_base/}"
+            local target="$HOME/$rel"
+            mkdir -p "$(dirname "$target")"
+            [[ -L "$target" ]] && rm -f "$target"
+            ln -sf "$src_file" "$target"
+            echo "  Linked: ~/$rel"
+        done < <(find "$src_base/.config" -name '.git' -prune -o -type f -print | sort)
+    fi
+}
 
 ## Stow the directories
 for dir in */ ; do
@@ -75,37 +99,7 @@ for dir in */ ; do
     fi
 
     echo "Processing $dir"
-
-    ## Back up any real files/dirs that would conflict with stow.
-    ## Files in NO_OVERWRITE are left alone — stow will warn about them.
-    if [[ -d "${dir%/}/.config" ]]; then
-        # --no-folding: stow creates intermediate dirs itself; only leaf files conflict
-        FIND_ARGS=(-not -type d)
-    else
-        # regular stow: top-level entries are symlinked directly; files and dirs can conflict
-        FIND_ARGS=(-mindepth 1 -maxdepth 1)
-    fi
-    while IFS= read -r -d '' src; do
-        rel="${src#${dir%/}/}"
-        target="$HOME/$rel"
-        filename="$(basename "$rel")"
-        skip=0
-        for f in "${NO_OVERWRITE[@]}"; do
-            [[ "$filename" == "$f" ]] && skip=1 && break
-        done
-        if [[ $skip -eq 1 ]]; then
-            [[ -e "$target" && ! -L "$target" ]] && echo "  Skipping (no-overwrite): $target"
-        elif [[ -e "$target" && ! -L "$target" ]]; then
-            echo "  Backing up $target -> $target.bak"
-            mv "$target" "$target.bak"
-        fi
-    done < <(find "${dir%/}" "${FIND_ARGS[@]}" -print0)
-
-    if [[ -d "${dir%/}/.config" ]]; then
-        stow "${dir%/}" --target="$HOME" --restow --no-folding || true
-    else
-        stow "${dir%/}" --target="$HOME" --restow || true
-    fi
+    link_package "${dir%/}"
 done
 
 echo Done!

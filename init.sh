@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
+REPO_URL_PLACEHOLDER="__REPO""_URL__"
 REPO_URL="${REPO_URL:-__REPO_URL__}"
 BRANCH="${BRANCH:-main}"
 CLONE_DIR="$HOME/.dotfiles"
 
-if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "__REPO_URL__" ]; then
+if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then
   echo >&2 "Error: REPO_URL is not set."
   echo >&2 "Run this installer via the published curl/Pages URL so the repository URL is embedded,"
   echo >&2 "or run it locally with REPO_URL set explicitly, for example:"

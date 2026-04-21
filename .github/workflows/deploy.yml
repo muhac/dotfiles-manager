@@ -29,7 +29,7 @@ jobs:
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           mkdir -p _site
-          sed "s|__REPO_URL__|${REPO_URL}|g" install.sh > _site/install.sh
+          sed "s|__REPO_URL__|${REPO_URL}|g" init.sh > _site/install.sh
           chmod +x _site/install.sh
 
       - name: Setup Pages

@@ -33,3 +33,4 @@ bash install.sh
 - `BRANCH` (default: `main`): branch used by `init.sh` clone/update flow.
 - `SKIP_SYSTEM_SETUP=1`: skip Linux system setup in `install.sh`.
 - `CLEAN_BROKEN_LINKS=0`: skip broken symlink cleanup in `symlink.sh`.
+- `UPDATE_SUBMODULES=1`: fast-forward submodules to their remote tracking branches in `symlink.sh`. Defaults to pinned SHAs for reproducibility.

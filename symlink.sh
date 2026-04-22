@@ -35,8 +35,14 @@ echo "$SHELL_FOLDER"
 cd "$SHELL_FOLDER/dotfiles" || exit 2
 
 ## Update the submodules
+UPDATE_SUBMODULES="${UPDATE_SUBMODULES:-0}"
 git submodule init
-git submodule update --remote --recursive
+if [[ "$UPDATE_SUBMODULES" == "1" ]]; then
+    echo "Updating submodules to remote tracking branches..."
+    git submodule update --remote --recursive
+else
+    git submodule update --init --recursive
+fi
 
 ## This is the config directory
 mkdir -p "$HOME/.config"

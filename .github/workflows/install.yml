@@ -35,7 +35,7 @@ jobs:
 
       - name: Verify placeholder replacement
         run: |
-          if rg -q '__REPO_URL__' /tmp/published-install.sh; then
+          if grep -Fq '__REPO_URL__' /tmp/published-install.sh; then
             echo "Placeholder __REPO_URL__ was not replaced in published script."
             exit 1
           fi

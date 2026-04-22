@@ -1,0 +1,78 @@
+name: Test Published install.sh
+
+on:
+  workflow_run:
+    workflows: ["Deploy install.sh"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  test-published:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Fetch published install.sh
+      # Pages can take a short while to propagate after deploy succeeds.
+        env:
+          INSTALL_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/install.sh
+        run: |
+          for i in 1 2 3 4 5 6; do
+            if curl -fsSL "$INSTALL_URL" -o /tmp/published-install.sh; then
+              echo "Fetched: $INSTALL_URL"
+              break
+            fi
+            echo "Retrying fetch ($i/6)..."
+            sleep 5
+          done
+          test -s /tmp/published-install.sh
+          chmod +x /tmp/published-install.sh
+
+      - name: Verify placeholder replacement
+        run: |
+          if rg -q '__REPO_URL__' /tmp/published-install.sh; then
+            echo "Placeholder __REPO_URL__ was not replaced in published script."
+            exit 1
+          fi
+
+      - name: Run published install.sh
+        run: bash /tmp/published-install.sh
+
+      - name: Verify symlinks
+        run: |
+          FAILED=0
+          check() {
+            if [ -L "$1" ] || [ -d "$1" ]; then
+              echo "OK  $1"
+            else
+              echo "MISSING  $1"
+              FAILED=1
+            fi
+          }
+
+          # zsh
+          check "$HOME/.zshrc"
+          check "$HOME/.zshenv"
+          check "$HOME/.zprofile"
+          check "$HOME/.p10k.zsh"
+          check "$HOME/.condarc"
+          check "$HOME/.config/starship.toml"
+
+          # vim
+          check "$HOME/.vimrc"
+          check "$HOME/.ideavimrc"
+          check "$HOME/.config/nvim"
+
+          # nano
+          check "$HOME/.nanorc"
+
+          # ghostty
+          check "$HOME/.config/ghostty"
+
+          # git is skipped (runner username is not muhan)
+          [ "$FAILED" -eq 0 ] || exit 1

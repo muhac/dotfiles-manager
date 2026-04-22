@@ -1,2 +1,5 @@
 .DS_Store
 .idea
+
+# ignored files inside dotfiles directory
+dotfiles/zsh/.zlogin

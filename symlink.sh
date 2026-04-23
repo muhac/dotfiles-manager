@@ -53,6 +53,8 @@ CLEAN_BROKEN_LINKS="${CLEAN_BROKEN_LINKS:-1}"
 if [[ "$CLEAN_BROKEN_LINKS" == "1" ]]; then
     find -L "$HOME" -maxdepth 1 -type l -delete
     find -L "$HOME/.config" -maxdepth 1 -type l -delete
+    ## Remove empty directories left after broken-link cleanup.
+    find "$HOME/.config" -depth -mindepth 1 -type d -empty -delete
 else
     echo "Skipping broken symlink cleanup (CLEAN_BROKEN_LINKS=$CLEAN_BROKEN_LINKS)"
 fi

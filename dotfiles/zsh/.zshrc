@@ -303,7 +303,7 @@ fi
 ### <<< Docker CLI <<<
 
 # bun completions
-[ -s "/Users/muhan.li/.bun/_bun" ] && source "/Users/muhan.li/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

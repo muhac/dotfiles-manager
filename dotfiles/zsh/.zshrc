@@ -62,9 +62,13 @@ alias ll='ls -lah'
 autoload -Uz compinit && compinit
 
 # Load plugins manually for starship
-source ~/.oh-my-zsh-custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ~/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.oh-my-zsh-custom/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+for __plugin_file in \
+  "$HOME/.oh-my-zsh-custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  "$HOME/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" \
+  "$HOME/.oh-my-zsh-custom/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh"; do
+  [[ -r "$__plugin_file" ]] && source "$__plugin_file"
+done
+unset __plugin_file
 
 ### <<< starship <<<
 else # if no alternative to $P10K_ALTERNATIVE

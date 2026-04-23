@@ -1,5 +1,5 @@
 P10K_ALTERNATIVE=0
-[[ "$(type starship)" == *"not found"* ]] || P10K_ALTERNATIVE=1
+command -v starship >/dev/null 2>&1 && P10K_ALTERNATIVE=1
 
 # zsh-vi-mode settings
 # The plugin will auto execute this zvm_config function
@@ -172,7 +172,7 @@ else
 fi
 
 # Use neovim if installed
-if [[ ! "$(type nvim)" == *"not found"* ]]; then
+if command -v nvim >/dev/null 2>&1; then
     alias vim="nvim"
     alias vi="nvim"
 fi
@@ -205,12 +205,12 @@ fi # End of p10k
 fi # End of !$P10K_ALTERNATIVE
 
 ### >>> nvbn/thefuck >>>
-[[ "$(type thefuck)" == *"not found"* ]] || eval $(thefuck --alias f)
+command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias f)"
 ### <<< nvbn/thefuck <<<
 
 ### >>> Pyenv >>>
 
-if [[ ! "$(type pyenv)" == *"not found"* ]]; then
+if command -v pyenv >/dev/null 2>&1; then
 
 export PATH="$HOME/.pyenv/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
@@ -268,7 +268,7 @@ unset __candidate_dir
 
 ### >>> Java >>>
 
-if [[ ! "$(type jenv)" == *"not found"* ]]; then
+if command -v jenv >/dev/null 2>&1; then
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
@@ -285,7 +285,7 @@ export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
 ### <<< Haskell <<<
 
 ### >>> Golang >>>
-if [[ ! "$(type go)" == *"not found"* ]]; then
+if command -v go >/dev/null 2>&1; then
 export PATH="$PATH:$(go env GOPATH)/bin"
 fi
 ### <<< Golang <<<

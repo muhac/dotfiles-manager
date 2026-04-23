@@ -21,11 +21,44 @@ fi
 unset __brew_bin
 unset __brew_bins
 unset __brew_candidate
+
+path_prepend_if_dir() {
+  local dir="$1"
+  [[ -d "$dir" ]] || return
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+}
+
+path_append_if_dir() {
+  local dir="$1"
+  [[ -d "$dir" ]] || return
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$PATH:$dir" ;;
+  esac
+}
+
+# Language/runtime paths (login shell only)
+export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
+path_prepend_if_dir "$PYENV_ROOT/bin"
+path_prepend_if_dir "$HOME/.jenv/bin"
+path_prepend_if_dir "/opt/homebrew/opt/openjdk/bin"
+path_prepend_if_dir "$HOME/.ghcup/bin"
+
+export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+path_prepend_if_dir "$BUN_INSTALL/bin"
 # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/bottles
 
 # Added by Toolbox App
-export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-export PATH="$PATH:/usr/local/bin"
+path_append_if_dir "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+path_append_if_dir "/usr/local/bin"
 
 # Created by pipx
-export PATH="$PATH:$HOME/.local/bin"
+path_append_if_dir "$HOME/.local/bin"
+
+unset -f path_prepend_if_dir
+unset -f path_append_if_dir
+
+export DOTFILES_ZPROFILE_LOADED=1

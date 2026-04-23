@@ -1,3 +1,8 @@
+# Ensure interactive non-login shells inherit login env setup once.
+if [[ -o interactive ]] && [[ ! -o login ]] && [[ -z "${DOTFILES_ZPROFILE_LOADED:-}" ]] && [[ -r "$HOME/.zprofile" ]]; then
+  source "$HOME/.zprofile"
+fi
+
 P10K_ALTERNATIVE=0
 command -v starship >/dev/null 2>&1 && P10K_ALTERNATIVE=1
 
@@ -213,21 +218,40 @@ fi # End of p10k
 
 fi # End of !$P10K_ALTERNATIVE
 
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
 ### >>> nvbn/thefuck >>>
 command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias f)"
 ### <<< nvbn/thefuck <<<
 
-### >>> Pyenv >>>
+### >>> Java >>>
+if command -v jenv >/dev/null 2>&1; then
 
+eval "$(jenv init -)"
+
+fi
+### <<< Java <<<
+
+### >>> Golang >>>
+if command -v go >/dev/null 2>&1; then
+
+__go_bin_dir="$(go env GOPATH)/bin"
+if [[ -d "$__go_bin_dir" && ":$PATH:" != *":$__go_bin_dir:"* ]]; then
+export PATH="$PATH:$__go_bin_dir"
+fi
+
+unset __go_bin_dir
+fi
+### <<< Golang <<<
+
+### >>> Pyenv >>>
 if command -v pyenv >/dev/null 2>&1; then
 
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
 fi
-
 ### <<< Pyenv <<<
 
 ### >>> conda initialize >>>
@@ -274,34 +298,3 @@ unset __conda_dirs
 unset __candidate_dir
 
 ### <<< conda initialize <<<
-
-### >>> Java >>>
-
-if command -v jenv >/dev/null 2>&1; then
-
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-# export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-
-fi
-
-### <<< Java <<<
-
-### >>> Haskell >>>
-export PATH="$HOME/.local/bin:$HOME/.ghcup/bin:$PATH"
-### <<< Haskell <<<
-
-### >>> Golang >>>
-if command -v go >/dev/null 2>&1; then
-export PATH="$PATH:$(go env GOPATH)/bin"
-fi
-### <<< Golang <<<
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"

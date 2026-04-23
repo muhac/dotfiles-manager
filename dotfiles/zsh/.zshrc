@@ -225,11 +225,18 @@ fi
 
 __conda_avail=0
 __conda_dir=""
+__conda_dirs=(
+  "$HOME/miniconda3"
+  "$HOME/anaconda3"
+)
 
-if [ -e "$HOME/Public/ProgrammingEnvironment/Python/Anaconda3/bin/conda" ]; then
-  __conda_avail=1
-  __conda_dir="$HOME/Public/ProgrammingEnvironment/Python/Anaconda3"
-fi
+for __candidate_dir in "${__conda_dirs[@]}"; do
+  if [ -e "$__candidate_dir/bin/conda" ]; then
+    __conda_avail=1
+    __conda_dir="$__candidate_dir"
+    break
+  fi
+done
 
 if [ $__conda_avail -eq 1 ]; then
 
@@ -254,6 +261,8 @@ fi
 
 unset __conda_avail
 unset __conda_dir
+unset __conda_dirs
+unset __candidate_dir
 
 ### <<< conda initialize <<<
 

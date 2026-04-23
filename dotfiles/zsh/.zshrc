@@ -1,6 +1,11 @@
 P10K_ALTERNATIVE=0
 command -v starship >/dev/null 2>&1 && P10K_ALTERNATIVE=1
 
+# Docker CLI completions should be available before compinit runs.
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" $fpath)
+fi
+
 # zsh-vi-mode settings
 # The plugin will auto execute this zvm_config function
 function zvm_config() {
@@ -289,18 +294,6 @@ if command -v go >/dev/null 2>&1; then
 export PATH="$PATH:$(go env GOPATH)/bin"
 fi
 ### <<< Golang <<<
-
-### >>> Docker CLI >>>
-if [[ -d "$HOME/.docker/completions" ]]; then
-
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=("$HOME/.docker/completions" $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
-fi
-### <<< Docker CLI <<<
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

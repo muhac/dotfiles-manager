@@ -83,10 +83,9 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     src="${src%/}"
 
     # Glob expansion: pkg/* → all files in dotfiles/pkg/
-    if [[ "$src" == *'/\*' ]] || [[ "$src" == *'/*' ]]; then
-        prefix="${src%/\*}"
-        prefix="${prefix%/*}"
-        src_dir="$SHELL_FOLDER/dotfiles/$prefix"
+    if [[ "$src" == *'/*' ]]; then
+        glob_dir="${src%/*}"
+        src_dir="$SHELL_FOLDER/dotfiles/$glob_dir"
         if [[ -d "$src_dir" ]]; then
             for item in "$src_dir"/*; do
                 [[ -e "$item" ]] || continue

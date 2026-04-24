@@ -1,8 +1,8 @@
 # Dotfiles Manager
 
-- `.config` files are linked file-by-file.
-- Other top-level package entries are linked as whole files/directories.
-- Existing real files/dirs are backed up with a timestamp suffix before linking.
+Symlinks are declared in [`symlink.conf`](symlink.conf) — one entry per line.
+Files are linked individually; directories are linked as a whole.
+Existing real files are backed up with a timestamp suffix before linking.
 
 ## Install
 
@@ -40,7 +40,8 @@ bash install.sh
 
 - `init.sh`: template source for the published installer (used by the deploy workflow).
 - `install.sh`: repository entrypoint for local/dev setup.
-- `symlink.sh`: links dotfiles into `$HOME`.
+- `symlink.sh`: reads `symlink.conf` and links dotfiles into `$HOME`.
+- `symlink.conf`: declarative config — see comments in file for format.
 
 ## Useful environment variables
 

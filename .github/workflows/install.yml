@@ -77,5 +77,4 @@ jobs:
           # cmux
           check "$HOME/.config/cmux/settings.json"
 
-          # git is skipped (runner username is not muhan)
           [ "$FAILED" -eq 0 ] || exit 1

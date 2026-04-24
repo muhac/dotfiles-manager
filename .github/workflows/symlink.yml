@@ -1,0 +1,143 @@
+name: Test symlink.sh
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Enable Developer Mode (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
+
+      - name: Run symlink.sh
+        run: bash symlink.sh
+
+      - name: Verify file symlinks
+        run: |
+          FAILED=0
+          check_link() {
+            if [ -L "$1" ]; then
+              target="$(readlink "$1")"
+              echo "OK  $1 -> $target"
+            else
+              echo "FAIL  $1 is not a symlink"
+              FAILED=1
+            fi
+          }
+
+          check_link "$HOME/.zshrc"
+          check_link "$HOME/.zshenv"
+          check_link "$HOME/.zprofile"
+          check_link "$HOME/.p10k.zsh"
+          check_link "$HOME/.condarc"
+          check_link "$HOME/.nanorc"
+          check_link "$HOME/.vimrc"
+          check_link "$HOME/.ideavimrc"
+          check_link "$HOME/.config/starship.toml"
+          check_link "$HOME/.config/nvim/init.vim"
+          check_link "$HOME/.config/cmux/settings.json"
+          check_link "$HOME/.config/ghostty/config"
+
+          [ "$FAILED" -eq 0 ] || exit 1
+
+      - name: Verify directory symlinks
+        run: |
+          FAILED=0
+          check_dir_link() {
+            if [ -L "$1" ] && [ -d "$1" ]; then
+              target="$(readlink "$1")"
+              echo "OK  $1/ -> $target"
+            else
+              echo "FAIL  $1 is not a directory symlink"
+              FAILED=1
+            fi
+          }
+
+          check_dir_link "$HOME/.vim"
+          check_dir_link "$HOME/.oh-my-zsh"
+          check_dir_link "$HOME/.oh-my-zsh-custom"
+
+          [ "$FAILED" -eq 0 ] || exit 1
+
+      - name: Verify glob expansion (nano/* expanded files only)
+        run: |
+          if [ -L "$HOME/.nanorc" ]; then
+            echo "OK  nano/* expanded .nanorc"
+          else
+            echo "FAIL  nano/* did not expand .nanorc"
+            exit 1
+          fi
+
+      - name: Verify flag:skip-existing
+        run: |
+          # Create a real .gitconfig before running symlink.sh
+          rm -f "$HOME/.gitconfig"
+          echo "[user]" > "$HOME/.gitconfig"
+          echo "  name = test" >> "$HOME/.gitconfig"
+
+          bash symlink.sh
+
+          if [ -L "$HOME/.gitconfig" ]; then
+            echo "FAIL  .gitconfig should not be a symlink (flag:skip-existing)"
+            exit 1
+          elif [ -f "$HOME/.gitconfig" ]; then
+            echo "OK  .gitconfig is a real file (skipped)"
+          else
+            echo "FAIL  .gitconfig missing"
+            exit 1
+          fi
+
+      - name: Verify broken symlink cleanup
+        if: runner.os != 'Windows'
+        run: |
+          ln -sf /nonexistent "$HOME/test-broken-link"
+
+          if [ ! -L "$HOME/test-broken-link" ]; then
+            echo "FAIL  could not create test broken symlink"
+            exit 1
+          fi
+
+          bash symlink.sh
+
+          if [ -L "$HOME/test-broken-link" ]; then
+            echo "FAIL  broken symlink was not cleaned up"
+            exit 1
+          else
+            echo "OK  broken symlink cleaned up"
+          fi
+
+      - name: Verify idempotent re-run
+        run: |
+          bash symlink.sh
+          bash symlink.sh
+
+          FAILED=0
+          for f in "$HOME/.zshrc" "$HOME/.vimrc" "$HOME/.nanorc"; do
+            if [ -L "$f" ]; then
+              echo "OK  $f still valid after re-run"
+            else
+              echo "FAIL  $f broken after re-run"
+              FAILED=1
+            fi
+          done
+
+          [ "$FAILED" -eq 0 ] || exit 1

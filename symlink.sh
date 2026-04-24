@@ -19,6 +19,7 @@ elif [[ "$(uname -s)" == Linux* ]]; then
 
 elif [[ "$(uname -s)" == MINGW* ]]; then
     echo Windows
+    export MSYS=winsymlinks:nativestrict
     _test_link=$(mktemp -u)
     if ! ln -sf "$0" "$_test_link" 2>/dev/null; then
         echo >&2 "Symlink creation failed. Please enable Developer Mode in Windows Settings"
@@ -61,13 +62,15 @@ ENTRY_FLAGS=()
 
 while IFS= read -r line || [[ -n "$line" ]]; do
     line="${line%%#*}"
+    line="${line%$'\r'}"
     [[ -z "${line// /}" ]] && continue
 
     IFS=$'\t' read -ra fields <<< "$line"
-    src="${fields[0]}"
+    src="${fields[0]%$'\r'}"
     dest=""
     flags=""
     for f in "${fields[@]:1}"; do
+        f="${f%$'\r'}"
         if [[ "$f" == flag:* ]]; then
             flags="${flags:+$flags,}${f#flag:}"
         else

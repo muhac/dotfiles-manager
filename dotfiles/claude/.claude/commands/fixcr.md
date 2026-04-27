@@ -9,10 +9,10 @@ Review feedback can come from two sources:
 ## Usage
 
 ```text
-/fixreview https://github.com/org/repo/pull/123          # fetch reviewer comments from GitHub + fix
-/fixreview https://github.com/org/repo/pull/123 reply     # draft reply only (no code changes)
-/fixreview                                                 # use /review output already in context
-/fixreview reply                                           # draft reply for /review output in context
+/fixcr https://github.com/org/repo/pull/123              # fetch reviewer comments from GitHub + fix
+/fixcr https://github.com/org/repo/pull/123 reply        # draft reply only (no code changes)
+/fixcr                                                    # use /review output already in context
+/fixcr reply                                              # draft reply for /review output in context
 ```
 
 $ARGUMENTS
@@ -56,7 +56,7 @@ For each **fix** item, read the relevant source code and plan the specific chang
 - File path and line range
 - What to change — concrete description or code snippet showing before/after
 - Whether it needs a test change too
-- Whether it affects other files or cross-repo contracts
+- Whether it affects other files or interface contracts
 
 For each **wont-fix** item, prepare the justification (reference codebase conventions, existing patterns, or risk/reward reasoning).
 
@@ -147,4 +147,4 @@ Report: commits pushed, reply posted (if applicable), PR URL.
 
 - Read `CLAUDE.md` before editing — it defines formatting, test, and commit conventions
 - When classifying as **wont-fix**, always have a concrete reason (existing codebase pattern, out of scope, low risk)
-- If a fix touches cross-repo contracts, warn the user that other repos may need corresponding changes
+- If a fix touches interface contracts, warn the user that other components may need corresponding changes

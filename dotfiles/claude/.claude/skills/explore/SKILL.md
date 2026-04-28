@@ -1,3 +1,7 @@
+---
+description: Researches the codebase and gathers context for a feature or topic. Use when exploring code, understanding architecture, or preparing for /spec.
+---
+
 # Explore Codebase
 
 Researches the codebase and gathers context for a feature or topic. Produces structured findings to fuel discussion — does NOT write design docs (use `/spec` after discussion).

@@ -1,3 +1,8 @@
+---
+description: Addresses review feedback on a PR. Classifies items, plans fixes, executes as separate commits, drafts reply, and pushes.
+allowed-tools: Bash(git *) Bash(gh *)
+---
+
 # Fix PR Review
 
 Addresses review feedback on a PR: classify each item, plan fixes, execute them as separate commits, reply to reviewer, and push.

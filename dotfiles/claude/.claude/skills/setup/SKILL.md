@@ -1,3 +1,8 @@
+---
+description: Ensures CLAUDE.md has the sections that /explore, /spec, and /impl expect. Detects project structure and fills in what's missing.
+disable-model-invocation: true
+---
+
 # Setup CLAUDE.md
 
 Ensures CLAUDE.md has the sections that `/explore`, `/spec`, and `/impl` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.

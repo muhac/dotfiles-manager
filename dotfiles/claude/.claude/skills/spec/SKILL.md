@@ -1,3 +1,8 @@
+---
+description: Captures a discussed feature plan into structured design docs that /impl can consume. Use after discussion or /explore when ready to write specs.
+allowed-tools: Bash(git *)
+---
+
 # Write Feature Spec
 
 Captures a discussed feature plan into structured design docs that `/impl` can consume. Assumes discussion has already happened (optionally after `/explore`) — does NOT do codebase research.

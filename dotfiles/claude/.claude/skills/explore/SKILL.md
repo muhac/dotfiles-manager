@@ -1,5 +1,7 @@
 ---
 description: Researches the codebase and gathers context for a feature or topic. Use when exploring code, understanding architecture, or preparing for /spec.
+when_to_use: When user asks how something works, where code lives, wants to understand a feature area, or says "explore", "investigate", "look into".
+argument-hint: "[ticket-or-topic] [repo-alias]"
 ---
 
 # Explore Codebase

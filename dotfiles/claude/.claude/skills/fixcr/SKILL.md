@@ -1,6 +1,8 @@
 ---
 description: Addresses review feedback on a PR. Classifies items, plans fixes, executes as separate commits, drafts reply, and pushes.
+when_to_use: When user shares a PR URL for fixing review comments, says "fix review", "address feedback", or has /review output in context to act on.
 allowed-tools: Bash(git *) Bash(gh *)
+argument-hint: "[pr-url] [reply]"
 ---
 
 # Fix PR Review

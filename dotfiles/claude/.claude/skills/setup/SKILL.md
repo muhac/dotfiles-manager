@@ -1,6 +1,7 @@
 ---
 description: Ensures CLAUDE.md has the sections that /explore, /spec, and /impl expect. Detects project structure and fills in what's missing.
 disable-model-invocation: true
+argument-hint: "[refresh]"
 ---
 
 # Setup CLAUDE.md

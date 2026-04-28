@@ -1,6 +1,8 @@
 ---
 description: Captures a discussed feature plan into structured design docs that /impl can consume. Use after discussion or /explore when ready to write specs.
+when_to_use: When user says "write spec", "capture the plan", "document the design", or discussion has converged and it's time to formalize.
 allowed-tools: Bash(git *)
+argument-hint: "[ticket] [revise] [component]"
 ---
 
 # Write Feature Spec

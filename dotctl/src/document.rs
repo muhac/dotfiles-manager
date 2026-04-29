@@ -9,6 +9,7 @@ use crate::path::FieldPath;
 pub trait Document {
     fn get(&self, path: &FieldPath) -> Option<Item>;
     fn set(&mut self, path: &FieldPath, item: Item) -> Result<()>;
+    fn clear(&mut self);
     fn contains(&self, path: &FieldPath) -> bool {
         self.get(path).is_some()
     }
@@ -23,6 +24,14 @@ impl AnyDocument {
     pub fn load(format: &str, path: &Path, allow_missing: bool) -> Result<Self> {
         match format {
             "toml" => Ok(Self::Toml(TomlDocument::load(path, allow_missing)?)),
+            "json" => bail!("format json is not implemented yet"),
+            other => bail!("unsupported format: {other}"),
+        }
+    }
+
+    pub fn empty(format: &str) -> Result<Self> {
+        match format {
+            "toml" => Ok(Self::Toml(TomlDocument::empty())),
             "json" => bail!("format json is not implemented yet"),
             other => bail!("unsupported format: {other}"),
         }
@@ -42,6 +51,12 @@ impl Document for AnyDocument {
         }
     }
 
+    fn clear(&mut self) {
+        match self {
+            Self::Toml(doc) => doc.clear(),
+        }
+    }
+
     fn to_string(&self) -> String {
         match self {
             Self::Toml(doc) => doc.to_string(),
@@ -54,12 +69,16 @@ pub struct TomlDocument {
 }
 
 impl TomlDocument {
+    pub fn empty() -> Self {
+        Self {
+            doc: DocumentMut::new(),
+        }
+    }
+
     pub fn load(path: &Path, allow_missing: bool) -> Result<Self> {
         if !path.exists() {
             if allow_missing {
-                return Ok(Self {
-                    doc: DocumentMut::new(),
-                });
+                return Ok(Self::empty());
             }
             bail!("file does not exist: {}", path.display());
         }
@@ -80,6 +99,10 @@ impl Document for TomlDocument {
 
     fn set(&mut self, path: &FieldPath, item: Item) -> Result<()> {
         set_in_table(self.doc.as_table_mut(), path.segments(), item)
+    }
+
+    fn clear(&mut self) {
+        self.doc = DocumentMut::new();
     }
 
     fn to_string(&self) -> String {
@@ -110,7 +133,9 @@ fn set_in_table(table: &mut Table, segments: &[String], item: Item) -> Result<()
     let child = match table.get_mut(first) {
         Some(existing) if existing.as_table().is_some() => existing,
         _ => {
-            table.insert(first, Item::Table(Table::new()));
+            let mut child = Table::new();
+            child.set_implicit(true);
+            table.insert(first, Item::Table(child));
             table.get_mut(first).expect("inserted table")
         }
     };

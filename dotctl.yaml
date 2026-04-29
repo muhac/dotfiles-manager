@@ -9,6 +9,7 @@ targets:
       - tui.notification_condition
       - tui.status_line
       - tui.theme
+      - notice.hide_rate_limit_model_nudge
       - plugins."github@openai-curated".enabled
     deny:
       - projects

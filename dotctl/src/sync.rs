@@ -78,9 +78,9 @@ fn run_target(target: &TargetConfig, direction: Direction, options: SyncOptions)
     validate_denied_paths(&source, &deny_paths)?;
 
     let changes = match direction {
-        Direction::Pull => pull(&mut source, &target_doc, &sync_paths)?,
+        Direction::Pull => pull(&mut source, &target_doc, &sync_paths, &target.format)?,
         Direction::Push => push(&source, &mut target_doc, &sync_paths)?,
-        Direction::Sync => sync(&mut source, &mut target_doc, &sync_paths)?,
+        Direction::Sync => sync(&mut source, &mut target_doc, &sync_paths, &target.format)?,
     };
 
     report_changes(target, direction, options, &changes);
@@ -109,10 +109,12 @@ fn pull(
     source: &mut dyn Document,
     target: &dyn Document,
     paths: &[ParsedPath],
+    format: &str,
 ) -> Result<Vec<Change>> {
+    let canonical_source = build_canonical_source(format, paths, |path| target.get(path))?;
     let mut changes = Vec::new();
     for path in paths {
-        let Some(target_item) = target.get(&path.path) else {
+        let Some(target_item) = canonical_source.get(&path.path) else {
             continue;
         };
         if source
@@ -127,6 +129,7 @@ fn pull(
             destination: Destination::Source,
         });
     }
+    replace_with_canonical_source(source, canonical_source, paths)?;
     Ok(changes)
 }
 
@@ -159,40 +162,71 @@ fn sync(
     source: &mut dyn Document,
     target: &mut dyn Document,
     paths: &[ParsedPath],
+    format: &str,
 ) -> Result<Vec<Change>> {
+    let canonical_source = build_canonical_source(format, paths, |path| {
+        target.get(path).or_else(|| source.get(path))
+    })?;
     let mut changes = Vec::new();
     for path in paths {
         let target_item = target.get(&path.path);
         let source_item = source.get(&path.path);
+        let canonical_item = canonical_source.get(&path.path);
 
-        match (target_item, source_item) {
-            (Some(target_item), Some(source_item)) => {
-                if !same_item(&target_item, &source_item) {
-                    source.set(&path.path, target_item)?;
-                    changes.push(Change {
-                        path: path.raw.clone(),
-                        destination: Destination::Source,
-                    });
-                }
-            }
-            (Some(target_item), None) => {
-                source.set(&path.path, target_item)?;
-                changes.push(Change {
-                    path: path.raw.clone(),
-                    destination: Destination::Source,
-                });
-            }
-            (None, Some(source_item)) => {
+        if canonical_item.as_ref().is_some_and(|canonical_item| {
+            source_item
+                .as_ref()
+                .is_none_or(|source_item| !same_item(source_item, canonical_item))
+        }) {
+            changes.push(Change {
+                path: path.raw.clone(),
+                destination: Destination::Source,
+            });
+        }
+
+        if target_item.is_none() {
+            if let Some(source_item) = source_item {
                 target.set(&path.path, source_item)?;
                 changes.push(Change {
                     path: path.raw.clone(),
                     destination: Destination::Target,
                 });
             }
-            (None, None) => {}
         }
     }
+    replace_with_canonical_source(source, canonical_source, paths)?;
     Ok(changes)
+}
+
+fn build_canonical_source<F>(
+    format: &str,
+    paths: &[ParsedPath],
+    mut value_for: F,
+) -> Result<AnyDocument>
+where
+    F: FnMut(&FieldPath) -> Option<toml_edit::Item>,
+{
+    let mut canonical = AnyDocument::empty(format)?;
+    for path in paths {
+        if let Some(item) = value_for(&path.path) {
+            canonical.set(&path.path, item)?;
+        }
+    }
+    Ok(canonical)
+}
+
+fn replace_with_canonical_source(
+    source: &mut dyn Document,
+    canonical_source: AnyDocument,
+    paths: &[ParsedPath],
+) -> Result<()> {
+    source.clear();
+    for path in paths {
+        if let Some(item) = canonical_source.get(&path.path) {
+            source.set(&path.path, item)?;
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug)]
@@ -328,7 +362,13 @@ project_doc_max_bytes = 65536
 trust_level = "trusted"
 "#,
         );
-        let changes = pull(&mut source, &target, &parsed(&["project_doc_max_bytes"])).unwrap();
+        let changes = pull(
+            &mut source,
+            &target,
+            &parsed(&["project_doc_max_bytes"]),
+            "toml",
+        )
+        .unwrap();
         assert_eq!(changes.len(), 1);
         assert!(
             source
@@ -336,6 +376,46 @@ trust_level = "trusted"
                 .is_some()
         );
         assert!(source.get(&FieldPath::parse("projects").unwrap()).is_none());
+    }
+
+    #[test]
+    fn pull_rewrites_source_in_sync_order() {
+        let mut source = toml_from(
+            r#"
+[local]
+state = true
+
+[tui]
+theme = "old"
+"#,
+        );
+        let target = toml_from(
+            r#"
+[plugins."github@openai-curated"]
+enabled = true
+
+[tui]
+theme = "monokai"
+"#,
+        );
+
+        pull(
+            &mut source,
+            &target,
+            &parsed(&["tui.theme", "plugins.\"github@openai-curated\".enabled"]),
+            "toml",
+        )
+        .unwrap();
+
+        let rendered = source.to_string();
+        assert!(!rendered.contains("[local]"));
+        assert!(
+            rendered.find("[tui]").unwrap()
+                < rendered
+                    .find("[plugins.\"github@openai-curated\"]")
+                    .unwrap()
+        );
+        assert!(!rendered.contains("[plugins]\n"));
     }
 
     #[test]
@@ -369,6 +449,7 @@ project_doc_fallback_filenames = ["CLAUDE.md"]
             &mut source,
             &mut target,
             &parsed(&["project_doc_max_bytes", "project_doc_fallback_filenames"]),
+            "toml",
         )
         .unwrap();
 
@@ -379,6 +460,48 @@ project_doc_fallback_filenames = ["CLAUDE.md"]
         assert!(
             target
                 .get(&FieldPath::parse("project_doc_fallback_filenames").unwrap())
+                .is_some()
+        );
+    }
+
+    #[test]
+    fn sync_canonical_source_uses_target_values_first() {
+        let mut source = toml_from(
+            r#"
+[plugins."github@openai-curated"]
+enabled = true
+
+[tui]
+theme = "source"
+"#,
+        );
+        let mut target = toml_from(
+            r#"
+[tui]
+theme = "target"
+"#,
+        );
+
+        sync(
+            &mut source,
+            &mut target,
+            &parsed(&["tui.theme", "plugins.\"github@openai-curated\".enabled"]),
+            "toml",
+        )
+        .unwrap();
+
+        let rendered = source.to_string();
+        assert!(rendered.contains("theme = \"target\""));
+        assert!(
+            rendered.find("[tui]").unwrap()
+                < rendered
+                    .find("[plugins.\"github@openai-curated\"]")
+                    .unwrap()
+        );
+        assert!(!rendered.contains("[plugins]\n"));
+        assert!(
+            target
+                .get(&FieldPath::parse("plugins.\"github@openai-curated\".enabled").unwrap())
                 .is_some()
         );
     }

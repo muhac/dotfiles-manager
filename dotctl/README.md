@@ -102,3 +102,26 @@ preferences to be shared across machines.
 The direction names mirror deployment-style workflows: `pull` brings the
 current target state back into the repo source, and `push` applies the repo
 source to the target environment.
+
+## Configuration
+
+`dotctl` reads `dotctl.yaml` from the current directory or the nearest parent
+directory. Paths in `source` are resolved relative to that file. Paths in
+`target` may use `~` for the current user's home directory.
+
+V1 fully supports TOML targets. JSON targets are part of the format abstraction
+but are not implemented yet.
+
+## Migration Notes
+
+For now, Codex config is still linked by `symlink.conf`. The intended migration
+is:
+
+1. Keep the shared Codex fields in `dotfiles/codex/.codex/config.sync.toml`.
+2. Run `dotctl push codex --dry-run` and inspect the planned writes.
+3. Remove `codex/.codex/config.toml` from `symlink.conf`.
+4. Replace the existing symlinked `~/.codex/config.toml` with a real file.
+5. Run `dotctl push codex`.
+
+After migration, Codex can keep local-only state in `~/.codex/config.toml`
+without writing that state back to the repository.

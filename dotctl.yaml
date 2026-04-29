@@ -1,0 +1,15 @@
+targets:
+  codex:
+    format: toml
+    source: dotfiles/codex/.codex/config.sync.toml
+    target: ~/.codex/config.toml
+    sync:
+      - project_doc_fallback_filenames
+      - project_doc_max_bytes
+      - tui.notification_condition
+      - tui.status_line
+      - tui.theme
+      - plugins."github@openai-curated".enabled
+    deny:
+      - projects
+      - tui.model_availability_nux

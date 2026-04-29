@@ -24,11 +24,11 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Build dotctl
-        run: cargo build --manifest-path dotctl/Cargo.toml
+      - name: Check dotctl
+        run: cargo check --manifest-path dotctl/Cargo.toml
 
-      - name: Run dotctl
-        run: |
-          output="$(cargo run --quiet --manifest-path dotctl/Cargo.toml)"
-          echo "$output"
-          test "$output" = "Hello, world!"
+      - name: Test dotctl
+        run: cargo test --manifest-path dotctl/Cargo.toml
+
+      - name: Run dotctl help
+        run: cargo run --quiet --manifest-path dotctl/Cargo.toml -- --help

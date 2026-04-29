@@ -6,10 +6,10 @@ targets:
     sync:
       - project_doc_fallback_filenames
       - project_doc_max_bytes
-      - tui.notification_condition
-      - tui.status_line
-      - tui.theme
       - notice.hide_rate_limit_model_nudge
+      - tui.notification_condition
+      - tui.theme
+      - tui.status_line
       - plugins."github@openai-curated".enabled
     deny:
       - projects

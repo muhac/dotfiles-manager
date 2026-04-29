@@ -18,6 +18,10 @@ pub enum Command {
         /// Show planned changes without writing files.
         #[arg(long)]
         dry_run: bool,
+
+        /// Create a timestamped backup before writing.
+        #[arg(long)]
+        backup: bool,
     },
 
     /// Push selected fields from source into target.
@@ -28,6 +32,10 @@ pub enum Command {
         /// Show planned changes without writing files.
         #[arg(long)]
         dry_run: bool,
+
+        /// Create a timestamped backup before writing.
+        #[arg(long)]
+        backup: bool,
     },
 
     /// Pull from target to source, then fill target from source.
@@ -38,5 +46,9 @@ pub enum Command {
         /// Show planned changes without writing files.
         #[arg(long)]
         dry_run: bool,
+
+        /// Create a timestamped backup before writing.
+        #[arg(long)]
+        backup: bool,
     },
 }

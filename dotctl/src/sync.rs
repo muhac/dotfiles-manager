@@ -18,6 +18,7 @@ pub enum Direction {
 #[derive(Debug, Clone, Copy)]
 pub struct SyncOptions {
     pub dry_run: bool,
+    pub backup: bool,
 }
 
 #[derive(Debug)]
@@ -96,10 +97,10 @@ fn run_target(target: &TargetConfig, direction: Direction, options: SyncOptions)
         .any(|change| matches!(change.destination, Destination::Target));
 
     if writes_source {
-        write_document(&target.source, source.to_string())?;
+        write_document(&target.source, source.to_string(), options.backup)?;
     }
     if writes_target {
-        write_document(&target.target, target_doc.to_string())?;
+        write_document(&target.target, target_doc.to_string(), options.backup)?;
     }
 
     Ok(())
@@ -112,6 +113,7 @@ fn pull(
     format: &str,
 ) -> Result<Vec<Change>> {
     let canonical_source = build_canonical_source(format, paths, |path| target.get(path))?;
+    let source_needs_canonical_rewrite = source.to_string() != canonical_source.to_string();
     let mut changes = Vec::new();
     for path in paths {
         let Some(target_item) = canonical_source.get(&path.path) else {
@@ -126,6 +128,16 @@ fn pull(
         source.set(&path.path, target_item)?;
         changes.push(Change {
             path: path.raw.clone(),
+            destination: Destination::Source,
+        });
+    }
+    if source_needs_canonical_rewrite
+        && !changes
+            .iter()
+            .any(|change| matches!(change.destination, Destination::Source))
+    {
+        changes.push(Change {
+            path: "canonical source order".to_string(),
             destination: Destination::Source,
         });
     }
@@ -167,6 +179,7 @@ fn sync(
     let canonical_source = build_canonical_source(format, paths, |path| {
         target.get(path).or_else(|| source.get(path))
     })?;
+    let source_needs_canonical_rewrite = source.to_string() != canonical_source.to_string();
     let mut changes = Vec::new();
     for path in paths {
         let target_item = target.get(&path.path);
@@ -193,6 +206,16 @@ fn sync(
                 });
             }
         }
+    }
+    if source_needs_canonical_rewrite
+        && !changes
+            .iter()
+            .any(|change| matches!(change.destination, Destination::Source))
+    {
+        changes.push(Change {
+            path: "canonical source order".to_string(),
+            destination: Destination::Source,
+        });
     }
     replace_with_canonical_source(source, canonical_source, paths)?;
     Ok(changes)
@@ -288,13 +311,13 @@ fn report_changes(
     }
 }
 
-fn write_document(path: &Path, content: String) -> Result<()> {
+fn write_document(path: &Path, content: String, backup: bool) -> Result<()> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)
             .with_context(|| format!("failed to create {}", parent.display()))?;
     }
 
-    if path.exists() {
+    if backup && path.exists() {
         backup_file(path)?;
     }
 
@@ -419,6 +442,39 @@ theme = "monokai"
     }
 
     #[test]
+    fn pull_reports_order_only_source_rewrite() {
+        let mut source = toml_from(
+            r#"
+[notice]
+hide_rate_limit_model_nudge = true
+
+[tui]
+theme = "monokai"
+"#,
+        );
+        let target = toml_from(
+            r#"
+[tui]
+theme = "monokai"
+
+[notice]
+hide_rate_limit_model_nudge = true
+"#,
+        );
+
+        let changes = pull(
+            &mut source,
+            &target,
+            &parsed(&["tui.theme", "notice.hide_rate_limit_model_nudge"]),
+            "toml",
+        )
+        .unwrap();
+
+        assert_eq!(changes.len(), 1);
+        assert_eq!(changes[0].path, "canonical source order");
+    }
+
+    #[test]
     fn push_preserves_unmanaged_target_fields() {
         let source = toml_from("project_doc_max_bytes = 65536\n");
         let mut target = toml_from(
@@ -507,6 +563,39 @@ theme = "target"
     }
 
     #[test]
+    fn sync_reports_order_only_source_rewrite() {
+        let mut source = toml_from(
+            r#"
+[notice]
+hide_rate_limit_model_nudge = true
+
+[tui]
+theme = "monokai"
+"#,
+        );
+        let mut target = toml_from(
+            r#"
+[tui]
+theme = "monokai"
+
+[notice]
+hide_rate_limit_model_nudge = true
+"#,
+        );
+
+        let changes = sync(
+            &mut source,
+            &mut target,
+            &parsed(&["tui.theme", "notice.hide_rate_limit_model_nudge"]),
+            "toml",
+        )
+        .unwrap();
+
+        assert_eq!(changes.len(), 1);
+        assert_eq!(changes[0].path, "canonical source order");
+    }
+
+    #[test]
     fn deny_paths_fail_validation() {
         let source = toml_from(
             r#"
@@ -531,7 +620,49 @@ theme = "target"
             deny: Vec::new(),
         };
 
-        let err = run_target(&target, Direction::Push, SyncOptions { dry_run: true }).unwrap_err();
+        let err = run_target(
+            &target,
+            Direction::Push,
+            SyncOptions {
+                dry_run: true,
+                backup: true,
+            },
+        )
+        .unwrap_err();
         assert!(err.to_string().contains("file does not exist"));
+    }
+
+    #[test]
+    fn write_document_skips_backup_by_default() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("config.toml");
+        fs::write(&path, "old = true\n").unwrap();
+
+        write_document(&path, "new = true\n".to_string(), false).unwrap();
+
+        assert_eq!(fs::read_to_string(&path).unwrap(), "new = true\n");
+        let backups = fs::read_dir(dir.path())
+            .unwrap()
+            .filter_map(Result::ok)
+            .filter(|entry| entry.file_name().to_string_lossy().contains(".bak."))
+            .count();
+        assert_eq!(backups, 0);
+    }
+
+    #[test]
+    fn write_document_creates_backup_when_requested() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("config.toml");
+        fs::write(&path, "old = true\n").unwrap();
+
+        write_document(&path, "new = true\n".to_string(), true).unwrap();
+
+        assert_eq!(fs::read_to_string(&path).unwrap(), "new = true\n");
+        let backups = fs::read_dir(dir.path())
+            .unwrap()
+            .filter_map(Result::ok)
+            .filter(|entry| entry.file_name().to_string_lossy().contains(".bak."))
+            .count();
+        assert_eq!(backups, 1);
     }
 }

@@ -1,10 +1,13 @@
 project_doc_fallback_filenames = ["CLAUDE.md"]
 project_doc_max_bytes = 65536
 
+[notice]
+hide_rate_limit_model_nudge = true
+
 [tui]
 notification_condition = "always"
-status_line = ["git-branch", "model", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "five-hour-limit", "weekly-limit"]
 theme = "monokai-extended"
+status_line = ["git-branch", "model", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "five-hour-limit", "weekly-limit"]
 
 [plugins."github@openai-curated"]
 enabled = true

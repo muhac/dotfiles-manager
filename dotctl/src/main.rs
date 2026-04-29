@@ -16,23 +16,35 @@ fn main() -> Result<()> {
     let loaded = DotctlConfig::load_from_current_dir()?;
 
     match cli.command {
-        Command::Pull { name, dry_run } => run(
+        Command::Pull {
+            name,
+            dry_run,
+            backup,
+        } => run(
             &loaded,
             name.as_deref(),
             Direction::Pull,
-            SyncOptions { dry_run },
+            SyncOptions { dry_run, backup },
         ),
-        Command::Push { name, dry_run } => run(
+        Command::Push {
+            name,
+            dry_run,
+            backup,
+        } => run(
             &loaded,
             name.as_deref(),
             Direction::Push,
-            SyncOptions { dry_run },
+            SyncOptions { dry_run, backup },
         ),
-        Command::Sync { name, dry_run } => run(
+        Command::Sync {
+            name,
+            dry_run,
+            backup,
+        } => run(
             &loaded,
             name.as_deref(),
             Direction::Sync,
-            SyncOptions { dry_run },
+            SyncOptions { dry_run, backup },
         ),
     }
 }

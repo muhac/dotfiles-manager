@@ -58,11 +58,12 @@ dotctl sync
 ```
 
 All commands support `--dry-run` to show planned changes without writing either
-file.
+file. Real writes do not create backups by default; pass `--backup` to create a
+timestamped backup before writing.
 
 ```sh
 dotctl pull codex --dry-run
-dotctl push --dry-run
+dotctl push codex --backup
 dotctl sync --dry-run
 ```
 

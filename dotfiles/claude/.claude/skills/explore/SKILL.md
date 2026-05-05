@@ -38,9 +38,9 @@ Parse `$ARGUMENTS`:
 
 Use any available MCP tools to look up the ticket (e.g., Linear, Jira, Glean). These are optional — if unavailable, skip and inform the user.
 
-Present what was found and ask: "Anything to add before I explore the codebase?"
-
-If the user provides additional context, incorporate it before proceeding.
+Present what was found. Use `AskUserQuestion` to let the user choose:
+- Option A: "Proceed" — start exploring the codebase
+- Option B: "Add context" — provide additional context before exploring
 
 ### 2. Sync repos
 

@@ -124,7 +124,9 @@ Set up branch <branch> in <repo-path> for development.
 Report: "ready" with current HEAD, or "blocked: local branch has unmerged changes" with shortstat
 ```
 
-If any subagent reports "blocked", ask the user whether to **keep** (push first) or **discard** (delete and recreate).
+If any subagent reports "blocked", use `AskUserQuestion` to let the user choose:
+- Option A: "Keep and push" — push the existing branch first, then continue
+- Option B: "Discard and recreate" — delete the local branch and create a fresh one
 
 **3b. Mark in progress**
 
@@ -287,7 +289,9 @@ If a previous run was interrupted (components with `status: in_progress`):
 1. For each involved repo, check for local work:
    - Uncommitted changes: `git -C <repo-path> status`
    - Unpushed commits: `git -C <repo-path> diff origin/<default-branch>... --shortstat`
-2. If either exists, show a summary and ask: continue from where it left off, or discard and restart
+2. If either exists, show a summary. Use `AskUserQuestion`:
+   - Option A: "Continue" — resume from where it left off
+   - Option B: "Discard and restart" — discard local work and start fresh
 3. Resume from the interrupted wave — completed components are skipped automatically
 
 ## Tips

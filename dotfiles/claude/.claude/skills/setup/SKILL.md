@@ -67,7 +67,10 @@ Show what was detected and what will be added or updated:
 
 In `refresh` mode, also show sections that appear outdated (e.g., repo map doesn't match current `.gitmodules`).
 
-Ask: "approve" to write / edit the drafts / skip specific sections.
+Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve" — write all drafted sections
+- Option B: "Edit drafts" — describe what to change before writing
+- Option C: "Skip sections" — choose which sections to omit
 
 ### 4. Write CLAUDE.md
 

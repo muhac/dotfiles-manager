@@ -184,13 +184,17 @@ Focus on code-level details and return a **structured list** (not prose):
 5. Any deviations from the component spec
 ```
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly says "approve" or "continue".**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
 
 Show the user:
 - Files changed per repo
 - Test results
 - Review issues found (if any)
-- **Options**: "approve" to proceed / ask questions to discuss / describe issues to fix
+
+Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve" — proceed to next wave
+- Option B: "Fix issues" — describe issues to address
+- Option C: "Discuss" — ask questions before deciding
 
 If fixes are needed: apply fixes, re-run 3d and 3e, checkpoint again.
 
@@ -241,12 +245,16 @@ Produce a **structured review report** (not prose):
 5. Suggested improvements (if any)
 ```
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly says "approve" or "continue".**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
 
 Present the review report:
 - Review findings
 - All repos with committed changes and their branches
-- **Options**: "approve" to push / ask questions to discuss / describe issues to fix
+
+Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve and push" — push all branches
+- Option B: "Fix issues" — describe issues to address
+- Option C: "Discuss" — ask questions before deciding
 
 If fixes are needed: apply, re-run 4a and 4b, checkpoint again.
 

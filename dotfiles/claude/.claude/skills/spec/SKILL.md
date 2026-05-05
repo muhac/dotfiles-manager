@@ -184,14 +184,16 @@ git commit -m "design(<ticket>): initial draft"
 
 ### 4. Present to user
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly says "approve" or "continue".**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
 
-Show the user the generated design docs. Focus on whether the specs are accurate, complete, and actionable. Present options:
-- "approve" to push
-- Ask questions to discuss
-- Describe changes to revise
+Show the user the generated design docs. Focus on whether the specs are accurate, complete, and actionable.
 
-If changes are requested, apply them and commit each round:
+Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve and push" — proceed to push
+- Option B: "Revise" — describe changes to the specs
+- Option C: "Discuss" — ask questions before deciding
+
+If revisions are requested, apply them and commit each round:
 ```bash
 git commit -m "design(<ticket>): <what changed>"
 ```
@@ -211,7 +213,7 @@ When invoked with `revise` or `revise NN`:
 1. **Read existing docs** — read the feature README and relevant component specs
 2. **Gather changes** — ask the user what needs to change. If the conversation already contains the changes, extract from context instead of asking.
 3. **Update docs** — modify README and/or component specs. When adding components, follow ordering rules. When removing components, update `depends_on` and `parallel_with` in affected specs.
-4. **CHECKPOINT — HARD GATE.** Present changes, ask for approval.
+4. **CHECKPOINT — HARD GATE.** Present changes. Use `AskUserQuestion`: "Approve and push" / "Revise" / "Discuss".
 5. **Commit and push**:
 ```bash
 git add <design-doc-directory>

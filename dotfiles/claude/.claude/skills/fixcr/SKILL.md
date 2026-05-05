@@ -71,7 +71,7 @@ For each **done** item, identify the commit that addressed it.
 
 For each **separate** item, reference the component spec or ticket.
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
 
 Present the full analysis to the user:
 
@@ -80,9 +80,12 @@ Present the full analysis to the user:
 
 For **fix** items, expand the planned action with the specific change details below the table.
 
-Options: "approve" to proceed with fixes / ask questions to discuss / describe changes to revise the plan.
+Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve" — proceed with fixes
+- Option B: "Revise plan" — describe changes to classifications or planned actions
+- Option C: "Discuss" — ask questions before deciding
 
-The user may ask questions without approving. Answer, then re-present the options. Do NOT move to step 4 unless they explicitly say "approve" or "continue".
+The user may ask questions without approving. Answer, then re-present the options. Do NOT move to step 4 until approved.
 
 ### 4. Execute fixes
 
@@ -129,9 +132,12 @@ Structure the reply with numbered items matching the reviewer's points.
 
 **Context mode**: Present the summary to the user as conversation output (no GitHub comment needed since the review was self-generated).
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
 
-Present the reply draft. Options: "approve" to post and push / edit the reply / discuss.
+Present the reply draft. Use `AskUserQuestion` to let the user choose:
+- Option A: "Approve and push" — post reply and push commits
+- Option B: "Edit reply" — describe changes to the reply draft
+- Option C: "Discuss" — ask questions before deciding
 
 ### 6. Push and post
 

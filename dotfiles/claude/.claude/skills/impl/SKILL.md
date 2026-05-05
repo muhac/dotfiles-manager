@@ -82,11 +82,18 @@ Skip components with `status: completed` or `on_hold` (except in fix mode). Comp
 
 **CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly says "approve" or "continue".**
 
-Present the execution plan, then ask:
-- Which components will be executed, in which waves
-- Which components run in parallel
-- Which components are skipped (already completed)
-- **Options**: "approve" to proceed / ask questions to discuss / describe changes to revise
+Present the execution plan, then use `AskUserQuestion` to let the user choose:
+
+**Question 1: Working mode** — suggest a branch name based on the ticket/feature name.
+- Option A: "Worktree: `<suggested-name>`" — creates an isolated worktree, keeps current working tree clean
+- Option B: "Branch: `<suggested-name>`" — checks out a branch in the current directory
+- Option C (Other): user specifies a custom name
+
+**Question 2: Approve plan**
+- Option A: "Approve" — proceed with execution
+- Option B: "Revise" — describe changes to the plan
+
+If the user chooses **worktree**, use `EnterWorktree` with the chosen name before branch setup (3a). All subsequent work happens in the worktree. Skip the branch checkout steps in 3a — the worktree already has its own branch.
 
 ### 3. Execute waves
 

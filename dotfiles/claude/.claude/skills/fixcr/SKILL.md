@@ -71,7 +71,7 @@ For each **done** item, identify the commit that addressed it.
 
 For each **separate** item, reference the component spec or ticket.
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Present the full analysis to the user:
 
@@ -132,7 +132,7 @@ Structure the reply with numbered items matching the reviewer's points.
 
 **Context mode**: Present the summary to the user as conversation output (no GitHub comment needed since the review was self-generated).
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Present the reply draft. Use `AskUserQuestion` to let the user choose:
 - Option A: "Approve and push" — post reply and push commits

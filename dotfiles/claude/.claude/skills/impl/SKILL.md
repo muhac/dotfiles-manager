@@ -80,7 +80,7 @@ Group components into **waves** based on dependency graph:
 
 Skip components with `status: completed` or `on_hold` (except in fix mode). Components with `status: in_progress` are included — they indicate a previously interrupted execution.
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly says "approve" or "continue".**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Present the execution plan, then use `AskUserQuestion` to let the user choose:
 
@@ -184,7 +184,7 @@ Focus on code-level details and return a **structured list** (not prose):
 5. Any deviations from the component spec
 ```
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Show the user:
 - Files changed per repo
@@ -245,7 +245,7 @@ Produce a **structured review report** (not prose):
 5. Suggested improvements (if any)
 ```
 
-**CHECKPOINT — HARD GATE. Do NOT proceed until the user approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Present the review report:
 - Review findings

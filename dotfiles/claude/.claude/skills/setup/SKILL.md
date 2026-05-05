@@ -56,7 +56,7 @@ For single-repo projects, **Repo Map**, **Repo-Specific Conventions**, and **Cro
 
 ### 3. Present plan
 
-**CHECKPOINT — Do NOT write anything until the user approves.**
+**CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 
 Show what was detected and what will be added or updated:
 

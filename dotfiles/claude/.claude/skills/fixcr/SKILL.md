@@ -93,13 +93,7 @@ Process fixes one at a time. For each fix:
 
 **4a. Make the change** — read the relevant source files, then edit. Follow repo conventions.
 
-**4b. Commit** — stage and commit immediately after each fix. Each fix is a **separate commit**. Use the repo's commit message convention (check recent `git log` for style):
-```bash
-git add <specific files>
-git commit -m "<type>(scope): description
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
-```
+**4b. Commit** — stage and commit immediately after each fix. Each fix is a **separate commit**. Follow the repo's commit message convention (check recent `git log` for style).
 
 Do NOT batch multiple fixes into one commit. Do NOT push yet.
 

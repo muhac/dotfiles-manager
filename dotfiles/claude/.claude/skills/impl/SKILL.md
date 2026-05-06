@@ -275,7 +275,9 @@ git push -u origin <branch>
 
 **4d. Pull request**
 
-After push succeeds, use `AskUserQuestion`:
+First check if a PR already exists for the current branch (`gh pr view --json url`). If one exists, show the URL and skip this step.
+
+Otherwise, use `AskUserQuestion`:
 - Option A: "Open PR" — create a PR with `gh pr create`
 - Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
 - Option C: "Skip" — no PR

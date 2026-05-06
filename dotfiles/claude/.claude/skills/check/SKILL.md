@@ -1,5 +1,5 @@
 ---
-description: Interactively verify a feature works end-to-end. Claude drives the verification — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates.
+description: Interactively check a feature works end-to-end. Claude drives the checking — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates.
 when_to_use: When user says "verify", "test this", "check if it works", "validate the feature".
 allowed-tools: Bash(git *) Bash(gh *)
 argument-hint: "[feature-or-topic]"
@@ -26,11 +26,11 @@ This skill optionally reads from CLAUDE.md:
 - **Feature Design Docs** — where design docs live (for finding verification checklists)
 - **Repo-Specific Conventions** — convention doc paths (for build/test/lint commands)
 
-Works without CLAUDE.md — will ask what to verify instead.
+Works without CLAUDE.md — will ask what to check instead.
 
 ## Steps
 
-### 1. Determine what to verify
+### 1. Determine what to check
 
 Parse `$ARGUMENTS`:
 - If it's a topic description → ask the user what the expected behavior is
@@ -116,7 +116,9 @@ If all pass, say so. If issues remain, summarize what needs fixing.
 
 ### 5. Pull request
 
-After the summary, use `AskUserQuestion`:
+First check if a PR already exists for the current branch (`gh pr view --json url`). If one exists, show the URL and skip this step.
+
+Otherwise, use `AskUserQuestion`:
 - Option A: "Open PR" — create a PR with `gh pr create`
 - Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
 - Option C: "Skip" — no PR

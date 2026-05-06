@@ -273,6 +273,39 @@ git push -u origin HEAD                        # workspace repo
 git push -u origin <branch>
 ```
 
+**4d. Pull request**
+
+After push succeeds, use `AskUserQuestion`:
+- Option A: "Open PR" — create a PR with `gh pr create`
+- Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
+- Option C: "Skip" — no PR
+
+If the user chooses to create a PR, spawn a **subagent** to generate the PR title and body:
+
+```text
+Generate a PR title and body for branch <branch> targeting <default-branch>.
+
+1. Run `git log <default-branch>..<branch> --oneline` to see all commits
+2. Run `git diff <default-branch>...<branch> --stat` for a file summary
+3. Read the feature README at <design-doc-directory>/README.md for context
+
+Return:
+- A PR title (under 70 characters, summarizes the feature/change)
+- A PR body in this format:
+  ## Summary
+  <1-3 bullet points>
+
+  ## Test plan
+  [Bulleted checklist of how this was verified]
+```
+
+Create the PR:
+```bash
+gh pr create --title "<title>" --body "<body>"        # or --draft for draft PR
+```
+
+Report the PR URL.
+
 ## Fix Mode
 
 When invoked with `fix NN`:

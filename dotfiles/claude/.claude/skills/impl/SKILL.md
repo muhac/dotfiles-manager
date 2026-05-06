@@ -159,12 +159,13 @@ TDD cycle:
 6. Implement the changes described in "What to implement" and "How to implement". Follow the interface contracts exactly.
 7. Run the tests again — confirm they PASS (green). Fix implementation until green.
 8. Add any additional tests discovered during implementation — internal logic, integration paths, or edge cases not apparent from the spec alone.
+9. Refactor — clean up the implementation: eliminate duplication, improve naming, simplify logic. Re-run tests after refactoring to confirm they still pass.
 
 Finalize:
-9. Run full test suite and linting (read the repo's CLAUDE.md for commands)
-10. If anything fails: fix, commit the fix, and re-run until green
-11. Commit with an appropriate message
-12. Report: files changed, commit hash, test/lint results, any issues
+10. Run full test suite and linting (read the repo's CLAUDE.md for commands)
+11. If anything fails: fix, commit the fix, and re-run until green
+12. Commit with an appropriate message
+13. Report: files changed, commit hash, test/lint results, any issues
 ```
 
 Do not proceed to review with failing tests.

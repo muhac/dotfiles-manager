@@ -20,14 +20,17 @@ function zvm_config() {
 }
 # The plugin will auto execute this zvm_after_lazy_keybindings function
 function zvm_after_lazy_keybindings() {
-  bindkey -M vicmd n vi-backward-char
-  bindkey -M vicmd e vi-down-line-or-history
-  bindkey -M vicmd u vi-up-line-or-history
-  bindkey -M vicmd i vi-forward-char
-  bindkey -M vicmd N vi-first-non-blank
-  bindkey -M vicmd I vi-end-of-line
-  bindkey -M vicmd j vi-forward-word-end
-  bindkey -M vicmd J vi-forward-blank-word-end
+  local mode
+  for mode in vicmd visual; do
+    bindkey -M $mode n vi-backward-char
+    bindkey -M $mode e vi-down-line-or-history
+    bindkey -M $mode u vi-up-line-or-history
+    bindkey -M $mode i vi-forward-char
+    bindkey -M $mode N vi-first-non-blank
+    bindkey -M $mode I vi-end-of-line
+    bindkey -M $mode j vi-forward-word-end
+    bindkey -M $mode J vi-forward-blank-word-end
+  done
   bindkey -M vicmd h zvm_enter_insert_mode
   bindkey -M vicmd H zvm_insert_bol
   bindkey -M vicmd l undo

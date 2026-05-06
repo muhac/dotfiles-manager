@@ -78,11 +78,13 @@ Spawn a **subagent** to read the relevant source code and plan all fixes. Keep i
 ```text
 Plan fixes for the following review items on branch <branch> in <repo-path>.
 
+First, run `gh pr diff <number> --repo <owner/repo>` to see what changed in the PR.
+
 Review items classified as "fix":
 [paste fix items from step 2]
 
 For each fix item:
-1. Read the relevant source file(s)
+1. Read the relevant source file(s) — use the PR diff to locate what changed
 2. Plan the specific change: file path, line range, what to change (before/after)
 3. Note if it needs a test change too
 4. Note if it affects other files or interface contracts

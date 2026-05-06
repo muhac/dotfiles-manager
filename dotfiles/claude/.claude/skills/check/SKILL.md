@@ -113,6 +113,39 @@ Issues found: 1 (details above)
 
 If all pass, say so. If issues remain, summarize what needs fixing.
 
+### 5. Pull request
+
+After the summary, use `AskUserQuestion`:
+- Option A: "Open PR" — create a PR with `gh pr create`
+- Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
+- Option C: "Skip" — no PR
+
+If the user chooses to create a PR, spawn a **subagent** to generate the PR title and body:
+
+```text
+Generate a PR title and body for branch <branch> targeting <default-branch>.
+
+1. Run `git log <default-branch>..<branch> --oneline` to see all commits
+2. Run `git diff <default-branch>...<branch> --stat` for a file summary
+3. Read the repo's CLAUDE.md for context
+
+Return:
+- A PR title (under 70 characters)
+- A PR body in this format:
+  ## Summary
+  <bullet points summarizing the changes>
+
+  ## Test plan
+  [Bulleted checklist of how this was verified]
+```
+
+Create the PR:
+```bash
+gh pr create --title "<title>" --body "<body>"        # or --draft for draft PR
+```
+
+Report the PR URL.
+
 ## Tips
 
 - Keep commands copy-pasteable — include the full command, not just a description

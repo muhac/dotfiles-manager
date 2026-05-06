@@ -1,19 +1,20 @@
 ---
 description: Interactively verify a feature works end-to-end. Claude drives the verification — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates.
 when_to_use: When user says "verify", "test this", "check if it works", "validate the feature".
+allowed-tools: Bash(git *) Bash(gh *)
 argument-hint: "[feature-or-topic]"
 ---
 
-# Verify Feature
+# Check Feature
 
-Interactively verify a feature works end-to-end. Claude drives the verification loop — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates until everything passes or issues are identified.
+Interactively check a feature works end-to-end. Claude drives the verification loop — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates until everything passes or issues are identified.
 
 ## Usage
 
 ```text
-/verify rf-0005                  # verify using design doc verification checklist
-/verify the new login flow       # verify by topic (no design doc)
-/verify                          # verify whatever was just implemented in this session
+/check rf-0005                   # check using design doc verification checklist
+/check the new login flow        # check by topic (no design doc)
+/check                           # check whatever was just implemented in this session
 ```
 
 $ARGUMENTS

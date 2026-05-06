@@ -26,13 +26,13 @@ This skill reads the following from CLAUDE.md. If CLAUDE.md doesn't exist, sugge
 
 ## Steps
 
-### 1. Load design docs
+### 1. Locate design docs
 
 Parse `$ARGUMENTS` for feature name and optional component number.
 
 Read CLAUDE.md for the design doc directory. Find the feature directory. If ambiguous, read the feature index and ask.
 
-Read the feature `README.md` for shared context. Then read the component specs to audit (all if no component specified, or just the one requested).
+Identify the paths of the README and component spec files to audit. Do NOT read them in the main context — the Explore agents will read them directly.
 
 ### 2. Audit each component
 
@@ -43,6 +43,7 @@ For each component spec, spawn an **Explore agent** to verify against the codeba
 ```text
 Audit component NN of feature <ticket> against the actual codebase.
 
+Read the feature README at <readme-path> for shared context.
 Read the component spec at <spec-path>.
 Read the repo's CLAUDE.md for conventions.
 

@@ -33,15 +33,28 @@ $ARGUMENTS
 - If `$ARGUMENTS` contains a PR URL → **GitHub mode**: fetch reviewer feedback from GitHub
 - If `$ARGUMENTS` is empty or only contains `reply` → **Context mode**: use the `/review` output already present in the conversation
 
-**GitHub mode** — parse the owner, repo, and PR number from the URL, then run in parallel:
-```bash
-gh pr view <number> --repo <owner/repo> --json title,body,state,baseRefName,headRefName
-gh pr diff <number> --repo <owner/repo>
-gh api repos/<owner/repo>/pulls/<number>/reviews --jq '.[] | select(.state != "PENDING") | "--- review \(.id) by \(.user.login) (\(.state)) ---\n\(.body)\n"'
-gh api repos/<owner/repo>/pulls/<number>/comments --paginate --jq '.[] | "--- inline \(.id) by \(.user.login) at \(.path):\(.line) ---\n\(.body)\n"'
+**GitHub mode** — spawn a **subagent** to fetch and summarize PR data. Keep raw diffs out of the main context.
+
+**Subagent prompt:**
+```text
+Fetch review feedback for PR <number> in <owner/repo>.
+
+Run these commands:
+- gh pr view <number> --repo <owner/repo> --json title,body,state,baseRefName,headRefName
+- gh api repos/<owner/repo>/pulls/<number>/reviews --jq '.[] | select(.state != "PENDING") | "--- review \(.id) by \(.user.login) (\(.state)) ---\n\(.body)\n"'
+- gh api repos/<owner/repo>/pulls/<number>/comments --paginate --jq '.[] | "--- inline \(.id) by \(.user.login) at \(.path):\(.line) ---\n\(.body)\n"'
+
+Return a **structured list** of review items:
+- Item number
+- Reviewer
+- File path and line (if inline)
+- The review comment text
+- Whether it's a question, suggestion, or required change
+
+Do NOT include the PR diff. Do NOT include resolved comments.
 ```
 
-**Context mode** — extract the numbered review items from the `/review` output in the current conversation. The PR and repo should be identifiable from the review output or the current git branch. Run `gh pr diff` if the diff is not already in context.
+**Context mode** — extract the numbered review items from the `/review` output in the current conversation. The PR and repo should be identifiable from the review output or the current git branch.
 
 In both modes, also read the repo's `CLAUDE.md` for commit and style conventions.
 
@@ -59,17 +72,29 @@ For each review item, determine:
 
 ### 3. Plan fixes
 
-For each **fix** item, read the relevant source code and plan the specific change:
-- File path and line range
-- What to change — concrete description or code snippet showing before/after
-- Whether it needs a test change too
-- Whether it affects other files or interface contracts
+Spawn a **subagent** to read the relevant source code and plan all fixes. Keep implementation details out of the main context.
 
-For each **wont-fix** item, prepare the justification (reference codebase conventions, existing patterns, or risk/reward reasoning).
+**Subagent prompt:**
+```text
+Plan fixes for the following review items on branch <branch> in <repo-path>.
 
-For each **done** item, identify the commit that addressed it.
+Review items classified as "fix":
+[paste fix items from step 2]
 
-For each **separate** item, reference the component spec or ticket.
+For each fix item:
+1. Read the relevant source file(s)
+2. Plan the specific change: file path, line range, what to change (before/after)
+3. Note if it needs a test change too
+4. Note if it affects other files or interface contracts
+
+Also check:
+- Items classified as "done": find the commit that already addressed each one
+- Items classified as "wont-fix": check codebase conventions to support the justification
+
+Return a **structured list** — one entry per review item with the planned action.
+```
+
+For each **separate** item, reference the component spec or ticket (main agent handles this from context).
 
 **CHECKPOINT — HARD GATE. Do NOT proceed until the user explicitly selects "Approve" via `AskUserQuestion`.**
 

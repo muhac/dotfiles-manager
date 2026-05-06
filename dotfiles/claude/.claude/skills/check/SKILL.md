@@ -32,13 +32,29 @@ Works without CLAUDE.md — will ask what to verify instead.
 ### 1. Determine what to verify
 
 Parse `$ARGUMENTS`:
-- If it matches a feature/ticket ID → read the design doc's component specs for `## Verification` checklists
 - If it's a topic description → ask the user what the expected behavior is
 - If empty → look at the current conversation context for what was just implemented
+- If it matches a feature/ticket ID → spawn a **subagent** to extract verification items from design docs. Keep spec content out of main context.
 
-Gather:
+**Subagent prompt** (only for feature/ticket ID):
+```text
+Read the design docs for feature <ticket>.
+
+1. Find the feature directory in the design doc location from CLAUDE.md
+2. Read the feature README and all component specs
+3. Extract every item from `## Verification` checklists across all specs
+4. Run `git diff` or `git log` on the current branch to see what changed
+5. Read the repo's CLAUDE.md for test/lint/build commands
+
+Return:
+- A flat list of verification items (from specs + standard test/lint)
+- A summary of what files changed (paths only, not content)
+- The repo's test/lint commands
+```
+
+For topic or empty mode, gather context directly:
 - **What was changed** — `git diff` or recent commits on the current branch
-- **Expected behavior** — from design docs, conversation context, or user description
+- **Expected behavior** — from conversation context or user description
 - **Existing test/lint commands** — from the repo's CLAUDE.md
 
 ### 2. Build verification plan

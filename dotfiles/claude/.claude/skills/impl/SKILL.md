@@ -293,7 +293,7 @@ Return:
 - A PR title (under 70 characters, summarizes the feature/change)
 - A PR body in this format:
   ## Summary
-  <1-3 bullet points>
+  <bullet points summarizing the changes>
 
   ## Test plan
   [Bulleted checklist of how this was verified]

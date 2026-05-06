@@ -1,5 +1,5 @@
 ---
-description: Captures a discussed feature plan into structured design docs that /impl can consume. Use after discussion or /explore when ready to write specs.
+description: Captures a discussed feature plan into structured design docs that /impl can consume. Use after discussion or /dig when ready to write specs.
 when_to_use: When user says "write spec", "capture the plan", "document the design".
 allowed-tools: Bash(git *)
 argument-hint: "[ticket] [revise] [component]"
@@ -7,7 +7,7 @@ argument-hint: "[ticket] [revise] [component]"
 
 # Write Feature Spec
 
-Captures a discussed feature plan into structured design docs that `/impl` can consume. Assumes discussion has already happened (optionally after `/explore`) — does NOT do codebase research.
+Captures a discussed feature plan into structured design docs that `/impl` can consume. Assumes discussion has already happened (optionally after `/dig`) — does NOT do codebase research.
 
 ## Usage
 
@@ -223,7 +223,7 @@ git push -u origin HEAD
 
 ## Tips
 
-- This skill turns discussion into docs — it does NOT research or propose solutions. Use `/explore` first if codebase research is needed.
+- This skill turns discussion into docs — it does NOT research or propose solutions. Use `/dig` first if codebase research is needed.
 - Keep README concise — prefer tables and diagrams over prose
 - Component specs should be self-contained — one spec = one coding session
 - Reference code by file path, not by pasting large blocks

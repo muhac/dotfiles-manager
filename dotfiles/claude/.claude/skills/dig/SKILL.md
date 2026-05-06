@@ -1,6 +1,6 @@
 ---
 description: Researches the codebase and gathers context for a feature or topic. Use when exploring code, understanding architecture, or preparing for /spec.
-when_to_use: When user asks how something works, where code lives, wants to understand a feature area, or says "explore", "investigate", "look into".
+when_to_use: When user asks how something works, where code lives, wants to understand a feature area, or says "dig", "explore", "investigate", "look into".
 argument-hint: "[ticket-or-topic] [repo-alias]"
 ---
 
@@ -11,9 +11,9 @@ Researches the codebase and gathers context for a feature or topic. Produces str
 ## Usage
 
 ```text
-/explore PROJ-123               # lookup ticket + explore all repos
-/explore PROJ-123 cli           # explore only one repo (by alias, workspace only)
-/explore some topic             # explore by topic (no ticket)
+/dig PROJ-123               # lookup ticket + explore all repos
+/dig PROJ-123 cli           # explore only one repo (by alias, workspace only)
+/dig some topic             # explore by topic (no ticket)
 ```
 
 $ARGUMENTS
@@ -105,4 +105,4 @@ No checkpoint gate — this is informational. The user will discuss, ask follow-
 - Keep findings factual — report what exists, don't propose solutions (that's discussion + `/spec`)
 - Reference code by file path and line range, not by pasting large blocks
 - If a repo is clearly not relevant, say so briefly rather than forcing a finding
-- The user may run `/explore` multiple times with different filters as discussion narrows scope
+- The user may run `/dig` multiple times with different filters as discussion narrows scope

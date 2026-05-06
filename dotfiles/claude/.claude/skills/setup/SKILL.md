@@ -1,12 +1,12 @@
 ---
-description: Ensures CLAUDE.md has the sections that /explore, /spec, and /impl expect. Detects project structure and fills in what's missing.
+description: Ensures CLAUDE.md has the sections that /dig, /spec, and /impl expect. Detects project structure and fills in what's missing.
 disable-model-invocation: true
 argument-hint: "[refresh]"
 ---
 
 # Setup CLAUDE.md
 
-Ensures CLAUDE.md has the sections that `/explore`, `/spec`, and `/impl` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
+Ensures CLAUDE.md has the sections that `/dig`, `/spec`, and `/impl` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
 
 ## Usage
 
@@ -46,7 +46,7 @@ Read the existing CLAUDE.md (if it exists). Check which of these sections are pr
 
 | Section | Required by | Purpose |
 |---------|------------|---------|
-| **Repo Map** | `/explore`, `/spec`, `/impl` | Repos, paths, default branches, tech stack |
+| **Repo Map** | `/dig`, `/spec`, `/impl` | Repos, paths, default branches, tech stack |
 | **Repo-Specific Conventions** | `/impl` | Convention doc paths per repo |
 | **Feature Design Docs** | `/spec`, `/impl` | Where design docs live, naming convention, feature index |
 | **Git Rules** | `/spec`, `/impl` | Branch naming, commit format, submodule conventions |

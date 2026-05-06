@@ -145,19 +145,26 @@ Check the component's `runtime_inputs` from metadata. For each declared input, a
 Spawn one **general-purpose subagent per component** (parallel if multiple). The main agent should NOT implement directly — keep implementation details out of the main context.
 
 ```text
-Implement component NN of feature <ticket>.
+Implement component NN of feature <ticket> using TDD.
 
 Runtime inputs: [paste resolved values from 3c. Omit if none.]
 
 1. Read <design-doc-directory>/README.md for shared context
 2. Read <design-doc-directory>/NN-*.md for the component spec
 3. Read the repo's CLAUDE.md and any convention docs for build/test/lint commands and style rules
-4. Implement the changes described in "What to implement" and "How to implement"
-5. Follow the interface contracts exactly
-6. Commit the changes with an appropriate message
-7. Run tests and linting (read the repo's CLAUDE.md for commands)
-8. If anything fails: read the error, fix the code, commit the fix, and re-run until green
-9. Report: files changed, commit hash, test/lint results, any issues
+
+TDD cycle:
+4. Write tests first — derive test cases from the spec's "What to implement", "Interface contracts", and "Verification" sections. Cover: interface contracts, expected inputs/outputs, error cases, boundary conditions.
+5. Run the tests — confirm they FAIL (red). If any pass unexpectedly, the test may be wrong — investigate before proceeding.
+6. Implement the changes described in "What to implement" and "How to implement". Follow the interface contracts exactly.
+7. Run the tests again — confirm they PASS (green). Fix implementation until green.
+8. If the implementation reveals logic that needs tests not derivable from the spec (retry, caching, concurrency, etc.), add those tests now.
+
+Finalize:
+9. Run full test suite and linting (read the repo's CLAUDE.md for commands)
+10. If anything fails: fix, commit the fix, and re-run until green
+11. Commit with an appropriate message
+12. Report: files changed, commit hash, test/lint results, any issues
 ```
 
 Do not proceed to review with failing tests.

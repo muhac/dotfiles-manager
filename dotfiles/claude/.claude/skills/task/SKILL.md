@@ -1,7 +1,7 @@
 ---
 description: Researches the codebase and gathers context for a feature or topic. Use when exploring code, understanding architecture, or preparing for /spec.
 when_to_use: When user has a new task or ticket, wants to understand a feature area, or says "task", "explore", "investigate", "look into".
-allowed-tools: Bash(git *)
+allowed-tools: Bash(git *) Bash(cd * && git *)
 argument-hint: "[ticket-or-topic] [repo-alias]"
 ---
 

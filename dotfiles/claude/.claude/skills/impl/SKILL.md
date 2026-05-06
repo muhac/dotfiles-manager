@@ -1,7 +1,7 @@
 ---
 description: Implements feature components using design docs. Reads design doc location and project structure from CLAUDE.md.
 disable-model-invocation: true
-allowed-tools: Bash(git *) Bash(gh *)
+allowed-tools: Bash(git *) Bash(cd * && git *) Bash(gh *)
 argument-hint: "[ticket] [component] [fix]"
 ---
 

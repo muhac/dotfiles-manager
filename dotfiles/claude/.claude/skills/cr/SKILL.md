@@ -1,7 +1,7 @@
 ---
 description: Spec-aware, convention-aware code review with structured output that /fixcr can consume. Multi-pass review using subagents for logic, spec compliance, and style.
 when_to_use: When user says "code review", "review my changes", "review this branch", "cr", or wants a structured review before /fixcr.
-allowed-tools: Bash(git *) Bash(gh *)
+allowed-tools: Bash(git *) Bash(cd * && git *) Bash(gh *)
 argument-hint: "[pr-url | ticket-or-feature] [nit]"
 ---
 

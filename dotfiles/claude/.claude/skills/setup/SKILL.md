@@ -1,5 +1,5 @@
 ---
-description: Ensures CLAUDE.md has the sections that /dig, /spec, /audit, /impl, /check, and /fixcr expect. Detects project structure and fills in what's missing.
+description: Ensures CLAUDE.md has the sections that /dig, /spec, /audit, /impl, /check, /cr, and /fixcr expect. Detects project structure and fills in what's missing.
 disable-model-invocation: true
 allowed-tools: Bash(git *)
 argument-hint: "[refresh]"
@@ -7,7 +7,7 @@ argument-hint: "[refresh]"
 
 # Setup CLAUDE.md
 
-Ensures CLAUDE.md has the sections that `/dig`, `/spec`, `/audit`, `/impl`, `/check`, and `/fixcr` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
+Ensures CLAUDE.md has the sections that `/dig`, `/spec`, `/audit`, `/impl`, `/check`, `/cr`, and `/fixcr` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
 
 ## Usage
 

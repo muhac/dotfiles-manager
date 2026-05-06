@@ -1,6 +1,6 @@
 ---
 description: Addresses review feedback on a PR. Classifies items, plans fixes, executes as separate commits, drafts reply, and pushes.
-when_to_use: When user shares a PR URL for fixing review comments, says "fix review", "address feedback", or has /review output in context to act on.
+when_to_use: When user shares a PR URL for fixing review comments, says "fix review", "address feedback", or has /cr or /review output in context to act on.
 allowed-tools: Bash(git *) Bash(gh *)
 argument-hint: "[pr-url] [reply]"
 ---
@@ -9,17 +9,18 @@ argument-hint: "[pr-url] [reply]"
 
 Addresses review feedback on a PR: classify each item, plan fixes, execute them as separate commits, reply to reviewer, and push.
 
-Review feedback can come from two sources:
+Review feedback can come from three sources:
 - **GitHub reviewer comments** — fetched from the PR via `gh api`
-- **`/review` output** — the self-review result already in the conversation context
+- **`/cr` output** — the structured code review result already in the conversation context
+- **`/review` output** — the built-in review result already in the conversation context
 
 ## Usage
 
 ```text
 /fixcr https://github.com/org/repo/pull/123              # fetch reviewer comments from GitHub + fix
 /fixcr https://github.com/org/repo/pull/123 reply        # draft reply only (no code changes)
-/fixcr                                                    # use /review output already in context
-/fixcr reply                                              # draft reply for /review output in context
+/fixcr                                                    # use /cr or /review output already in context
+/fixcr reply                                              # draft reply for /cr or /review output in context
 ```
 
 $ARGUMENTS
@@ -31,7 +32,7 @@ $ARGUMENTS
 **Determine the input source:**
 
 - If `$ARGUMENTS` contains a PR URL → **GitHub mode**: fetch reviewer feedback from GitHub
-- If `$ARGUMENTS` is empty or only contains `reply` → **Context mode**: use the `/review` output already present in the conversation
+- If `$ARGUMENTS` is empty or only contains `reply` → **Context mode**: use the `/cr` or `/review` output already present in the conversation
 
 **GitHub mode** — spawn a **subagent** to fetch and summarize PR data. Keep raw diffs out of the main context.
 
@@ -54,7 +55,7 @@ Return a **structured list** of review items:
 Do NOT include the PR diff. Do NOT include resolved comments.
 ```
 
-**Context mode** — extract the numbered review items from the `/review` output in the current conversation. The PR and repo should be identifiable from the review output or the current git branch.
+**Context mode** — extract the numbered review items from the `/cr` or `/review` output in the current conversation. The PR and repo should be identifiable from the review output or the current git branch.
 
 In both modes, also read the repo's `CLAUDE.md` for commit and style conventions.
 

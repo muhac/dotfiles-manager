@@ -1,12 +1,12 @@
 ---
-description: Ensures CLAUDE.md has the sections that /dig, /spec, and /impl expect. Detects project structure and fills in what's missing.
+description: Ensures CLAUDE.md has the sections that /dig, /spec, /audit, /impl, /check, and /fixcr expect. Detects project structure and fills in what's missing.
 disable-model-invocation: true
 argument-hint: "[refresh]"
 ---
 
 # Setup CLAUDE.md
 
-Ensures CLAUDE.md has the sections that `/dig`, `/spec`, and `/impl` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
+Ensures CLAUDE.md has the sections that `/dig`, `/spec`, `/audit`, `/impl`, `/check`, and `/fixcr` expect. Detects the project structure and fills in what's missing — does not overwrite existing content.
 
 ## Usage
 
@@ -47,9 +47,9 @@ Read the existing CLAUDE.md (if it exists). Check which of these sections are pr
 | Section | Required by | Purpose |
 |---------|------------|---------|
 | **Repo Map** | `/dig`, `/spec`, `/impl` | Repos, paths, default branches, tech stack |
-| **Repo-Specific Conventions** | `/impl` | Convention doc paths per repo |
-| **Feature Design Docs** | `/spec`, `/impl` | Where design docs live, naming convention, feature index |
-| **Git Rules** | `/spec`, `/impl` | Branch naming, commit format, submodule conventions |
+| **Repo-Specific Conventions** | `/impl`, `/check`, `/fixcr` | Convention doc paths, build/test/lint commands per repo |
+| **Feature Design Docs** | `/spec`, `/audit`, `/impl`, `/check` | Where design docs live, naming convention, feature index |
+| **Git Rules** | `/spec`, `/impl`, `/fixcr` | Branch naming, commit format, submodule conventions |
 | **Cross-Repo Change Rules** | `/spec` | Dependency ordering, component sequencing preferences |
 
 For single-repo projects, **Repo Map**, **Repo-Specific Conventions**, and **Cross-Repo Change Rules** can be omitted or simplified.
@@ -115,7 +115,7 @@ Also read the repo's own `repos/<repo>/CLAUDE.md` for repo-level guidelines.
 ```markdown
 ## Feature Design Docs
 
-Design docs live in `docs/features/<feature-name>/`. Each has:
+Design docs live in `docs/features/<group>/<feature-name>/` (group is optional). Each has:
 - `README.md` — shared context (problem, architecture, scope, contracts)
 - Numbered component specs (`01-*.md`, `02-*.md`, ...) — per-component implementation details
 

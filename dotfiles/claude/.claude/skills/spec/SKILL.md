@@ -159,6 +159,10 @@ Omit if the component has no cross-boundary dependencies.]
   from: component <NN>
   description: <what it is>
 
+## Observability
+[Logging, metrics, or alerting this component should add.
+Omit if the change has no runtime behavior (e.g., pure refactor, proto-only).]
+
 ## Verification
 - [ ] Linter passes
 - [ ] Tests pass

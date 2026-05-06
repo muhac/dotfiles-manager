@@ -44,7 +44,7 @@ Read the design docs for feature <ticket>.
 1. Find the feature directory in the design doc location from CLAUDE.md
 2. Read the feature README and all component specs
 3. Extract every item from `## Verification` checklists across all specs
-4. Run `git diff` or `git log` on the current branch to see what changed
+4. Run `git diff origin/<default-branch>...HEAD` (three-dot) to see what changed on this branch
 5. Read the repo's CLAUDE.md for test/lint/build commands
 
 Return:
@@ -54,7 +54,7 @@ Return:
 ```
 
 For topic or empty mode, gather context directly:
-- **What was changed** — `git diff` or recent commits on the current branch
+- **What was changed** — `git diff origin/<default-branch>...HEAD` (three-dot) or recent commits on the current branch
 - **Expected behavior** — from conversation context or user description
 - **Existing test/lint commands** — from the repo's CLAUDE.md
 

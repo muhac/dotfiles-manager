@@ -208,7 +208,7 @@ Spawn an **Explore agent** to review this wave's changes:
 ```text
 Review the changes from wave N of feature <ticket>.
 
-For each repo in this wave, run `git -C <repo-path> diff origin/<default-branch>..<branch>` to see changes.
+For each repo in this wave, run `git -C <repo-path> diff origin/<default-branch>...<branch>` to see changes (three-dot — only branch changes since fork point).
 Read the component spec(s) for this wave.
 
 Focus on code-level details and return a **structured list** (not prose):
@@ -269,7 +269,7 @@ Spawn an **Explore agent** to review the full feature:
 ```text
 Review the full implementation of feature <ticket>.
 
-For each repo with changes, run `git -C <repo-path> diff origin/<default-branch>..<branch>`.
+For each repo with changes, run `git -C <repo-path> diff origin/<default-branch>...<branch>` (three-dot — only branch changes since fork point).
 Read the feature README for the design spec.
 
 Produce a **structured review report** (not prose):

@@ -14,9 +14,3 @@
 - Use subagents for context-heavy work (debug, review, research) — main context keeps structured results only
 - Prefer selection-based interaction (AskUserQuestion) over free-text input
 - Keep responses concise
-
-## Review Standards
-
-- Priority: correctness > security > performance > style
-- Implementation must cover all spec items
-- Don't add: excessive error handling, defensive coding for impossible cases, premature abstractions

@@ -93,13 +93,38 @@ Present the execution plan, then use `AskUserQuestion` to let the user choose:
 - Option A: "Approve" — proceed with execution
 - Option B: "Revise" — describe changes to the plan
 
-If the user chooses **worktree**, use `EnterWorktree` with the chosen name before branch setup (3a). All subsequent work happens in the worktree. Skip the branch checkout steps in 3a — the worktree already has its own branch.
+If the user chooses **worktree**, use `EnterWorktree` with the chosen name before branch setup (4a). All subsequent work happens in the worktree. Skip the branch checkout steps in 4a — the worktree already has its own branch.
 
-### 3. Execute waves
+### 3. Generate interface contracts (conditional)
+
+Skip this step if there is only one component or no component specs contain `## Interface contracts`.
+
+Spawn a **subagent** to generate shared interface definitions before any implementation begins:
+
+```text
+Generate interface stubs for feature <ticket>.
+
+1. Read <design-doc-directory>/README.md — focus on "Interface Contracts" section
+2. Read all component specs — extract each "Interface contracts" section
+3. Read the repo's CLAUDE.md for language/framework conventions
+
+For each contract, generate the minimal shared definition:
+- Type definitions, function signatures, interfaces, proto messages, etc.
+- Use the project's conventions for file location and naming
+- Include only signatures and types — no implementation logic
+
+Commit the stubs with message: "contracts(<ticket>): generate interface stubs"
+
+Report: files created, contracts defined
+```
+
+Subsequent waves implement against these real definitions rather than defining their own.
+
+### 4. Execute waves
 
 For each wave, execute the following sub-steps:
 
-**3a. Branch setup**
+**4a. Branch setup**
 
 For each component in the wave, spawn one **subagent per repo** in parallel (single repo: one subagent for the current repo). Determine default branches from Repo Map in CLAUDE.md (workspace) or `git symbolic-ref refs/remotes/origin/HEAD` (single repo).
 
@@ -128,7 +153,7 @@ If any subagent reports "blocked", use `AskUserQuestion` to let the user choose:
 - Option A: "Keep and push" — push the existing branch first, then continue
 - Option B: "Discard and recreate" — delete the local branch and create a fresh one
 
-**3b. Mark in progress**
+**4b. Mark in progress**
 
 Update each component spec: set `status: in_progress`. Commit:
 ```bash
@@ -136,18 +161,18 @@ git add <design-doc-directory>
 git commit -m "status(<ticket>): mark component NN in_progress"
 ```
 
-**3c. Pre-flight check**
+**4c. Pre-flight check**
 
 Check the component's `runtime_inputs` from metadata. For each declared input, ask the user for the value before proceeding.
 
-**3d. Implement**
+**4d. Implement**
 
 Spawn one **general-purpose subagent per component** (parallel if multiple). The main agent should NOT implement directly — keep implementation details out of the main context.
 
 ```text
 Implement component NN of feature <ticket> using TDD.
 
-Runtime inputs: [paste resolved values from 3c. Omit if none.]
+Runtime inputs: [paste resolved values from 4c. Omit if none.]
 
 1. Read <design-doc-directory>/README.md for shared context
 2. Read <design-doc-directory>/NN-*.md for the component spec
@@ -176,7 +201,7 @@ git add <design-doc-directory>
 git commit -m "status(<ticket>): update component NN verification checklist"
 ```
 
-**3e. Review (per-wave, focus on details)**
+**4e. Review (per-wave, focus on details)**
 
 Spawn an **Explore agent** to review this wave's changes:
 
@@ -206,9 +231,9 @@ Use `AskUserQuestion` to let the user choose:
 - Option B: "Fix issues" — describe issues to address
 - Option C: "Discuss" — ask questions before deciding
 
-If fixes are needed: apply fixes, re-run 3d and 3e, checkpoint again.
+If fixes are needed: apply fixes, re-run 4d and 4e, checkpoint again.
 
-**3f. Update spec**
+**4f. Update spec**
 
 Set status to `completed`. If the implementation deviated from the spec, update the spec to match. Commit:
 ```bash
@@ -216,15 +241,15 @@ git add <design-doc-directory>
 git commit -m "status(<ticket>): mark component NN completed"
 ```
 
-**3g. Repeat** for the next wave.
+**4g. Repeat** for the next wave.
 
-### 4. Finalize
+### 5. Finalize
 
 After all waves complete:
 
 - Update the feature index if all components are done
 
-**4a. Full verify**
+**5a. Full verify**
 
 Run tests and linting for **all repos** modified across all waves. Spawn one **subagent per repo** in parallel:
 
@@ -237,7 +262,7 @@ Run tests and linting for <repo-path>.
 4. Report: pass/fail, what was fixed (if anything)
 ```
 
-**4b. Review agent (holistic, focus on completeness)**
+**5b. Review agent (holistic, focus on completeness)**
 
 Spawn an **Explore agent** to review the full feature:
 
@@ -266,9 +291,9 @@ Use `AskUserQuestion` to let the user choose:
 - Option B: "Fix issues" — describe issues to address
 - Option C: "Discuss" — ask questions before deciding
 
-If fixes are needed: apply, re-run 4a and 4b, checkpoint again.
+If fixes are needed: apply, re-run 5a and 5b, checkpoint again.
 
-**4c. Push**
+**5c. Push**
 
 **Workspace**: push each modified submodule repo, then push the workspace repo (design doc status updates):
 ```bash
@@ -281,7 +306,7 @@ git push -u origin HEAD                        # workspace repo
 git push -u origin <branch>
 ```
 
-**4d. Pull request**
+**5d. Pull request**
 
 First check if a PR already exists for the current branch (`gh pr view --json url`). If one exists, show the URL and skip this step.
 
@@ -321,7 +346,7 @@ Report the PR URL.
 When invoked with `fix NN`:
 
 - Does NOT skip based on status — works on completed components
-- Uses the same branch setup (3a), status tracking (3b/3f), and wave/checkpoint flow
+- Uses the same branch setup (4a), status tracking (4b/4f), and wave/checkpoint flow
 - Only executes the single specified component
 - If the fix affects interface contracts, warn the user that dependent components may need updates
 

@@ -4,3 +4,4 @@
 - Comments only when the _why_ is non-obvious
 - For non-trivial changes, write tests first (TDD).
 - Use three-dot diff (`git diff A...B`) when comparing branch changes.
+- Avoid `cd <dir> && <cmd>` — use absolute paths or tool flags (`git -C`, `grep <path>`) instead.

@@ -122,9 +122,11 @@ Use `AskUserQuestion`:
 **Handling each choice:**
 
 - **Next**: advance to the next step in the path, repeat step 4
-- **Deeper**: spawn a subagent to map the internals of the chosen function, then walk through it as a sub-path. When done, return to the parent path.
-- **Branch**: spawn a subagent to map the branch path, then walk through it. When done, return to the main path.
+- **Deeper**: spawn a subagent to map the internals of the chosen function, then walk through it as a sub-path. When done, return to the current step and re-present the options.
+- **Branch**: spawn a subagent to map the branch path, then walk through it. When done, return to the current step and re-present the options.
 - **Question**: if the question needs more code context, spawn a subagent to look it up. Answer in the main context, then re-present the options for the current step.
+
+**Stay on the current step until the user explicitly selects "Next".** Deeper, Branch, and Question all return to the same step afterwards.
 
 ### 5. Wrap up
 

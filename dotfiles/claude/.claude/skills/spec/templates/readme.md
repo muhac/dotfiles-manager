@@ -7,9 +7,8 @@
 [Data flow and component interactions. Use text diagrams if helpful.
 Workspace: describe data flow across repos.]
 
-## Scope
-[Which repos are involved and why. Which repos are NOT involved and why.
->>> WORKSPACE ONLY — omit this section for single repo projects. <<<]
+## Scope >>> WORKSPACE ONLY — omit for single repo <<<
+[Which repos are involved and why. Which repos are NOT involved and why.]
 
 ## Interface Changes
 [New or modified interfaces: CLI commands, API endpoints, SDK types,

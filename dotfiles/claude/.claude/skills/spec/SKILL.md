@@ -66,9 +66,9 @@ Read CLAUDE.md for directory naming and grouping conventions (some projects orga
 
 Create the feature directory and write:
 
-**README.md** — shared context loaded by every `/impl` session. Use the [readme template](templates/spec-readme.md). Sections marked with `>>> WORKSPACE ONLY <<<` are included only for multi-repo workspaces; for single repos, drop those sections and the Repo column from Component Overview.
+**README.md** — shared context loaded by every `/impl` session. Use the [readme template](../_shared/templates/spec-readme.md). Sections marked with `>>> WORKSPACE ONLY <<<` are included only for multi-repo workspaces; for single repos, drop those sections and the Repo column from Component Overview.
 
-**Component specs** — one numbered file per implementation session. Use the [component template](templates/spec-component.md).
+**Component specs** — one numbered file per implementation session. Use the [component template](../_shared/templates/spec-component.md).
 
 **Component ordering** — read CLAUDE.md for project-specific ordering rules. General defaults:
 1. Foundational changes (proto, shared types) come first

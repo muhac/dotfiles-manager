@@ -1,7 +1,7 @@
 ---
 description: Implements feature components using design docs. Reads design doc location and project structure from CLAUDE.md.
 when_to_use: Only when the user explicitly types /impl. Never auto-invoke.
-allowed-tools: Bash(git *) Bash(cd * && git *) Bash(gh *)
+allowed-tools: Read Bash(git *) Bash(cd * && git *) Bash(gh *)
 argument-hint: "[ticket] [component] [fix]"
 ---
 

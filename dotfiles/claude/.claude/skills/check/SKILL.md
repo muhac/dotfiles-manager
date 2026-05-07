@@ -1,7 +1,7 @@
 ---
 description: Interactively check a feature works end-to-end. Claude drives the checking — runs automated checks itself, gives manual commands to the user, analyzes results, and iterates.
 when_to_use: When user says "verify", "test this", "check if it works", "validate the feature".
-allowed-tools: Bash(git *) Bash(cd * && git *) Bash(gh *)
+allowed-tools: Read Bash(git *) Bash(cd * && git *) Bash(gh *)
 argument-hint: "[feature-or-topic]"
 ---
 

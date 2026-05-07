@@ -123,7 +123,7 @@ Otherwise, use `AskUserQuestion`:
 - Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
 - Option C: "Skip" — no PR
 
-If the user chooses to create a PR, spawn a **subagent** using the [PR template](../_shared/templates/pr.md).
+If the user chooses to create a PR, spawn a **subagent** using the [PR template](templates/pr.md).
 
 Create the PR:
 ```bash

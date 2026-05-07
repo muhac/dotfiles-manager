@@ -150,7 +150,7 @@ Return as interaction pairs with protocol and direction.
 
 Read CLAUDE.md for the **Feature Design Docs** section to determine the design doc directory (default: `docs/features/`).
 
-Create the feature directory if it doesn't exist, and write `task.md` using the [task template](../_shared/templates/task.md).
+Create the feature directory if it doesn't exist, and write `task.md` using the [task template](templates/task.md).
 
 Adapt the template to what was actually found:
 - Skip diagram sections that don't apply (e.g., no sequence diagram for single-service changes)

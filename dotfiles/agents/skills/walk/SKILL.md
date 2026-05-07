@@ -1,4 +1,5 @@
 ---
+name: walk
 description: Interactively walks through a code path step by step. Guides the user through call chains, data flows, and request handling with explanations at each step.
 when_to_use: When user says "walk me through", "explain the flow", "how does X work", "trace through", "show me how".
 allowed-tools: Read Bash(git *) Bash(cd * && git *)

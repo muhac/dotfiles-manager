@@ -60,6 +60,27 @@ SOURCES=()
 TARGETS=()
 ENTRY_FLAGS=()
 
+expand_dest() {
+    local path="$1"
+    case "$path" in
+        "~")
+            printf '%s\n' "$HOME"
+            ;;
+        "~/"*)
+            printf '%s\n' "$HOME/${path#"~/"}"
+            ;;
+        '$HOME')
+            printf '%s\n' "$HOME"
+            ;;
+        '$HOME/'*)
+            printf '%s\n' "$HOME/${path#"\$HOME/"}"
+            ;;
+        *)
+            printf '%s\n' "$path"
+            ;;
+    esac
+}
+
 while IFS= read -r line || [[ -n "$line" ]]; do
     line="${line%%#*}"
     line="${line%$'\r'}"
@@ -77,7 +98,18 @@ while IFS= read -r line || [[ -n "$line" ]]; do
             dest="$f"
         fi
     done
-    dest="${dest:-$HOME}"
+    dest_provided=1
+    if [[ -z "$dest" ]]; then
+        dest="$HOME/"
+        dest_provided=0
+    fi
+    dest_is_root=0
+    [[ "$dest" == */ ]] && dest_is_root=1
+    dest="$(expand_dest "$dest")"
+    if [[ "$dest_is_root" == "1" ]]; then
+        dest="${dest%/}"
+        [[ -z "$dest" ]] && dest="/"
+    fi
 
     # Strip trailing / (convention only)
     src="${src%/}"
@@ -115,7 +147,11 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
     source_path="$SHELL_FOLDER/dotfiles/$src"
     rel="${src#*/}"
-    target_path="$dest/$rel"
+    if [[ "$dest_is_root" == "1" || "$dest_provided" == "0" ]]; then
+        target_path="$dest/$rel"
+    else
+        target_path="$dest"
+    fi
 
     SOURCES+=("$source_path")
     TARGETS+=("$target_path")
@@ -172,6 +208,7 @@ for i in "${!SOURCES[@]}"; do
 
     if [[ -d "$source_path" ]]; then
         # Directory: link as a whole
+        mkdir -p "$(dirname "$target_path")"
         if [[ -d "$target_path" && ! -L "$target_path" ]]; then
             echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
             continue

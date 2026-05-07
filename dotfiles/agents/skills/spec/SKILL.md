@@ -1,4 +1,5 @@
 ---
+name: spec
 description: Captures a discussed feature plan into structured design docs that /impl can consume. Use after discussion or /task when ready to write specs.
 when_to_use: When user says "write spec", "capture the plan", "document the design".
 allowed-tools: Read Bash(git *) Bash(cd * && git *)

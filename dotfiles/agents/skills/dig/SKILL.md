@@ -1,4 +1,5 @@
 ---
+name: dig
 description: Debugs a problem by systematically narrowing down the root cause using subagents. Keeps raw traces and file content out of main context.
 when_to_use: When user reports a bug, error, test failure, unexpected behavior, or says "dig", "debug", "investigate this error", "why is this failing".
 allowed-tools: Bash(git *) Bash(cd * && git *) Bash(gh *)

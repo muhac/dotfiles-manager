@@ -1,4 +1,5 @@
 ---
+name: task
 description: Researches the codebase and gathers context for a feature or topic. Produces a task.md document with diagrams to fuel /spec.
 when_to_use: When user has a new task or ticket, wants to understand a feature area, or says "task", "explore", "investigate", "look into".
 allowed-tools: Read Bash(git *) Bash(cd * && git *)

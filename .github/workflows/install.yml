@@ -99,6 +99,8 @@ jobs:
 
       - name: Verify Codex config sync
         run: |
+          test -f "$HOME/.codex/config.toml"
+          test ! -L "$HOME/.codex/config.toml"
           grep -Fq 'project_doc_fallback_filenames' "$HOME/.codex/config.toml"
           test ! -e "$HOME/.local/bin/dotctl"
           test ! -e "$HOME/.local/bin/dotctl.exe"

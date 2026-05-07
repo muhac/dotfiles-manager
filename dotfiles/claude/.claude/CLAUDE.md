@@ -4,6 +4,7 @@
 - Comments only when the _why_ is non-obvious
 - For non-trivial changes, write tests first (TDD).
 - Use three-dot diff (`git diff A...B`) when comparing branch changes.
+- Push rejected by remote: rebase onto latest and retry. If conflicts are unclear, ask the user.
 
 # Tool Usage
 

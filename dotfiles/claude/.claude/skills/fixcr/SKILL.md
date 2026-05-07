@@ -132,6 +132,7 @@ After all fix commits are made:
 1. **Lint + test** — run the repo's lint + test commands as a regression check. Read `CLAUDE.md` or `Makefile` in the target repo for the correct commands. If anything fails: fix, commit the fix, re-run until green.
 
 2. **Cross-change review** — review all fix commits together (`git diff` from before the first fix to HEAD). Check for:
+   - Behavioral changes — any fix that changes observable behavior beyond what the review finding requested. Do NOT assume subtle changes are acceptable.
    - Inconsistencies between fixes (e.g., one fix uses a pattern that conflicts with another)
    - Naming or style drift across changes
    - Missing updates in related code (e.g., a fix changed a function signature but a caller wasn't updated)

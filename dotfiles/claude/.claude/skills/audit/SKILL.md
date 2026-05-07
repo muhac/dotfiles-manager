@@ -1,6 +1,7 @@
 ---
 description: Reviews design docs against the actual codebase before implementation. Catches wrong file paths, outdated interfaces, incorrect assumptions, and missing dependencies.
 when_to_use: When user says "audit", "review the spec", "check the design", "sanity check before implementing".
+allowed-tools: Bash(git *) Bash(cd * && git *)
 argument-hint: "[ticket-or-feature]"
 ---
 

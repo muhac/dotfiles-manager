@@ -164,9 +164,10 @@ Fix: <what to change>
 1. Read the file and understand the surrounding context
 2. Read the repo's CLAUDE.md for conventions
 3. Make the fix
-4. If a test was failing, run it to confirm it passes now
-5. Run the repo's test suite to check for regressions
-6. Commit with an appropriate message
+4. Behavioral change check — verify the fix ONLY changes the broken behavior. If any other observable behavior changes (return values, side effects, error messages, defaults, etc.), STOP and report it before continuing.
+5. If a test was failing, run it to confirm it passes now
+6. Run the repo's test suite to check for regressions
+7. Commit with an appropriate message
 
 Report: what changed, test results, commit hash
 ```

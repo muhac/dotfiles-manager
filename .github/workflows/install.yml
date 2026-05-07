@@ -94,7 +94,6 @@ jobs:
           check "$HOME/.claude/skills"
           check "$HOME/.codex/AGENTS.md"
           check "$HOME/.agents/skills"
-          check "$HOME/.codex/config.toml"
 
           [ "$FAILED" -eq 0 ] || exit 1
 

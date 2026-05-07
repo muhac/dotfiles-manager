@@ -104,12 +104,13 @@ Review for:
 4. Security — injection, auth bypass, sensitive data exposure, unsafe deserialization
 5. Resource management — leaks (connections, goroutines, file handles), missing timeouts
 6. Dead code — unreachable branches, unused variables, redundant checks
+7. Behavioral changes — any change in observable behavior vs the code before this branch (return values, side effects, error messages, event ordering, defaults). Do NOT assume subtle changes are acceptable. Flag every behavioral difference, even if it looks intentional.
 
 For each finding, return:
 - severity: error | warning | suggestion
 - file: <path>
 - line: <line-number or range>
-- category: bug | error-handling | edge-case | security | resource | dead-code
+- category: bug | error-handling | edge-case | security | resource | dead-code | behavioral-change
 - finding: <one-line description>
 - rationale: <why this is a problem, what could go wrong>
 - suggestion: <how to fix it>

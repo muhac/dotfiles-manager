@@ -97,6 +97,16 @@ Function signatures, message types, RPC names, CLI flags, shared types, etc.]
 ## Related Features
 [Links to related feature docs, if any. Omit if none.]
 
+## Behavioral Changes
+[Any difference between current behavior and new behavior. Do NOT omit
+this section — if there are no behavioral changes, state that explicitly.
+Do NOT assume subtle changes are acceptable. Every change in observable
+behavior must be listed, no matter how minor, with:
+- Current behavior (what happens today)
+- New behavior (what will happen after this feature)
+- Impact (who/what is affected, is it breaking)
+- Resolution (accepted, needs migration, needs flag, needs discussion)]
+
 ## Design Decisions
 [Key trade-offs and why this approach was chosen]
 ```
@@ -122,6 +132,16 @@ Omit if the feature is self-contained within one module.]
 ## Component Overview
 | # | Component | Parallel | Dependencies | Description |
 |---|-----------|----------|-------------|-------------|
+
+## Behavioral Changes
+[Any difference between current behavior and new behavior. Do NOT omit
+this section — if there are no behavioral changes, state that explicitly.
+Do NOT assume subtle changes are acceptable. Every change in observable
+behavior must be listed, no matter how minor, with:
+- Current behavior (what happens today)
+- New behavior (what will happen after this feature)
+- Impact (who/what is affected, is it breaking)
+- Resolution (accepted, needs migration, needs flag, needs discussion)]
 
 ## Design Decisions
 [Key trade-offs and why this approach was chosen]

@@ -183,8 +183,9 @@ TDD cycle:
 5. Run the tests — confirm they FAIL (red). If any pass unexpectedly, the test may be wrong — investigate before proceeding.
 6. Implement the changes described in "What to implement" and "How to implement". Follow the interface contracts exactly.
 7. Run the tests again — confirm they PASS (green). Fix implementation until green.
-8. Add any additional tests discovered during implementation — internal logic, integration paths, or edge cases not apparent from the spec alone.
-9. Refactor — clean up the implementation: eliminate duplication, improve naming, simplify logic. Re-run tests after refactoring to confirm they still pass.
+8. Behavioral change check — compare current behavior with new behavior. If ANY observable behavior changes (return values, side effects, error messages, event ordering, default values, etc.), flag it explicitly. Do NOT assume subtle changes are acceptable. If the spec has a "Behavioral Changes" section, verify every item is handled correctly. If you discover an undocumented behavioral change, STOP and report it before continuing.
+9. Add any additional tests discovered during implementation — internal logic, integration paths, or edge cases not apparent from the spec alone.
+10. Refactor — clean up the implementation: eliminate duplication, improve naming, simplify logic. Re-run tests after refactoring to confirm they still pass.
 
 Finalize:
 10. Run full test suite and linting (read the repo's CLAUDE.md for commands)

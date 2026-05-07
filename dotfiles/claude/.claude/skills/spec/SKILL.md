@@ -45,18 +45,20 @@ git fetch origin && git checkout <default-branch> && git pull --rebase origin <d
 git checkout <branch-name> 2>/dev/null || git checkout -b <branch-name>
 ```
 
-### 2. Extract from conversation context
+### 2. Extract from conversation context and task.md
 
-Scan the current conversation for the feature's decided plan. Extract:
+Check if a `task.md` exists in the feature directory (produced by `/task`). If it does, read it — it contains research findings, diagrams, dependency chains, and interface boundaries that inform the spec.
+
+Scan both `task.md` (if present) and the current conversation for the feature's decided plan. Extract:
 
 - **Problem**: what problem does this solve
-- **Architecture**: data flow, component interactions
+- **Architecture**: data flow, component interactions (leverage diagrams from `task.md` if available)
 - **Scope**: which repos/services/modules need changes and why
 - **Components**: how the work breaks down into implementable units
 - **Interface contracts**: interfaces across boundaries — function signatures, API endpoints, proto messages, CLI flags, shared types (applies to cross-repo, cross-service, and cross-module boundaries)
 - **Design decisions**: key trade-offs and why this approach was chosen
 
-If critical information is missing (e.g., no clear component breakdown, unclear scope), ask the user to fill in the gaps before proceeding. Do NOT invent answers — the conversation should already contain the plan.
+If critical information is missing (e.g., no clear component breakdown, unclear scope), ask the user to fill in the gaps before proceeding. Do NOT invent answers — the conversation and `task.md` should already contain the plan.
 
 ### 3. Write design docs
 

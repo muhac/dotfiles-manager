@@ -15,7 +15,74 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build-dotctl:
+    name: Build dotctl (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x64
+            os: ubuntu-latest
+            asset: dotctl-linux-x64
+            bin: dotctl
+            target: ""
+          - name: macos-x64
+            os: macos-latest
+            asset: dotctl-macos-x64
+            bin: dotctl
+            target: x86_64-apple-darwin
+          - name: macos-arm64
+            os: macos-latest
+            asset: dotctl-macos-arm64
+            bin: dotctl
+            target: aarch64-apple-darwin
+          - name: windows-x64
+            os: windows-latest
+            asset: dotctl-windows-x64.exe
+            bin: dotctl.exe
+            target: ""
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add Rust target
+        if: matrix.target != ''
+        run: rustup target add "${{ matrix.target }}"
+
+      - name: Build dotctl
+        run: |
+          args=(--manifest-path dotctl/Cargo.toml --release --target-dir target/dotctl)
+          if [ -n "${{ matrix.target }}" ]; then
+            args+=(--target "${{ matrix.target }}")
+          fi
+          cargo build "${args[@]}"
+
+      - name: Package dotctl
+        run: |
+          mkdir -p dist
+          if [ -n "${{ matrix.target }}" ]; then
+            src="target/dotctl/${{ matrix.target }}/release/${{ matrix.bin }}"
+          else
+            src="target/dotctl/release/${{ matrix.bin }}"
+          fi
+          cp "$src" "dist/${{ matrix.asset }}"
+          chmod +x "dist/${{ matrix.asset }}"
+
+      - name: Upload dotctl artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotctl-${{ matrix.name }}
+          path: dist/${{ matrix.asset }}
+
   deploy:
+    needs: build-dotctl
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -24,13 +91,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Download dotctl artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dotctl-artifacts
+          pattern: dotctl-*
+          merge-multiple: true
+
       - name: Generate install.sh
         env:
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+          DOTCTL_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: |
           mkdir -p _site
-          sed "s|__REPO_URL__|${REPO_URL}|g" init.sh > _site/install.sh
+          sed \
+            -e "s|__REPO_URL__|${REPO_URL}|g" \
+            -e "s|__DOTCTL_BASE_URL__|${DOTCTL_BASE_URL}|g" \
+            init.sh > _site/install.sh
           chmod +x _site/install.sh
+          mkdir -p _site/bin
+          cp dotctl-artifacts/* _site/bin/
+          chmod +x _site/bin/*
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

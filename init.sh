@@ -2,11 +2,23 @@
 set -e
 
 REPO_URL_PLACEHOLDER="__REPO""_URL__"
+DOTCTL_BASE_URL_PLACEHOLDER="__DOTCTL""_BASE_URL__"
 REPO_URL="${REPO_URL:-__REPO_URL__}"
+DOTCTL_BASE_URL="${DOTCTL_BASE_URL:-__DOTCTL_BASE_URL__}"
 BRANCH="${BRANCH:-main}"
 CLONE_DIR="$HOME/.dotfiles"
 AUTO_STASH_DIRTY="${AUTO_STASH_DIRTY:-0}"
 FIX_ORIGIN_URL="${FIX_ORIGIN_URL:-0}"
+RUN_DOTCTL="${RUN_DOTCTL:-1}"
+DOWNLOAD_DOTCTL="${DOWNLOAD_DOTCTL:-1}"
+DOTCTL_TMP_DIR=""
+
+cleanup_dotctl() {
+  if [ -n "$DOTCTL_TMP_DIR" ] && [ -d "$DOTCTL_TMP_DIR" ]; then
+    rm -rf "$DOTCTL_TMP_DIR"
+  fi
+}
+trap cleanup_dotctl EXIT
 
 normalize_repo_url() {
   local url="$1"
@@ -39,6 +51,112 @@ normalize_repo_url() {
   esac
 
   echo "$url"
+}
+
+dotctl_asset_name() {
+  local os
+  local arch
+  local exe=""
+
+  case "$(uname -s)" in
+    Darwin)
+      os="macos"
+      ;;
+    Linux)
+      os="linux"
+      ;;
+    MINGW*|MSYS*|CYGWIN*)
+      os="windows"
+      exe=".exe"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  case "$(uname -m)" in
+    x86_64|amd64)
+      arch="x64"
+      ;;
+    arm64|aarch64)
+      arch="arm64"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  echo "dotctl-${os}-${arch}${exe}"
+}
+
+download_dotctl() {
+  if [ "$DOWNLOAD_DOTCTL" != "1" ]; then
+    echo "Skipping dotctl download (DOWNLOAD_DOTCTL=$DOWNLOAD_DOTCTL)"
+    return 1
+  fi
+
+  if [ -z "$DOTCTL_BASE_URL" ] || [ "$DOTCTL_BASE_URL" = "$DOTCTL_BASE_URL_PLACEHOLDER" ]; then
+    echo >&2 "Warning: DOTCTL_BASE_URL is not set, skipping dotctl download."
+    return 1
+  fi
+
+  command -v curl >/dev/null 2>&1 || {
+    echo >&2 "Warning: curl is required to download dotctl, skipping."
+    return 1
+  }
+
+  local asset
+  if ! asset="$(dotctl_asset_name)"; then
+    echo >&2 "Warning: unsupported OS/architecture for prebuilt dotctl: $(uname -s)/$(uname -m)"
+    return 1
+  fi
+
+  local tmp_parent="${TMPDIR:-/tmp}"
+  tmp_parent="${tmp_parent%/}"
+  if ! DOTCTL_TMP_DIR="$(mktemp -d "$tmp_parent/dotctl.XXXXXX")"; then
+    echo >&2 "Warning: failed to create temporary directory for dotctl."
+    return 1
+  fi
+
+  local bin="$DOTCTL_TMP_DIR/dotctl"
+  if [ "${asset%.exe}" != "$asset" ]; then
+    bin="$DOTCTL_TMP_DIR/dotctl.exe"
+  fi
+
+  echo "Downloading dotctl from $DOTCTL_BASE_URL/bin/$asset..."
+  if ! curl -fsSL "$DOTCTL_BASE_URL/bin/$asset" -o "$bin"; then
+    echo >&2 "Warning: failed to download dotctl."
+    return 1
+  fi
+  if ! chmod +x "$bin"; then
+    echo >&2 "Warning: failed to make dotctl executable."
+    return 1
+  fi
+  DOTCTL_BIN="$bin"
+}
+
+run_dotctl() {
+  if [ "$RUN_DOTCTL" != "1" ]; then
+    echo "Skipping dotctl sync (RUN_DOTCTL=$RUN_DOTCTL)"
+    return
+  fi
+
+  local dotctl_bin
+  dotctl_bin="$(command -v dotctl 2>/dev/null || true)"
+
+  if [ -z "$dotctl_bin" ]; then
+    if download_dotctl; then
+      dotctl_bin="$DOTCTL_BIN"
+    fi
+  fi
+
+  if [ -z "$dotctl_bin" ]; then
+    echo >&2 "Warning: dotctl is not available, skipping Codex config sync."
+    return
+  fi
+
+  echo "Syncing Codex config with dotctl..."
+  (cd "$CLONE_DIR" && "$dotctl_bin" push codex --backup)
 }
 
 if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then
@@ -98,3 +216,5 @@ fi
 
 echo "Running symlink.sh..."
 bash "$CLONE_DIR/symlink.sh"
+
+run_dotctl

@@ -113,16 +113,21 @@ directory. Paths in `source` are resolved relative to that file. Paths in
 V1 fully supports TOML targets. JSON targets are part of the format abstraction
 but are not implemented yet.
 
-## Migration Notes
+## Installer Integration
 
-For now, Codex config is still linked by `symlink.conf`. The intended migration
-is:
+The published installer downloads the prebuilt `dotctl` binary from GitHub
+Pages into a temporary directory when `dotctl` is not already available on
+`PATH`, then runs:
 
-1. Keep the shared Codex fields in `dotfiles/codex/.codex/config.sync.toml`.
-2. Run `dotctl push codex --dry-run` and inspect the planned writes.
-3. Remove `codex/.codex/config.toml` from `symlink.conf`.
-4. Replace the existing symlinked `~/.codex/config.toml` with a real file.
-5. Run `dotctl push codex`.
+```sh
+dotctl push codex --backup
+```
 
-After migration, Codex can keep local-only state in `~/.codex/config.toml`
-without writing that state back to the repository.
+This applies repo-managed Codex fields from
+`dotfiles/codex/.codex/config.sync.toml` into the real
+`~/.codex/config.toml` while preserving local-only state such as model provider
+tokens, trusted project paths, counters, and other app-owned fields.
+
+The temporary binary is removed when the installer exits. Set
+`DOWNLOAD_DOTCTL=0` to skip the fallback download, or `RUN_DOTCTL=0` to skip
+the config push during remote install.

@@ -65,4 +65,10 @@ jobs:
           # cmux
           check "$HOME/.config/cmux/settings.json"
 
+          # agents
+          check "$HOME/.claude/CLAUDE.md"
+          check "$HOME/.claude/skills"
+          check "$HOME/.codex/AGENTS.md"
+          check "$HOME/.agents/skills"
+
           [ "$FAILED" -eq 0 ] || exit 1

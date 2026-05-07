@@ -56,6 +56,8 @@ jobs:
           check_link "$HOME/.config/nvim/init.vim"
           check_link "$HOME/.config/cmux/settings.json"
           check_link "$HOME/.config/ghostty/config"
+          check_link "$HOME/.claude/CLAUDE.md"
+          check_link "$HOME/.codex/AGENTS.md"
 
           [ "$FAILED" -eq 0 ] || exit 1
 
@@ -75,6 +77,8 @@ jobs:
           check_dir_link "$HOME/.vim"
           check_dir_link "$HOME/.oh-my-zsh"
           check_dir_link "$HOME/.oh-my-zsh-custom"
+          check_dir_link "$HOME/.claude/skills"
+          check_dir_link "$HOME/.agents/skills"
 
           [ "$FAILED" -eq 0 ] || exit 1
 

@@ -47,6 +47,10 @@ jobs:
             echo "Placeholder __REPO_URL__ was not replaced in published script."
             exit 1
           fi
+          if grep -Fq '__DOTCTL_BASE_URL__' /tmp/published-install.sh; then
+            echo "Placeholder __DOTCTL_BASE_URL__ was not replaced in published script."
+            exit 1
+          fi
 
       - name: Run published install.sh
         run: bash /tmp/published-install.sh
@@ -85,4 +89,17 @@ jobs:
           # cmux
           check "$HOME/.config/cmux/settings.json"
 
+          # agents
+          check "$HOME/.claude/CLAUDE.md"
+          check "$HOME/.claude/skills"
+          check "$HOME/.codex/AGENTS.md"
+          check "$HOME/.agents/skills"
+          check "$HOME/.codex/config.toml"
+
           [ "$FAILED" -eq 0 ] || exit 1
+
+      - name: Verify Codex config sync
+        run: |
+          grep -Fq 'project_doc_fallback_filenames' "$HOME/.codex/config.toml"
+          test ! -e "$HOME/.local/bin/dotctl"
+          test ! -e "$HOME/.local/bin/dotctl.exe"

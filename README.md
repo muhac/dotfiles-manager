@@ -13,6 +13,9 @@ curl -fsSL https://muhac.github.io/dotfiles-manager/install.sh | bash
 ```
 
 This downloads the published installer, clones the repo to `~/.dotfiles`, and creates symlinks.
+It also applies repo-managed Codex config fields into `~/.codex/config.toml` with `dotctl`.
+If `dotctl` is not already available on `PATH`, the installer downloads the published binary
+to a temporary directory and removes it when the installer exits.
 
 Supported parameters for Option 1 (set before `bash`):
 
@@ -21,6 +24,8 @@ Supported parameters for Option 1 (set before `bash`):
 - `FIX_ORIGIN_URL=1`: auto-fix `origin` URL when it differs from expected repository URL.
 - `CLEAN_BROKEN_LINKS=0`: skip broken symlink cleanup in `symlink.sh`.
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to remote tracking branches (default keeps pinned SHAs).
+- `RUN_DOTCTL=0`: skip applying managed app config with `dotctl`.
+- `DOWNLOAD_DOTCTL=0`: skip downloading the published `dotctl` binary when it is not already on `PATH`.
 
 Example:
 
@@ -42,6 +47,7 @@ bash install.sh
 - `install.sh`: repository entrypoint for local/dev setup.
 - `symlink.sh`: reads `symlink.conf` and links dotfiles into `$HOME`.
 - `symlink.conf`: declarative config — see comments in file for format.
+- `dotctl`: Rust CLI for syncing selected app-owned config fields, such as Codex config.
 
 ## Useful environment variables
 
@@ -51,3 +57,5 @@ bash install.sh
 - `SKIP_SYSTEM_SETUP=1`: skip Linux system setup in `install.sh` (Option 2).
 - `CLEAN_BROKEN_LINKS=0`: skip broken symlink cleanup in `symlink.sh`.
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to their remote tracking branches in `symlink.sh`. Defaults to pinned SHAs for reproducibility.
+- `RUN_DOTCTL=0`: skip applying managed app config in the remote installer.
+- `DOWNLOAD_DOTCTL=0`: skip downloading the published `dotctl` binary when it is not already on `PATH`.

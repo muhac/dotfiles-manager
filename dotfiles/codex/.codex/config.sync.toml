@@ -1,5 +1,11 @@
 project_doc_fallback_filenames = ["CLAUDE.md"]
 project_doc_max_bytes = 65536
+developer_instructions = """
+When Codex creates a git commit:
+- Use a conventional-commit subject.
+- Include a commit body for non-trivial changes. Explain the motivation, the key implementation details, and the validation performed.
+- Include this trailer: Co-authored-by: Codex <noreply@openai.com>.
+"""
 
 [notice]
 hide_rate_limit_model_nudge = true
@@ -7,7 +13,7 @@ hide_rate_limit_model_nudge = true
 [tui]
 notification_condition = "always"
 theme = "monokai-extended"
-status_line = ["git-branch", "model", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "five-hour-limit", "weekly-limit"]
+status_line = ["task-progress", "git-branch", "model-with-reasoning", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "five-hour-limit", "weekly-limit"]
 
 [plugins."github@openai-curated"]
 enabled = true

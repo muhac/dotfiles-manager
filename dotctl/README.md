@@ -31,6 +31,7 @@ targets:
     sync:
       - project_doc_fallback_filenames
       - project_doc_max_bytes
+      - developer_instructions
       - tui.notification_condition
       - tui.status_line
       - tui.theme

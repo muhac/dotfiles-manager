@@ -6,6 +6,7 @@ targets:
     sync:
       - project_doc_fallback_filenames
       - project_doc_max_bytes
+      - developer_instructions
       - notice.hide_rate_limit_model_nudge
       - tui.notification_condition
       - tui.theme

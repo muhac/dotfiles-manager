@@ -123,24 +123,7 @@ Otherwise, use `AskUserQuestion`:
 - Option B: "Draft PR" — create a draft PR with `gh pr create --draft`
 - Option C: "Skip" — no PR
 
-If the user chooses to create a PR, spawn a **subagent** to generate the PR title and body:
-
-```text
-Generate a PR title and body for branch <branch> targeting <default-branch>.
-
-1. Run `git log <default-branch>..<branch> --oneline` to see all commits
-2. Run `git diff <default-branch>...<branch> --stat` for a file summary
-3. Read the repo's CLAUDE.md for context
-
-Return:
-- A PR title (under 70 characters)
-- A PR body in this format:
-  ## Summary
-  <bullet points summarizing the changes>
-
-  ## Test plan
-  [Bulleted checklist of how this was verified]
-```
+If the user chooses to create a PR, spawn a **subagent** using the [PR template](../_shared/templates/pr.md).
 
 Create the PR:
 ```bash

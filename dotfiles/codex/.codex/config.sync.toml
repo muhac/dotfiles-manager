@@ -13,7 +13,7 @@ hide_rate_limit_model_nudge = true
 [tui]
 notification_condition = "always"
 theme = "monokai-extended"
-status_line = ["task-progress", "git-branch", "model-with-reasoning", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "context-window-size", "five-hour-limit", "weekly-limit"]
+status_line = ["task-progress", "git-branch", "model-with-reasoning", "used-tokens", "total-input-tokens", "total-output-tokens", "context-remaining", "five-hour-limit", "weekly-limit"]
 
 [plugins."github@openai-curated"]
 enabled = true

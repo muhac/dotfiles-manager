@@ -5,6 +5,8 @@ When Codex creates a git commit:
 - Use a conventional-commit subject.
 - Include a commit body for non-trivial changes. Explain the motivation, the key implementation details, and the validation performed.
 - Include this trailer: Co-authored-by: Codex <noreply@openai.com>.
+
+When Codex uses the GitHub CLI (`gh`), run it outside the sandbox by requesting escalation with `sandbox_permissions = "require_escalated"`. This avoids recurring sandbox, network, and authentication failures.
 """
 
 [notice]

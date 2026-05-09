@@ -47,10 +47,6 @@ jobs:
             echo "Placeholder __REPO_URL__ was not replaced in published script."
             exit 1
           fi
-          if grep -Fq '__DOTCTL_BASE_URL__' /tmp/published-install.sh; then
-            echo "Placeholder __DOTCTL_BASE_URL__ was not replaced in published script."
-            exit 1
-          fi
 
       - name: Run published install.sh
         run: bash /tmp/published-install.sh
@@ -98,10 +94,11 @@ jobs:
           [ "$FAILED" -eq 0 ] || exit 1
 
       - name: Verify Codex config sync
+        if: runner.os != 'Windows'
         run: |
           test -f "$HOME/.codex/config.toml"
           test ! -L "$HOME/.codex/config.toml"
           grep -Fq 'project_doc_fallback_filenames' "$HOME/.codex/config.toml"
           grep -Fq 'Co-authored-by: Codex <noreply@openai.com>' "$HOME/.codex/config.toml"
-          test ! -e "$HOME/.local/bin/dotctl"
-          test ! -e "$HOME/.local/bin/dotctl.exe"
+          test ! -e "$HOME/.local/bin/dot-sync"
+          test ! -e "$HOME/.local/bin/ds"

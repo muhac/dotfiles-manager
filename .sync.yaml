@@ -12,6 +12,3 @@ targets:
       - tui.theme
       - tui.status_line
       - plugins."github@openai-curated".enabled
-    deny:
-      - projects
-      - tui.model_availability_nux

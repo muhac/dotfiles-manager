@@ -14,7 +14,7 @@ curl -fsSL https://muhac.github.io/dotfiles-manager/install.sh | bash
 
 This downloads the published installer, clones the repo to `~/.dotfiles`, and creates symlinks.
 It also applies repo-managed Codex config fields into `~/.codex/config.toml` with
-`dot-sync`. The installer installs the `dot-sync` nightly release into a temporary
+[`dot-sync`](https://github.com/muhac/dot-sync). The installer installs the [`dot-sync`](https://github.com/muhac/dot-sync) nightly release into a temporary
 directory and removes it when the installer exits.
 
 Supported parameters for Option 1 (set before `bash`):
@@ -24,8 +24,8 @@ Supported parameters for Option 1 (set before `bash`):
 - `FIX_ORIGIN_URL=1`: auto-fix `origin` URL when it differs from expected repository URL.
 - `CLEAN_BROKEN_LINKS=0`: skip broken symlink cleanup in `symlink.sh`.
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to remote tracking branches (default keeps pinned SHAs).
-- `RUN_DOT_SYNC=0`: skip applying managed app config with `dot-sync`.
-- `DOT_SYNC_INSTALL_URL`: override the `dot-sync` installer URL.
+- `RUN_DOT_SYNC=0`: skip applying managed app config with [`dot-sync`](https://github.com/muhac/dot-sync).
+- `DOT_SYNC_INSTALL_URL`: override the [`dot-sync`](https://github.com/muhac/dot-sync) installer URL.
 
 Example:
 
@@ -47,7 +47,7 @@ bash install.sh
 - `install.sh`: repository entrypoint for local/dev setup.
 - `symlink.sh`: reads `symlink.conf` and links dotfiles into `$HOME`.
 - `symlink.conf`: declarative config — see comments in file for format.
-- `.sync.yaml`: `dot-sync` config for selected app-owned config fields, such as Codex config.
+- `.sync.yaml`: [`dot-sync`](https://github.com/muhac/dot-sync) config for selected app-owned config fields, such as Codex config.
 
 ## Related Projects
 
@@ -62,4 +62,4 @@ bash install.sh
 - `CLEAN_BROKEN_LINKS=0`: skip broken symlink cleanup in `symlink.sh`.
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to their remote tracking branches in `symlink.sh`. Defaults to pinned SHAs for reproducibility.
 - `RUN_DOT_SYNC=0`: skip applying managed app config in the remote installer.
-- `DOT_SYNC_INSTALL_URL`: override the `dot-sync` installer URL.
+- `DOT_SYNC_INSTALL_URL`: override the [`dot-sync`](https://github.com/muhac/dot-sync) installer URL.

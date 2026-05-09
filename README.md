@@ -49,6 +49,10 @@ bash install.sh
 - `symlink.conf`: declarative config — see comments in file for format.
 - `.sync.yaml`: `dot-sync` config for selected app-owned config fields, such as Codex config.
 
+## Related Projects
+
+- [`dot-sync`](https://github.com/muhac/dot-sync): sync selected fields between structured config files without owning the whole file.
+
 ## Useful environment variables
 
 - `BRANCH` (default: `main`): branch used by `init.sh` clone/update flow.

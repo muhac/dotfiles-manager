@@ -3,100 +3,100 @@
   "lines": [
     [
       {
-        "id": "7a0181b8-3b77-4e1f-8cef-4b7f328f61de",
-        "type": "git-branch"
+        "id": "7e3ca074-c8ca-4a83-adb1-b056905df9dc",
+        "type": "git-branch",
+        "color": "brightBlue"
       },
       {
-        "id": "f903bb17-e536-470f-914b-9d599a1c5e76",
+        "id": "56bf4851-12c1-4829-8938-2612aa158e99",
+        "type": "separator"
+      },
+      {
+        "id": "1f8bff79-ee7c-4091-97cd-e0916d077bf9",
+        "type": "worktree-mode",
+        "color": "magenta"
+      },
+      {
+        "id": "d7efc273-388d-4e3f-8f66-2ffa6c8f2e8c",
         "type": "custom-text",
         "customText": " "
       },
       {
-        "id": "291cbf24-910e-4c9f-af2c-17e671c7ba0f",
-        "type": "git-worktree"
+        "id": "6746be4c-3bab-4436-b567-ee9cba0abfe9",
+        "type": "git-status"
       },
       {
-        "id": "2",
-        "type": "separator"
-      },
-      {
-        "id": "7",
-        "type": "git-changes",
-        "color": "yellow"
-      },
-      {
-        "id": "4",
-        "type": "separator"
-      },
-      {
-        "id": "c56eeea8-b75d-4204-9106-22430e44e2b2",
-        "type": "git-ahead-behind"
-      },
-      {
-        "id": "aa8512bb-b65b-4963-87a3-4abd78c5e95f",
+        "id": "48119faf-5e7d-43fe-aa01-994b68d1f8f5",
         "type": "flex-separator"
       },
       {
         "id": "1",
         "type": "model",
-        "color": "cyan"
+        "color": "brightCyan"
       },
       {
-        "id": "a433d402-fa2e-4e98-8c6f-41027fa31a16",
+        "id": "27361def-f58d-402b-ad5e-a6451b2cadf5",
         "type": "separator"
       },
       {
-        "id": "f3b0a173-1e26-49a3-9876-4de02e199f59",
-        "type": "session-cost"
+        "id": "09b22f35-cdc6-4573-acb4-9c7895f37339",
+        "type": "session-cost",
+        "color": "brightRed"
       }
     ],
     [
       {
-        "id": "c5da093c-f971-4396-97d9-85a068bec728",
-        "type": "tokens-total"
+        "id": "f12ce830-1f92-43e3-84ad-5e4a1f6086e2",
+        "type": "tokens-total",
+        "color": "cyan"
       },
       {
-        "id": "5e9b3600-2024-417a-9136-d6b461b0d74b",
+        "id": "fc8d517c-e5e7-4684-a813-1eaae8df99c5",
         "type": "separator"
       },
       {
-        "id": "168e06c7-e9d7-4471-90f6-72ed3f3df469",
-        "type": "tokens-input"
+        "id": "98077b61-0f07-4fa4-b34e-b7aa2bf63256",
+        "type": "tokens-input",
+        "color": "yellow"
       },
       {
-        "id": "f2142611-6827-430d-b976-e9fcce3485db",
+        "id": "b6bbd96b-4f43-473a-ab07-6150d978a172",
         "type": "separator"
       },
       {
-        "id": "24bcc133-305a-48a5-ad52-4b68e1782187",
-        "type": "tokens-output"
+        "id": "57317ef8-b135-4a7e-a7e7-077dd23c900a",
+        "type": "tokens-output",
+        "color": "green"
       },
       {
-        "id": "8b1c3ef3-b49e-44c0-b12e-0a9eaf2f8f18",
+        "id": "fb32be25-264c-4dab-8a42-897b8b19a682",
         "type": "separator"
       },
       {
-        "id": "10feceda-f038-47ba-984f-deb877c93634",
-        "type": "output-speed"
+        "id": "fa90b64c-65fc-4b59-8016-99ac5b59ca1c",
+        "type": "output-speed",
+        "color": "brightBlue"
       },
       {
-        "id": "d18d37ae-e2fa-44be-8537-fafeb7345fd1",
-        "type": "flex-separator"
+        "id": "8c0d94aa-0610-40b4-9f9b-987453273f00",
+        "type": "flex-separator",
+        "color": "white"
       },
       {
-        "id": "10b6bc5e-c6ad-4e1b-8a67-aadb1dfc59f7",
-        "type": "context-length"
+        "id": "61ad622a-a5c6-4ada-bd35-01b93206bbc1",
+        "type": "context-length",
+        "color": "yellow"
       },
       {
-        "id": "84401058-2ea6-4a67-93ee-97bf801bdf8a",
+        "id": "e71904f3-4686-4262-94d1-d0f364b050da",
         "type": "separator"
       },
       {
-        "id": "16f2bc11-3080-45d2-94c2-f6e5fc715e4c",
-        "type": "context-percentage-usable"
+        "id": "d214ca40-b023-4502-9cb2-66a5b5c6f06f",
+        "type": "context-percentage-usable",
+        "color": "brightBlue"
       }
-    ],
-    []
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,

@@ -80,8 +80,8 @@ run_dot_sync() {
     return
   fi
 
-  echo "Syncing Codex config with dot-sync..."
-  (cd "$CLONE_DIR" && "$DOT_SYNC_TMP_DIR/bin/dot-sync" push codex --backup)
+  echo "Syncing managed app config with dot-sync..."
+  (cd "$CLONE_DIR" && "$DOT_SYNC_TMP_DIR/bin/dot-sync" push --backup)
 }
 
 if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then

@@ -4,7 +4,7 @@ font-family = CommitMonoCode
 font-family = Cascadia Code NF
 font-family = Monaco Fira Nerd
 font-family = FiraCode Nerd Font
-font-size = 13
+font-size = 13.5
 adjust-cell-height = 10%
 
 # Cursor
@@ -14,7 +14,11 @@ shell-integration-features = no-cursor
 
 # Theme
 theme = Everforest Dark Hard
+background-opacity = 0.92
+background-blur = 50
 
 # Behavior
 copy-on-select = clipboard
-scrollback-limit = 50000
+scrollback-limit = 50000000
+clipboard-trim-trailing-spaces = true
+window-inherit-working-directory = true

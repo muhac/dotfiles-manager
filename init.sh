@@ -64,9 +64,9 @@ install_dot_sync() {
     return 1
   }
 
-  echo "Installing dot-sync nightly into a temporary directory..."
+  echo "Installing dot-sync (latest stable) into a temporary directory..."
   curl -fsSL "$DOT_SYNC_INSTALL_URL" -o "$DOT_SYNC_TMP_DIR/install-dot-sync.sh"
-  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --nightly --dir "$DOT_SYNC_TMP_DIR/bin"
+  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --dir "$DOT_SYNC_TMP_DIR/bin"
 }
 
 run_dot_sync() {
@@ -80,8 +80,8 @@ run_dot_sync() {
     return
   fi
 
-  echo "Syncing Codex config with dot-sync..."
-  (cd "$CLONE_DIR" && "$DOT_SYNC_TMP_DIR/bin/dot-sync" push codex --backup)
+  echo "Syncing managed app config with dot-sync..."
+  (cd "$CLONE_DIR" && "$DOT_SYNC_TMP_DIR/bin/dot-sync" push --backup)
 }
 
 if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then
@@ -143,3 +143,11 @@ echo "Running symlink.sh..."
 bash "$CLONE_DIR/symlink.sh"
 
 run_dot_sync
+
+if ! git config --global --get user.email >/dev/null 2>&1; then
+  echo ""
+  echo "Note: git user.name/user.email is not set. For personal machines, run:"
+  echo "  git config --global user.name \"Muhan Li\""
+  echo "  git config --global user.email \"limuhan@msn.com\""
+  echo "On work machines, substitute your work identity."
+fi

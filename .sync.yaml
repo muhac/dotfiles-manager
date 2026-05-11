@@ -12,3 +12,19 @@ targets:
       - tui.theme
       - tui.status_line
       - plugins."github@openai-curated".enabled
+
+  git:
+    format: gitconfig
+    source: dotfiles/git/git.sync.gitconfig
+    target: ~/.gitconfig
+    sync:
+      - core.editor
+      - init.defaultBranch
+      - push.autoSetupRemote
+      - pull.rebase
+      - rebase.autoStash
+      - merge.conflictstyle
+      - rerere.enabled
+      - diff.algorithm
+      - diff.colorMoved
+      - fetch.prune

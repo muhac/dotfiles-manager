@@ -63,7 +63,7 @@ jobs:
           check "$HOME/.config/ghostty"
 
           # cmux
-          check "$HOME/.config/cmux/settings.json"
+          check "$HOME/.config/cmux/cmux.json"
 
           # agents
           check "$HOME/.claude/CLAUDE.md"

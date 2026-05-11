@@ -54,7 +54,7 @@ jobs:
           check_link "$HOME/.ideavimrc"
           check_link "$HOME/.config/starship.toml"
           check_link "$HOME/.config/nvim/init.vim"
-          check_link "$HOME/.config/cmux/settings.json"
+          check_link "$HOME/.config/cmux/cmux.json"
           check_link "$HOME/.config/ghostty/config"
           check_link "$HOME/.claude/CLAUDE.md"
           check_link "$HOME/.codex/AGENTS.md"

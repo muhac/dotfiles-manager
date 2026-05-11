@@ -143,3 +143,11 @@ echo "Running symlink.sh..."
 bash "$CLONE_DIR/symlink.sh"
 
 run_dot_sync
+
+if ! git config --global --get user.email >/dev/null 2>&1; then
+  echo ""
+  echo "Note: git user.name/user.email is not set. For personal machines, run:"
+  echo "  git config --global user.name \"Muhan Li\""
+  echo "  git config --global user.email \"limuhan@msn.com\""
+  echo "On work machines, substitute your work identity."
+fi

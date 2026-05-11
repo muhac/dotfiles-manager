@@ -64,9 +64,9 @@ install_dot_sync() {
     return 1
   }
 
-  echo "Installing dot-sync nightly into a temporary directory..."
+  echo "Installing dot-sync (latest stable) into a temporary directory..."
   curl -fsSL "$DOT_SYNC_INSTALL_URL" -o "$DOT_SYNC_TMP_DIR/install-dot-sync.sh"
-  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --nightly --dir "$DOT_SYNC_TMP_DIR/bin"
+  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --dir "$DOT_SYNC_TMP_DIR/bin"
 }
 
 run_dot_sync() {

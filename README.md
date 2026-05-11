@@ -13,8 +13,8 @@ curl -fsSL https://muhac.github.io/dotfiles-manager/install.sh | bash
 ```
 
 This downloads the published installer, clones the repo to `~/.dotfiles`, and creates symlinks.
-It also applies repo-managed Codex config fields into `~/.codex/config.toml` with
-[`dot-sync`](https://github.com/muhac/dot-sync). The installer installs the [`dot-sync`](https://github.com/muhac/dot-sync) nightly release into a temporary
+It also applies repo-managed app config fields with
+[`dot-sync`](https://github.com/muhac/dot-sync). The installer installs the latest [`dot-sync`](https://github.com/muhac/dot-sync) stable release into a temporary
 directory and removes it when the installer exits.
 
 Supported parameters for Option 1 (set before `bash`):

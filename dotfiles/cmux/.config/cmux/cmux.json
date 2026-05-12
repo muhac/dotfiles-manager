@@ -4,7 +4,8 @@
   "app": {
     "minimalMode": true,
     "openMarkdownInCmuxViewer": true,
-    "appearance": "dark"
+    "appearance": "dark",
+    "appIcon": "light"
   },
   "terminal": {
     "showScrollBar": false,

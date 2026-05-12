@@ -2,15 +2,18 @@
   "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
   "schemaVersion": 1,
   "app": {
-    "minimalMode": true
+    "minimalMode": true,
+    "openMarkdownInCmuxViewer": true,
+    "appearance": "dark"
   },
   "terminal": {
     "showScrollBar": false,
-    "autoResumeAgentSessions": true
+    "autoResumeAgentSessions": false
   },
   "browser": {
     "openTerminalLinksInCmuxBrowser": false,
-    "interceptTerminalOpenCommandInCmuxBrowser": false
+    "interceptTerminalOpenCommandInCmuxBrowser": false,
+    "theme": "system"
   },
   "sidebar": {
     "openPullRequestLinksInCmuxBrowser": false,
@@ -20,7 +23,7 @@
     "matchTerminalBackground": true
   },
   "workspaceColors": {
-    "indicatorStyle": "washRail",
+    "indicatorStyle": "solidFill",
     "selectionColor": "#2F383E",
     "notificationBadgeColor": "#2196F3"
   }

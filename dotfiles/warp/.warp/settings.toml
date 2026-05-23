@@ -3,13 +3,18 @@
 [appearance.text]
 notebook_font_size = 14.0
 font_size = 13.0
+font_name = "CommitMonoCode Nerd Font"
+line_height_ratio = 1.2999999523162842
+ai_font_name = "CommitMonoCode Nerd Font"
+match_ai_font = true
+ligature_rendering_enabled = true
 
 [appearance.themes]
 system_theme = false
-theme = "dracula"
+theme = "adeberry"
 
 [appearance.vertical_tabs]
-view_mode = "compact"
+view_mode = "expanded"
 display_granularity = "panes"
 compact_subtitle = "branch"
 primary_info = "command"
@@ -19,7 +24,20 @@ enabled = true
 [appearance.icon]
 app_icon = "warp_one"
 
+[appearance.window]
+override_blur = 55
+override_opacity = 77
+
+[appearance.panes]
+should_dim_inactive_panes = true
+focus_pane_on_hover = true
+
+[appearance.tabs]
+show_indicators_button = true
+workspace_decoration_visibility = "on_hover"
+
 [terminal]
+maximum_grid_size = 100000
 
 [terminal.input]
 input_box_type_setting = "universal"
@@ -54,5 +72,13 @@ play_notification_sound = true
 is_settings_sync_enabled = true
 
 [privacy]
-crash_reporting_enabled = true
-telemetry_enabled = true
+crash_reporting_enabled = false
+telemetry_enabled = false
+
+[code]
+
+[code.editor]
+open_file_editor = { external_editor = "vs_code" }
+
+[keys]
+ctrl_tab_behavior_setting = "cycle_most_recent_session"

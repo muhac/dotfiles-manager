@@ -2,18 +2,16 @@
 
 [appearance.text]
 notebook_font_size = 14.0
-font_size = 13.0
+font_size = 13.5
 font_name = "CommitMonoCode Nerd Font"
-line_height_ratio = 1.2999999523162842
+line_height_ratio = 1.2
 ai_font_name = "CommitMonoCode Nerd Font"
 match_ai_font = true
 ligature_rendering_enabled = true
 
 [appearance.themes]
 system_theme = false
-theme = {
-  custom = { name = "Tomorrow Night", path = "~/.warp/themes/standard/tomorrow_night.yaml" },
-}
+theme = { custom = { name = "Jellybeans", path = "~/.warp/themes/standard/jellybeans.yaml" } }
 
 [appearance.vertical_tabs]
 view_mode = "expanded"
@@ -36,13 +34,14 @@ focus_pane_on_hover = true
 
 [appearance.tabs]
 show_indicators_button = true
-workspace_decoration_visibility = "on_hover"
+workspace_decoration_visibility = "hide_fullscreen"
 
 [terminal]
 maximum_grid_size = 100000
 
 [terminal.input]
 input_box_type_setting = "universal"
+honor_ps1 = false
 
 [agents]
 cloud_conversation_storage_enabled = true

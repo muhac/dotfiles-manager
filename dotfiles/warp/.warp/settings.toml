@@ -1,0 +1,58 @@
+[appearance]
+
+[appearance.text]
+notebook_font_size = 14.0
+font_size = 13.0
+
+[appearance.themes]
+system_theme = false
+theme = "dracula"
+
+[appearance.vertical_tabs]
+view_mode = "compact"
+display_granularity = "panes"
+compact_subtitle = "branch"
+primary_info = "command"
+show_pr_link = true
+enabled = true
+
+[appearance.icon]
+app_icon = "warp_one"
+
+[terminal]
+
+[terminal.input]
+input_box_type_setting = "universal"
+
+[agents]
+cloud_conversation_storage_enabled = true
+
+[agents.warp_agent]
+
+[agents.warp_agent.input]
+nld_in_terminal_enabled = true
+
+[agents.third_party]
+auto_open_composer_on_cli_agent_start = false
+auto_dismiss_composer_after_submit = false
+
+[agents.third_party.cli_agent_toolbar_enabled_commands]
+
+[notifications]
+toast_duration_secs = 8
+
+[notifications.preferences]
+is_agent_task_completed_enabled = true
+is_long_running_enabled = true
+is_needs_attention_enabled = true
+is_password_prompt_enabled = true
+long_running_threshold = 30
+mode = "enabled"
+play_notification_sound = true
+
+[account]
+is_settings_sync_enabled = true
+
+[privacy]
+crash_reporting_enabled = true
+telemetry_enabled = true

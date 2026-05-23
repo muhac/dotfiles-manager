@@ -11,7 +11,9 @@ ligature_rendering_enabled = true
 
 [appearance.themes]
 system_theme = false
-theme = "adeberry"
+theme = {
+  custom = { name = "Tomorrow Night", path = "~/.warp/themes/standard/tomorrow_night.yaml" },
+}
 
 [appearance.vertical_tabs]
 view_mode = "expanded"

@@ -14,7 +14,7 @@ curl -fsSL https://muhac.github.io/dotfiles-manager/install.sh | bash
 
 This downloads the published installer, clones the repo to `~/.dotfiles`, and creates symlinks.
 It also applies repo-managed app config fields with
-[`dot-sync`](https://github.com/muhac/dot-sync). The installer installs the latest [`dot-sync`](https://github.com/muhac/dot-sync) stable release into a temporary
+[`dot-sync`](https://github.com/muhac/dot-sync). The installer downloads a pinned [`dot-sync`](https://github.com/muhac/dot-sync) release into a temporary
 directory and removes it when the installer exits.
 
 Supported parameters for Option 1 (set before `bash`):
@@ -26,6 +26,7 @@ Supported parameters for Option 1 (set before `bash`):
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to remote tracking branches (default keeps pinned SHAs).
 - `RUN_DOT_SYNC=0`: skip applying managed app config with [`dot-sync`](https://github.com/muhac/dot-sync).
 - `DOT_SYNC_INSTALL_URL`: override the [`dot-sync`](https://github.com/muhac/dot-sync) installer URL.
+- `DOT_SYNC_VERSION` (default: `v0.1.0`): [`dot-sync`](https://github.com/muhac/dot-sync) release tag to install.
 
 Example:
 
@@ -63,3 +64,4 @@ bash install.sh
 - `UPDATE_SUBMODULES=1`: fast-forward submodules to their remote tracking branches in `symlink.sh`. Defaults to pinned SHAs for reproducibility.
 - `RUN_DOT_SYNC=0`: skip applying managed app config in the remote installer.
 - `DOT_SYNC_INSTALL_URL`: override the [`dot-sync`](https://github.com/muhac/dot-sync) installer URL.
+- `DOT_SYNC_VERSION` (default: `v0.1.0`): [`dot-sync`](https://github.com/muhac/dot-sync) release tag to install.

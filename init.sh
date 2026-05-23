@@ -9,6 +9,7 @@ AUTO_STASH_DIRTY="${AUTO_STASH_DIRTY:-0}"
 FIX_ORIGIN_URL="${FIX_ORIGIN_URL:-0}"
 RUN_DOT_SYNC="${RUN_DOT_SYNC:-1}"
 DOT_SYNC_INSTALL_URL="${DOT_SYNC_INSTALL_URL:-https://raw.githubusercontent.com/muhac/dot-sync/main/install.sh}"
+DOT_SYNC_VERSION="${DOT_SYNC_VERSION:-v0.1.0}"
 DOT_SYNC_TMP_DIR=""
 
 cleanup_dot_sync() {
@@ -64,9 +65,9 @@ install_dot_sync() {
     return 1
   }
 
-  echo "Installing dot-sync (latest stable) into a temporary directory..."
+  echo "Installing dot-sync ${DOT_SYNC_VERSION} into a temporary directory..."
   curl -fsSL "$DOT_SYNC_INSTALL_URL" -o "$DOT_SYNC_TMP_DIR/install-dot-sync.sh"
-  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --dir "$DOT_SYNC_TMP_DIR/bin"
+  sh "$DOT_SYNC_TMP_DIR/install-dot-sync.sh" --dir "$DOT_SYNC_TMP_DIR/bin" --version "$DOT_SYNC_VERSION"
 }
 
 run_dot_sync() {

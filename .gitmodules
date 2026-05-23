@@ -70,3 +70,7 @@
     path = dotfiles/zsh/.oh-my-zsh
     url = https://github.com/ohmyzsh/ohmyzsh.git
 	branch = master
+[submodule "dotfiles/warp/.vendor/warp-themes"]
+	path = dotfiles/warp/.vendor/warp-themes
+	url = https://github.com/warpdotdev/themes.git
+	branch = main

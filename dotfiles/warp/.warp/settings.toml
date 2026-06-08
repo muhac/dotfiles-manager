@@ -1,13 +1,14 @@
 [appearance]
 
 [appearance.text]
-notebook_font_size = 14.0
+notebook_font_size = 13.0
 font_size = 13.0
-font_name = "CommitMonoCode Nerd Font"
-line_height_ratio = 1.3
-ai_font_name = "CommitMonoCode Nerd Font"
+font_name = "Monaco Fira Nerd"
+line_height_ratio = 1.2
+ai_font_name = "Monaco Fira Nerd"
 match_ai_font = true
 ligature_rendering_enabled = true
+font_weight = "normal"
 
 [appearance.themes]
 system_theme = false

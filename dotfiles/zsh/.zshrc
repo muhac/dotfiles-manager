@@ -403,7 +403,7 @@ after() {
     done
 
     (( countdown_started )) && printf "\033[1A\r\033[K"
-    printf "Running now at %s\n" "$target_time"
+    printf "Running at %s (now)\n" "$target_time"
   else
     print "Running at ${target_time} (in ${secs}s)"
     sleep "$secs"

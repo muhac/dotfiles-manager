@@ -301,3 +301,115 @@ unset __conda_dirs
 unset __candidate_dir
 
 ### <<< conda initialize <<<
+
+### >>> Personal functions >>>
+
+after() {
+  emulate -L zsh
+
+  if (( $# < 2 )); then
+    print -u2 "Usage: after HH:MM|duration command [args...]"
+    print -u2 "Examples: after 23:30 echo hi"
+    print -u2 "          after 10m echo hi"
+    return 2
+  fi
+
+  local when="$1"
+  shift
+
+  local now target secs today clock_time target_time
+  local remaining days hours minutes seconds countdown countdown_started
+  local duration_re='^([0-9]+[smhd])+$'
+  local clock_sep_re='^([0-9]|[01][0-9]|2[0-3])[:.]([0-5][0-9])$'
+  local clock_compact_re='^([01][0-9]|2[0-3])([0-5][0-9])$'
+
+  now=$(date +%s)
+
+  if [[ "$when" =~ "$duration_re" ]]; then
+    local rest="$when"
+    local amount unit
+    secs=0
+
+    while [[ -n "$rest" ]]; do
+      [[ "$rest" =~ '^([0-9]+)([smhd])(.*)$' ]] || return 2
+      amount="${match[1]}"
+      unit="${match[2]}"
+      rest="${match[3]}"
+
+      case "$unit" in
+        s) secs=$(( secs + amount )) ;;
+        m) secs=$(( secs + amount * 60 )) ;;
+        h) secs=$(( secs + amount * 3600 )) ;;
+        d) secs=$(( secs + amount * 86400 )) ;;
+      esac
+    done
+  elif [[ "$when" =~ "$clock_sep_re" ]]; then
+    clock_time="$(printf "%02d:%s" $((10#${match[1]})) "${match[2]}")"
+
+    if date -d "$clock_time" +%s >/dev/null 2>&1; then
+      target=$(date -d "$clock_time" +%s)
+      (( target <= now )) && target=$(date -d "tomorrow $clock_time" +%s)
+    else
+      today=$(date +%Y-%m-%d)
+      target=$(date -j -f "%Y-%m-%d %H:%M" "$today $clock_time" +%s) || return
+      (( target <= now )) && target=$(( target + 86400 ))
+    fi
+
+    secs=$(( target - now ))
+  elif [[ "$when" =~ "$clock_compact_re" ]]; then
+    clock_time="$(printf "%02d:%s" $((10#${match[1]})) "${match[2]}")"
+
+    if date -d "$clock_time" +%s >/dev/null 2>&1; then
+      target=$(date -d "$clock_time" +%s)
+      (( target <= now )) && target=$(date -d "tomorrow $clock_time" +%s)
+    else
+      today=$(date +%Y-%m-%d)
+      target=$(date -j -f "%Y-%m-%d %H:%M" "$today $clock_time" +%s) || return
+      (( target <= now )) && target=$(( target + 86400 ))
+    fi
+
+    secs=$(( target - now ))
+  else
+    print -u2 "Unsupported time: $when"
+    print -u2 "Supported: H:MM, H.MM, HH:MM, HH.MM, HHMM, 10s, 5m, 2h, 1d, 1h30m"
+    return 2
+  fi
+
+  target=$(( now + secs ))
+  if target_time=$(date -r "$target" "+%Y-%m-%d %H:%M:%S" 2>/dev/null); then
+  else
+    target_time=$(date -d "@$target" "+%Y-%m-%d %H:%M:%S" 2>/dev/null) || target_time="$target"
+  fi
+
+  if [[ -t 1 ]]; then
+    countdown_started=0
+
+    while (( (remaining = target - $(date +%s)) > 0 )); do
+      days=$(( remaining / 86400 ))
+      hours=$(( (remaining % 86400) / 3600 ))
+      minutes=$(( (remaining % 3600) / 60 ))
+      seconds=$(( remaining % 60 ))
+
+      if (( days > 0 )); then
+        countdown=$(printf "%dd %02d:%02d:%02d" "$days" "$hours" "$minutes" "$seconds")
+      else
+        countdown=$(printf "%02d:%02d:%02d" "$hours" "$minutes" "$seconds")
+      fi
+
+      (( countdown_started )) && printf "\033[1A\r\033[K"
+      printf "Running at %s (in %s)\n" "$target_time" "$countdown"
+      countdown_started=1
+      sleep 1
+    done
+
+    (( countdown_started )) && printf "\033[1A\r\033[K"
+    printf "Running now at %s\n" "$target_time"
+  else
+    print "Running at ${target_time} (in ${secs}s)"
+    sleep "$secs"
+  fi
+
+  "$@"
+}
+
+### <<< Personal functions <<<

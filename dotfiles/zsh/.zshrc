@@ -308,18 +308,20 @@ after() {
   emulate -L zsh
 
   if (( $# < 2 )); then
-    print -u2 "Usage: after HH:MM|duration command [args...]"
-    print -u2 "Examples: after 23:30 echo hi"
-    print -u2 "          after 10m echo hi"
+    print -u2 "Usage: after HH.MM|duration|YYMMDD-HHMMSS command [args...]"
+    print -u2 "Examples: after 10m echo hi"
+    print -u2 "          after 23.30 echo hi"
+    print -u2 "          after 260618-233000 echo hi"
     return 2
   fi
 
   local when="$1"
   shift
 
-  local now target secs today clock_time target_time
+  local now target secs today clock_time target_time absolute_time
   local remaining days hours minutes seconds countdown countdown_started
   local duration_re='^([0-9]+[smhd])+$'
+  local absolute_compact_re='^([0-9]{2})([0-9]{2})([0-9]{2})-([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])$'
   local clock_sep_re='^([0-9]|[01][0-9]|2[0-3])[:.]([0-5][0-9])$'
   local clock_compact_re='^([01][0-9]|2[0-3])([0-5][0-9])$'
 
@@ -343,6 +345,20 @@ after() {
         d) secs=$(( secs + amount * 86400 )) ;;
       esac
     done
+  elif [[ "$when" =~ "$absolute_compact_re" ]]; then
+    absolute_time="20${match[1]}-${match[2]}-${match[3]} ${match[4]}:${match[5]}:${match[6]}"
+
+    if date -d "$absolute_time" +%s >/dev/null 2>&1; then
+      target=$(date -d "$absolute_time" +%s)
+    else
+      target=$(date -j -f "%Y-%m-%d %H:%M:%S" "$absolute_time" +%s) || return
+    fi
+
+    secs=$(( target - now ))
+    if (( secs < 0 )); then
+      print -u2 "Target time has already passed: $when"
+      return 2
+    fi
   elif [[ "$when" =~ "$clock_sep_re" ]]; then
     clock_time="$(printf "%02d:%s" $((10#${match[1]})) "${match[2]}")"
 
@@ -371,7 +387,7 @@ after() {
     secs=$(( target - now ))
   else
     print -u2 "Unsupported time: $when"
-    print -u2 "Supported: H:MM, H.MM, HH:MM, HH.MM, HHMM, 10s, 5m, 2h, 1d, 1h30m"
+    print -u2 "Supported: H:MM, H.MM, HH:MM, HH.MM, HHMM, 10s, 5m, 2h, 1d, 1h30m, YYMMDD-HHMMSS"
     return 2
   fi
 

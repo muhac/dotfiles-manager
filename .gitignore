@@ -4,3 +4,6 @@ target/
 
 # ignored files inside dotfiles directory
 dotfiles/zsh/.zlogin
+
+# Anthropic skills synced by Claude Code into ~/.claude/skills (symlinked here)
+dotfiles/agents/skills/synced/

@@ -6,9 +6,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    labels:
-      - "dependencies"
-      - "github-actions"
     groups:
       github-actions:
         update-types:
@@ -19,11 +16,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    labels:
-      - "dependencies"
-      - "submodules"
     groups:
       submodules:
-        update-types:
-          - "minor"
-          - "patch"
+        patterns:
+          - "*"

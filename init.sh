@@ -92,6 +92,78 @@ run_dot_sync() {
   (cd "$CLONE_DIR" && "$DOT_SYNC_TMP_DIR/bin/dot-sync" push --backup)
 }
 
+usage() {
+  cat <<EOF
+Usage: init.sh [command]
+
+Commands:
+  install   Clone or update the dotfiles repo and link them (default).
+  sync      Bring the existing checkout at $CLONE_DIR up to date with the remote,
+            including submodule pointer bumps.
+  help      Show this help.
+
+Run remotely with: curl -fsSL <install.sh url> | bash -s -- <command>
+EOF
+}
+
+run_sync_step() {
+  echo "+ git $*"
+  if ! git -C "$CLONE_DIR" "$@"; then
+    echo >&2 "Error: 'git $*' failed in $CLONE_DIR."
+    return 1
+  fi
+}
+
+sync_dotfiles() {
+  if [ ! -d "$CLONE_DIR/.git" ]; then
+    echo >&2 "Error: $CLONE_DIR is not a git checkout."
+    echo >&2 "Run init.sh without a command to install first."
+    return 1
+  fi
+
+  echo "Syncing $CLONE_DIR with its remote..."
+  run_sync_step submodule update --init --recursive || return 1
+
+  if ! run_sync_step pull --recurse-submodules; then
+    echo >&2 ""
+    echo >&2 "Hint: only Dependabot is expected to commit submodule pointers. A local commit"
+    echo >&2 "that bumps a submodule makes 'git pull' (pull.rebase=true) fail with"
+    echo >&2 "'cannot rebase with locally recorded submodule modifications'."
+    echo >&2 "Check for one with:"
+    echo >&2 "  git -C \"$CLONE_DIR\" log origin/HEAD..HEAD"
+    echo >&2 "If it is a local pointer commit, drop it yourself (for example with an"
+    echo >&2 "interactive rebase) and rerun 'init.sh sync'. Nothing was reset automatically."
+    return 1
+  fi
+
+  run_sync_step submodule update --init --recursive || return 1
+  echo "Sync complete."
+}
+
+COMMAND="install"
+case "${1:-}" in
+  ""|install ) ;;
+  sync ) COMMAND="sync" ;;
+  -h|--help|help ) usage; exit 0 ;;
+  * )
+    echo >&2 "Error: unknown command '$1'."
+    usage >&2
+    exit 2
+    ;;
+esac
+if [ "$#" -gt 1 ]; then
+  echo >&2 "Error: unexpected argument '$2'."
+  usage >&2
+  exit 2
+fi
+
+command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed."; exit 1; }
+
+if [ "$COMMAND" = "sync" ]; then
+  sync_dotfiles || exit 1
+  exit 0
+fi
+
 if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then
   echo >&2 "Error: REPO_URL is not set."
   echo >&2 "Run this installer via the published curl/Pages URL so the repository URL is embedded,"
@@ -99,8 +171,6 @@ if [ -z "$REPO_URL" ] || [ "$REPO_URL" = "$REPO_URL_PLACEHOLDER" ]; then
   echo >&2 "  REPO_URL=https://github.com/<owner>/<repo>.git ./init.sh"
   exit 1
 fi
-
-command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed."; exit 1; }
 
 if [ -d "$CLONE_DIR/.git" ]; then
   echo "Repo already exists at $CLONE_DIR, pulling latest..."

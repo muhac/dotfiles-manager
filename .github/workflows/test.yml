@@ -25,11 +25,18 @@ jobs:
         shell: powershell
         run: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
 
+      - name: Lint init.sh
+        if: runner.os == 'Linux'
+        run: shellcheck init.sh
+
       - name: Run bootstrap installer
         env:
           REPO_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.clone_url || format('{0}/{1}', github.server_url, github.repository) }}
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: bash init.sh
+
+      - name: Run sync subcommand
+        run: bash init.sh sync
 
       - name: Verify symlinks
         run: |

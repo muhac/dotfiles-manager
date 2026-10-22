@@ -41,9 +41,36 @@ bash install.sh
 
 `install.sh` runs Linux workspace setup (zsh/starship) when needed, then calls `symlink.sh`.
 
+### Sync an existing install
+
+`init.sh sync` brings `~/.dotfiles` up to date with the remote, including submodule pointer
+bumps from Dependabot. It runs, in order, stopping at the first failure:
+
+```bash
+git submodule update --init --recursive
+git pull --recurse-submodules
+git submodule update --init --recursive
+```
+
+The first step discards uncommitted submodule drift (for example from `omz update` or
+`UPDATE_SUBMODULES=1`) so the pull can succeed; the last step checks out the pulled pointers.
+
+```bash
+bash ~/.dotfiles/init.sh sync
+# or, without a local copy of init.sh:
+curl -fsSL https://muhac.github.io/dotfiles-manager/install.sh | bash -s -- sync
+```
+
+Only Dependabot should commit submodule pointers. If the pull fails with
+`cannot rebase with locally recorded submodule modifications`, you have a local pointer commit:
+inspect it with `git -C ~/.dotfiles log origin/HEAD..HEAD` and drop it. `sync` never resets
+anything automatically.
+
+Run `init.sh help` to list commands. With no command, `init.sh` installs as described above.
+
 ## Script entrypoints
 
-- `init.sh`: template source for the published installer (used by the deploy workflow).
+- `init.sh`: template source for the published installer (used by the deploy workflow). Commands: `install` (default), `sync`, `help`.
 - `install.sh`: repository entrypoint for local/dev setup.
 - `symlink.sh`: reads `symlink.conf` and links dotfiles into `$HOME`.
 - `symlink.conf`: declarative config — see comments in file for format.

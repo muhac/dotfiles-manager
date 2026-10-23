@@ -35,8 +35,17 @@ jobs:
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: bash init.sh
 
-      - name: Run sync subcommand
-        run: bash init.sh sync
+      - name: Re-run installer with a drifted submodule
+        env:
+          REPO_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.clone_url || format('{0}/{1}', github.server_url, github.repository) }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          RUN_DOT_SYNC: "0"
+        run: |
+          SUBMODULE=dotfiles/vim/.vim/plugged/vim-surround
+          git -C "$HOME/.dotfiles/$SUBMODULE" checkout -q --detach HEAD~1
+          git -C "$HOME/.dotfiles" status --porcelain | grep -q "^ M $SUBMODULE"
+          bash init.sh
+          ! git -C "$HOME/.dotfiles" status --porcelain | grep -q "^ M $SUBMODULE"
 
       - name: Verify symlinks
         run: |

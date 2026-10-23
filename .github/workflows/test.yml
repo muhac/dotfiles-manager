@@ -18,18 +18,34 @@ jobs:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Enable Developer Mode (Windows)
         if: runner.os == 'Windows'
         shell: powershell
         run: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
 
+      - name: Lint init.sh
+        if: runner.os == 'Linux'
+        run: shellcheck init.sh
+
       - name: Run bootstrap installer
         env:
           REPO_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.clone_url || format('{0}/{1}', github.server_url, github.repository) }}
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: bash init.sh
+
+      - name: Re-run installer with a drifted submodule
+        env:
+          REPO_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.clone_url || format('{0}/{1}', github.server_url, github.repository) }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          RUN_DOT_SYNC: "0"
+        run: |
+          SUBMODULE=dotfiles/vim/.vim/plugged/vim-surround
+          git -C "$HOME/.dotfiles/$SUBMODULE" checkout -q --detach HEAD~1
+          git -C "$HOME/.dotfiles" status --porcelain | grep -q "^ M $SUBMODULE"
+          bash init.sh
+          ! git -C "$HOME/.dotfiles" status --porcelain | grep -q "^ M $SUBMODULE"
 
       - name: Verify symlinks
         run: |

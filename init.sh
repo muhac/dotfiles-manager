@@ -124,6 +124,9 @@ if [ -d "$CLONE_DIR/.git" ]; then
     fi
   fi
 
+  echo "Resetting submodule checkouts to the recorded pointers..."
+  git -C "$CLONE_DIR" submodule update --init --recursive
+
   if [ -n "$(git -C "$CLONE_DIR" status --porcelain)" ]; then
     if [ "$AUTO_STASH_DIRTY" = "1" ]; then
       STASH_NAME="auto-stash-before-installer-$(date +%Y%m%d-%H%M%S)"

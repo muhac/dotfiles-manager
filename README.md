@@ -17,6 +17,11 @@ It also applies repo-managed app config fields with
 [`dot-sync`](https://github.com/muhac/dot-sync). The installer installs the latest [`dot-sync`](https://github.com/muhac/dot-sync) stable release into a temporary
 directory and removes it when the installer exits.
 
+Re-running the install command on an existing machine syncs it with the remote, including
+Dependabot submodule bumps. Submodule checkouts that drifted from the recorded pointers
+(for example after `UPDATE_SUBMODULES=1`) are reset first. Only Dependabot should commit
+submodule pointers.
+
 Supported parameters for Option 1 (set before `bash`):
 
 - `BRANCH` (default: `main`): branch used by installer clone/update.

@@ -46,12 +46,25 @@ input_box_type_setting = "universal"
 honor_ps1 = false
 
 [agents]
-cloud_conversation_storage_enabled = true
+cloud_conversation_storage_enabled = false
 
 [agents.warp_agent]
+is_any_ai_enabled = false
+
+[agents.warp_agent.active_ai]
+enabled = false
+code_suggestions_enabled = false
+intelligent_autosuggestions_enabled = false
+agent_mode_query_suggestions_enabled = false
+git_operations_autogen_enabled = false
+rule_suggestions_enabled = false
+shared_block_title_generation_enabled = false
 
 [agents.warp_agent.input]
-nld_in_terminal_enabled = true
+nld_in_terminal_enabled = false
+ai_auto_detection_enabled = false
+show_agent_tips = false
+show_model_selectors_in_prompt = false
 
 [agents.third_party]
 auto_open_composer_on_cli_agent_start = false

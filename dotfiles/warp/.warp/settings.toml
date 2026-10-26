@@ -92,7 +92,7 @@ codex = "Codex"
 left = [{ context_chip = "svn_dirty_items" }, { context_chip = "git_diff_stats" }, "rich_input"]
 right = [
   { context_chip = "github_pull_request" },
-  { context_chip = "shell_git_branch" },
+  { context_chip = "git_branch_status" },
   { context_chip = "working_directory" },
 ]
 

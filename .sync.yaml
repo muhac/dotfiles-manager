@@ -4,6 +4,9 @@ targets:
     source: dotfiles/codex/.codex/config.sync.toml
     target: ~/.codex/config.toml
     sync:
+      - sandbox_mode
+      - approval_policy
+      - approvals_reviewer
       - project_doc_fallback_filenames
       - project_doc_max_bytes
       - developer_instructions

@@ -206,33 +206,32 @@ for i in "${!SOURCES[@]}"; do
         fi
     fi
 
-    if [[ -d "$source_path" ]]; then
-        # Directory: link as a whole
-        mkdir -p "$(dirname "$target_path")"
-        if [[ -d "$target_path" && ! -L "$target_path" ]]; then
-            echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
-            continue
-        fi
-        [[ -L "$target_path" ]] && rm -f "$target_path"
-        ln -sf "$source_path" "$target_path"
-        echo "  Linked: ~/$rel/"
+    mkdir -p "$(dirname "$target_path")"
+    if [[ -d "$source_path" && -d "$target_path" && ! -L "$target_path" ]]; then
+        echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
+        continue
+    fi
 
-    else
-        # File: link individually
-        mkdir -p "$(dirname "$target_path")"
-        if [[ -e "$target_path" && ! -L "$target_path" ]]; then
-            ts="$(date +%Y%m%d-%H%M%S)"
-            backup_idx=0
-            backup_path="${target_path}.bak.${ts}"
-            while [[ -e "$backup_path" ]]; do
-                backup_idx=$((backup_idx + 1))
-                backup_path="${target_path}.bak.${ts}.${backup_idx}"
-            done
-            echo "  Backing up: ~/$rel -> ${backup_path##*/}"
-            mv "$target_path" "$backup_path"
+    if [[ -e "$target_path" && ! -L "$target_path" ]]; then
+        ts="$(date +%Y%m%d-%H%M%S)"
+        backup_idx=0
+        backup_path="${target_path}.bak.${ts}"
+        while [[ -e "$backup_path" || -L "$backup_path" ]]; do
+            backup_idx=$((backup_idx + 1))
+            backup_path="${target_path}.bak.${ts}.${backup_idx}"
+        done
+        echo "  Backing up: ~/$rel -> ${backup_path##*/}"
+        if ! mv "$target_path" "$backup_path"; then
+            echo >&2 "Error: failed to back up $target_path; refusing to replace it."
+            exit 1
         fi
-        [[ -L "$target_path" ]] && rm -f "$target_path"
-        ln -sf "$source_path" "$target_path"
+    fi
+
+    [[ -L "$target_path" ]] && rm -f "$target_path"
+    ln -sf "$source_path" "$target_path"
+    if [[ -d "$source_path" ]]; then
+        echo "  Linked: ~/$rel/"
+    else
         echo "  Linked: ~/$rel"
     fi
 done

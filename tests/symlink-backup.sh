@@ -114,3 +114,39 @@ for source in directory file; do
     assert_link "$target_dir/after-failed-$source" "$fixture/dotfiles/test/file"
 done
 printf 'PASS: failed backups preserve originals, allow later links, and return failure\n'
+
+rm "$mock_bin/mv"
+export TEST_REAL_LN
+TEST_REAL_LN="$(command -v ln)"
+# The mock expands these variables when the installer invokes it.
+# shellcheck disable=SC2016
+printf '%s\n' '#!/bin/bash' \
+    'target="${!#}"' \
+    'case "$target" in' \
+    '    */link-failure-*) exit 1 ;;' \
+    '    */raced-*) printf "competing file\n" > "$target" ;;' \
+    'esac' \
+    'exec "$TEST_REAL_LN" "$@"' > "$mock_bin/ln"
+chmod +x "$mock_bin/ln"
+for source in directory file; do
+    cp "$test_dir/original" "$target_dir/link-failure-$source"
+    printf 'test/%s\t%s\n' "$source" "$target_dir/link-failure-$source" > "$fixture/symlink.conf"
+    printf 'test/file\t%s\n' "$target_dir/after-link-failure-$source" >> "$fixture/symlink.conf"
+    if PATH="$mock_bin:$PATH" run_links; then
+        fail "link failure reported success: $source"
+    fi
+    grep -Fq "Error: failed to link $target_dir/link-failure-$source" "$test_dir/run.log" || fail 'link error missing'
+    if grep -F 'Linked:' "$test_dir/run.log" | grep -Fq "$target_dir/link-failure-$source"; then
+        fail 'failed link logged as successful'
+    fi
+    assert_backup "$target_dir/link-failure-$source"
+    assert_link "$target_dir/after-link-failure-$source" "$fixture/dotfiles/test/file"
+
+    printf 'test/%s\t%s\n' "$source" "$target_dir/raced-$source" > "$fixture/symlink.conf"
+    if PATH="$mock_bin:$PATH" run_links; then
+        fail "concurrent target creation reported success: $source"
+    fi
+    [[ ! -L "$target_dir/raced-$source" ]] || fail 'concurrent target overwritten'
+    [[ "$(< "$target_dir/raced-$source")" == 'competing file' ]] || fail 'concurrent content lost'
+done
+printf 'PASS: failed links retain backups, allow later links, and never force replacement\n'

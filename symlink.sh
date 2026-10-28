@@ -213,7 +213,11 @@ for i in "${!SOURCES[@]}"; do
         fi
     fi
 
-    mkdir -p "$(dirname "$target_path")"
+    if ! mkdir -p "$(dirname "$target_path")"; then
+        echo >&2 "Error: failed to create parent directory for $target_path."
+        link_status=1
+        continue
+    fi
     if [[ -d "$source_path" && -d "$target_path" && ! -L "$target_path" ]]; then
         echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
         continue
@@ -235,8 +239,16 @@ for i in "${!SOURCES[@]}"; do
         fi
     fi
 
-    [[ -L "$target_path" ]] && rm -f "$target_path"
-    ln -sf "$source_path" "$target_path"
+    if [[ -L "$target_path" ]] && ! rm -f "$target_path"; then
+        echo >&2 "Error: failed to remove existing link $target_path."
+        link_status=1
+        continue
+    fi
+    if ! ln -s "$source_path" "$target_path"; then
+        echo >&2 "Error: failed to link $target_path to $source_path."
+        link_status=1
+        continue
+    fi
     if [[ -d "$source_path" ]]; then
         echo "  Linked: ~/$rel/"
     else

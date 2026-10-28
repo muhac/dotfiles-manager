@@ -104,11 +104,13 @@ chmod +x "$mock_bin/mv"
 for source in directory file; do
     cp "$test_dir/original" "$target_dir/failed-$source"
     printf 'test/%s\t%s\n' "$source" "$target_dir/failed-$source" > "$fixture/symlink.conf"
+    printf 'test/file\t%s\n' "$target_dir/after-failed-$source" >> "$fixture/symlink.conf"
     if PATH="$mock_bin:$PATH" run_links; then
         fail "backup failure reported success: $source"
     fi
     grep -Fq 'refusing to replace' "$test_dir/run.log" || fail "backup refusal missing: $source"
     [[ ! -L "$target_dir/failed-$source" ]] || fail "backup failure replaced original: $source"
     cmp -s "$test_dir/original" "$target_dir/failed-$source" || fail "backup failure lost content: $source"
+    assert_link "$target_dir/after-failed-$source" "$fixture/dotfiles/test/file"
 done
-printf 'PASS: failed backups stop before replacing either source type\n'
+printf 'PASS: failed backups preserve originals, allow later links, and return failure\n'

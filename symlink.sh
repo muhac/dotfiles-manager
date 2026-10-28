@@ -187,6 +187,7 @@ fi
 # ---------------------------------------------------------------------------
 # Link entries
 # ---------------------------------------------------------------------------
+link_status=0
 for i in "${!SOURCES[@]}"; do
     source_path="${SOURCES[$i]}"
     target_path="${TARGETS[$i]}"
@@ -229,7 +230,8 @@ for i in "${!SOURCES[@]}"; do
         echo "  Backing up: ~/$rel -> ${backup_path##*/}"
         if ! mv "$target_path" "$backup_path"; then
             echo >&2 "Error: failed to back up $target_path; refusing to replace it."
-            exit 1
+            link_status=1
+            continue
         fi
     fi
 
@@ -242,5 +244,10 @@ for i in "${!SOURCES[@]}"; do
     fi
 done
 
-echo Done!
+if [[ "$link_status" -eq 0 ]]; then
+    echo Done!
+else
+    echo >&2 "Completed with errors."
+fi
 echo "$(date)"
+exit "$link_status"

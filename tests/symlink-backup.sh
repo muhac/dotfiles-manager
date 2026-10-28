@@ -73,6 +73,21 @@ cmp -s "$test_dir/original" "$target_dir/existing-directory/content" || fail 'di
 cmp -s "$test_dir/original" "$target_dir/skipped" || fail 'skip-existing content changed'
 printf 'PASS: existing directories and skip-existing files preserved\n'
 
+mkdir -p "$fixture/dotfiles/test/parent"
+cp "$test_dir/original" "$fixture/dotfiles/test/parent/file"
+git -C "$fixture" add dotfiles/test/parent/file
+printf 'test/parent\t%s\n' "$target_dir/alias" > "$fixture/symlink.conf"
+run_links
+printf 'test/parent/file\t%s\n' "$target_dir/alias/file" > "$fixture/symlink.conf"
+run_links
+[[ ! -L "$fixture/dotfiles/test/parent/file" ]] || fail 'source file replaced through linked parent'
+cmp -s "$test_dir/original" "$fixture/dotfiles/test/parent/file" || fail 'source content changed through linked parent'
+source_backups=("$fixture/dotfiles/test/parent/file".bak.*)
+[[ ${#source_backups[@]} -eq 0 ]] || fail 'source file was backed up through linked parent'
+git -C "$fixture" diff --exit-code -- dotfiles/test/parent/file || fail 'source working tree changed'
+assert_link "$target_dir/alias" "$fixture/dotfiles/test/parent"
+printf 'PASS: target resolving to source leaves repository content intact\n'
+
 printf '#!/bin/bash\nprintf "20000101-000000\\n"\n' > "$mock_bin/date"
 chmod +x "$mock_bin/date"
 cp "$test_dir/original" "$target_dir/collision"

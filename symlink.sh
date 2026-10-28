@@ -198,6 +198,12 @@ for i in "${!SOURCES[@]}"; do
         continue
     fi
 
+    # A linked parent can make the target refer to the repository's source itself.
+    if [[ "$target_path" -ef "$source_path" ]]; then
+        echo "  Skipping: ~/$rel (already points to source)"
+        continue
+    fi
+
     # flag:skip-existing — skip if target is a real file/dir (not a symlink)
     if [[ ",$flags," == *",skip-existing,"* ]]; then
         if [[ -e "$target_path" && ! -L "$target_path" ]]; then

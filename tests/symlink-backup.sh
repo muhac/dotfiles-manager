@@ -1,15 +1,28 @@
 #!/bin/bash
 set -euo pipefail
+shopt -s nullglob
 
 repo_dir="$(cd "$(dirname "$0")/.." && pwd)"
 test_dir="$(mktemp -d)"
-trap 'rm -rf "$test_dir"' EXIT
+cleanup() {
+    local status=$?
+    if [[ "$status" -ne 0 && -f "$test_dir/run.log" ]]; then
+        printf '\nInstaller output:\n' >&2
+        while IFS= read -r line || [[ -n "$line" ]]; do
+            printf '%s\n' "$line" >&2
+        done < "$test_dir/run.log"
+    fi
+    rm -rf "$test_dir"
+    exit "$status"
+}
+trap cleanup EXIT
 fixture="$test_dir/repo with spaces"
 target_dir="$test_dir/targets"
 mock_bin="$test_dir/bin"
-mkdir -p "$fixture/dotfiles/test/directory" "$target_dir" "$mock_bin"
+test_home="$test_dir/home"
+mkdir -p "$fixture/dotfiles/test/directory" "$target_dir" "$mock_bin" "$test_home"
 cp "$repo_dir/symlink.sh" "$fixture/symlink.sh"
-git -C "$fixture" init -q
+env HOME="$test_home" git -C "$fixture" init -q
 printf 'managed\n' > "$fixture/dotfiles/test/file"
 printf 'original\n' > "$test_dir/original"
 printf 'older backup\n' > "$test_dir/older"
@@ -20,7 +33,7 @@ fail() {
 }
 
 run_links() {
-    CLEAN_BROKEN_LINKS=0 bash "$fixture/symlink.sh" > "$test_dir/run.log" 2>&1
+    env HOME="$test_home" CLEAN_BROKEN_LINKS=0 bash "$fixture/symlink.sh" > "$test_dir/run.log" 2>&1
 }
 
 assert_link() {
@@ -79,6 +92,7 @@ for source in directory file; do
     if PATH="$mock_bin:$PATH" run_links; then
         fail "backup failure reported success: $source"
     fi
+    grep -Fq 'refusing to replace' "$test_dir/run.log" || fail "backup refusal missing: $source"
     [[ ! -L "$target_dir/failed-$source" ]] || fail "backup failure replaced original: $source"
     cmp -s "$test_dir/original" "$target_dir/failed-$source" || fail "backup failure lost content: $source"
 done

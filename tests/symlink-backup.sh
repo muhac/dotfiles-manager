@@ -61,17 +61,36 @@ assert_backup "$target_dir/directory"
 assert_backup "$target_dir/file"
 printf 'PASS: file backups for both source types and repeated runs\n'
 
-mkdir "$target_dir/existing-directory"
-cp "$test_dir/original" "$target_dir/existing-directory/content"
+original_dir="$test_dir/original-directory"
+mkdir -p "$original_dir/nested/empty"
+cp "$test_dir/original" "$original_dir/content"
+cp "$test_dir/original" "$original_dir/nested/.hidden"
+for source in directory file; do
+    target="$target_dir/existing-directory-$source"
+    cp -R "$original_dir" "$target"
+    printf 'test/%s\t%s\n' "$source" "$target" > "$fixture/symlink.conf"
+    run_links
+    assert_link "$target" "$fixture/dotfiles/test/$source"
+    backups=("$target".bak.*)
+    [[ ${#backups[@]} -eq 1 && -d "${backups[0]}" && ! -L "${backups[0]}" ]] || fail 'directory backup missing'
+    diff -r "$original_dir" "${backups[0]}" || fail 'directory backup content changed'
+    run_links
+    backups=("$target".bak.*)
+    [[ ${#backups[@]} -eq 1 ]] || fail 'repeated run created another directory backup'
+    diff -r "$original_dir" "${backups[0]}" || fail 'repeated run changed directory backup'
+done
+printf 'PASS: both source types back up real directories intact, including on repeated runs\n'
+
+cp -R "$original_dir" "$target_dir/skipped-directory"
 cp "$test_dir/original" "$target_dir/skipped"
-printf 'test/directory\t%s\n' "$target_dir/existing-directory" > "$fixture/symlink.conf"
+printf 'test/directory\t%s\tflag:skip-existing\n' "$target_dir/skipped-directory" > "$fixture/symlink.conf"
 printf 'test/directory\t%s\tflag:skip-existing\n' "$target_dir/skipped" >> "$fixture/symlink.conf"
 run_links
-[[ ! -L "$target_dir/existing-directory" ]] || fail 'existing directory was replaced'
-cmp -s "$test_dir/original" "$target_dir/existing-directory/content" || fail 'directory content changed'
+[[ ! -L "$target_dir/skipped-directory" ]] || fail 'skip-existing directory was replaced'
+diff -r "$original_dir" "$target_dir/skipped-directory" || fail 'skip-existing directory content changed'
 [[ ! -L "$target_dir/skipped" ]] || fail 'skip-existing file was replaced'
 cmp -s "$test_dir/original" "$target_dir/skipped" || fail 'skip-existing content changed'
-printf 'PASS: existing directories and skip-existing files preserved\n'
+printf 'PASS: skip-existing files and directories preserved\n'
 
 mkdir -p "$fixture/dotfiles/test/parent"
 cp "$test_dir/original" "$fixture/dotfiles/test/parent/file"

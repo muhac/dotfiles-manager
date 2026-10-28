@@ -218,11 +218,6 @@ for i in "${!SOURCES[@]}"; do
         link_status=1
         continue
     fi
-    if [[ -d "$source_path" && -d "$target_path" && ! -L "$target_path" ]]; then
-        echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
-        continue
-    fi
-
     if [[ -e "$target_path" && ! -L "$target_path" ]]; then
         ts="$(date +%Y%m%d-%H%M%S)"
         backup_idx=0
@@ -249,11 +244,7 @@ for i in "${!SOURCES[@]}"; do
         link_status=1
         continue
     fi
-    if [[ -d "$source_path" ]]; then
-        echo "  Linked: ~/$rel/"
-    else
-        echo "  Linked: ~/$rel"
-    fi
+    echo "  Linked: ~/$rel"
 done
 
 if [[ "$link_status" -eq 0 ]]; then

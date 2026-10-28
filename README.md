@@ -2,7 +2,7 @@
 
 Symlinks are declared in [`symlink.conf`](symlink.conf) — one entry per line.
 Files are linked individually; directories are linked as a whole.
-Existing real files are backed up with a timestamp suffix before linking.
+Existing real files and directories are backed up with a timestamp suffix before linking.
 
 ## Install
 

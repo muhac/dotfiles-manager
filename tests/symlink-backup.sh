@@ -2,6 +2,10 @@
 set -euo pipefail
 shopt -s nullglob
 
+if [[ "$(uname -s)" == MINGW* ]]; then
+    export MSYS=winsymlinks:nativestrict
+fi
+
 repo_dir="$(cd "$(dirname "$0")/.." && pwd)"
 test_dir="$(mktemp -d)"
 cleanup() {
@@ -177,6 +181,8 @@ printf 'repo owned\n' > "$fixture/dotfiles/test/aliased/existing"
 printf 'repo owned\n' > "$fixture/dotfiles/test/aliased/same"
 ln -s "$fixture/dotfiles/test/aliased" "$alias_home/.config"
 ln -s "$sibling_dir" "$alias_home/.sibling"
+[[ -L "$alias_home/.config" ]] || fail 'aliased parent fixture is not a symlink'
+[[ -L "$alias_home/.sibling" ]] || fail 'sibling fixture is not a symlink'
 {
     printf 'test/file\t%s\n' "$alias_home/.config/ghostty/config"
     printf 'test/file\t%s\n' "$alias_home/.config/ghostty"

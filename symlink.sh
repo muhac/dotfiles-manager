@@ -187,6 +187,9 @@ fi
 # ---------------------------------------------------------------------------
 # Link entries
 # ---------------------------------------------------------------------------
+link_status=0
+REPO_ROOT="$(cd -P "$SHELL_FOLDER" && pwd -P)"
+REPO_ROOT_PREFIX="${REPO_ROOT%/}/"
 for i in "${!SOURCES[@]}"; do
     source_path="${SOURCES[$i]}"
     target_path="${TARGETS[$i]}"
@@ -198,6 +201,31 @@ for i in "${!SOURCES[@]}"; do
         continue
     fi
 
+    # A linked parent can make the target refer to the repository's source itself.
+    if [[ "$target_path" -ef "$source_path" ]]; then
+        echo "  Skipping: ~/$rel (already points to source)"
+        continue
+    fi
+
+    # A linked parent can also alias a not-yet-existing target into the repository.
+    # Resolve the nearest existing ancestor physically, since mkdir -p creates the rest.
+    ancestor="$(dirname "$target_path")"
+    while [[ ! -d "$ancestor" && "$ancestor" != "$(dirname "$ancestor")" ]]; do
+        ancestor="$(dirname "$ancestor")"
+    done
+    if ! resolved_ancestor="$(cd -P "$ancestor" 2>/dev/null && pwd -P)"; then
+        echo >&2 "Error: failed to resolve parent directory of $target_path; refusing."
+        link_status=1
+        continue
+    fi
+    case "${resolved_ancestor%/}/" in
+        "$REPO_ROOT_PREFIX"*)
+            echo >&2 "Error: $target_path resolves inside the repository; refusing."
+            link_status=1
+            continue
+            ;;
+    esac
+
     # flag:skip-existing — skip if target is a real file/dir (not a symlink)
     if [[ ",$flags," == *",skip-existing,"* ]]; then
         if [[ -e "$target_path" && ! -L "$target_path" ]]; then
@@ -206,36 +234,44 @@ for i in "${!SOURCES[@]}"; do
         fi
     fi
 
-    if [[ -d "$source_path" ]]; then
-        # Directory: link as a whole
-        mkdir -p "$(dirname "$target_path")"
-        if [[ -d "$target_path" && ! -L "$target_path" ]]; then
-            echo "  Warning: ~/$rel is a real directory, cannot replace with symlink"
+    if ! mkdir -p "$(dirname "$target_path")"; then
+        echo >&2 "Error: failed to create parent directory for $target_path."
+        link_status=1
+        continue
+    fi
+    if [[ -e "$target_path" && ! -L "$target_path" ]]; then
+        ts="$(date +%Y%m%d-%H%M%S)"
+        backup_idx=0
+        backup_path="${target_path}.bak.${ts}"
+        while [[ -e "$backup_path" || -L "$backup_path" ]]; do
+            backup_idx=$((backup_idx + 1))
+            backup_path="${target_path}.bak.${ts}.${backup_idx}"
+        done
+        echo "  Backing up: ~/$rel -> ${backup_path##*/}"
+        if ! mv "$target_path" "$backup_path"; then
+            echo >&2 "Error: failed to back up $target_path; refusing to replace it."
+            link_status=1
             continue
         fi
-        [[ -L "$target_path" ]] && rm -f "$target_path"
-        ln -sf "$source_path" "$target_path"
-        echo "  Linked: ~/$rel/"
-
-    else
-        # File: link individually
-        mkdir -p "$(dirname "$target_path")"
-        if [[ -e "$target_path" && ! -L "$target_path" ]]; then
-            ts="$(date +%Y%m%d-%H%M%S)"
-            backup_idx=0
-            backup_path="${target_path}.bak.${ts}"
-            while [[ -e "$backup_path" ]]; do
-                backup_idx=$((backup_idx + 1))
-                backup_path="${target_path}.bak.${ts}.${backup_idx}"
-            done
-            echo "  Backing up: ~/$rel -> ${backup_path##*/}"
-            mv "$target_path" "$backup_path"
-        fi
-        [[ -L "$target_path" ]] && rm -f "$target_path"
-        ln -sf "$source_path" "$target_path"
-        echo "  Linked: ~/$rel"
     fi
+
+    if [[ -L "$target_path" ]] && ! rm -f "$target_path"; then
+        echo >&2 "Error: failed to remove existing link $target_path."
+        link_status=1
+        continue
+    fi
+    if ! ln -s "$source_path" "$target_path"; then
+        echo >&2 "Error: failed to link $target_path to $source_path."
+        link_status=1
+        continue
+    fi
+    echo "  Linked: ~/$rel"
 done
 
-echo Done!
+if [[ "$link_status" -eq 0 ]]; then
+    echo Done!
+else
+    echo >&2 "Completed with errors."
+fi
 echo "$(date)"
+exit "$link_status"

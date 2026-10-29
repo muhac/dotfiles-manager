@@ -28,6 +28,9 @@ jobs:
         shell: powershell
         run: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
 
+      - name: Verify backup safety
+        run: bash tests/symlink-backup.sh
+
       - name: Run symlink.sh
         run: bash symlink.sh
 

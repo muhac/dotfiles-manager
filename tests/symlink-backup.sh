@@ -33,7 +33,7 @@ fail() {
 }
 
 run_links() {
-    env HOME="$test_home" CLEAN_BROKEN_LINKS=0 bash "$fixture/symlink.sh" > "$test_dir/run.log" 2>&1
+    env HOME="${links_home:-$test_home}" CLEAN_BROKEN_LINKS=0 bash "$fixture/symlink.sh" > "$test_dir/run.log" 2>&1
 }
 
 assert_link() {
@@ -169,3 +169,45 @@ for source in directory file; do
     [[ "$(< "$target_dir/raced-$source")" == 'competing file' ]] || fail 'concurrent content lost'
 done
 printf 'PASS: failed links retain backups, allow later links, and never force replacement\n'
+
+alias_home="$test_dir/home with spaces"
+sibling_dir="$fixture with sibling"
+mkdir -p "$alias_home" "$fixture/dotfiles/test/aliased" "$sibling_dir"
+printf 'repo owned\n' > "$fixture/dotfiles/test/aliased/existing"
+printf 'repo owned\n' > "$fixture/dotfiles/test/aliased/same"
+ln -s "$fixture/dotfiles/test/aliased" "$alias_home/.config"
+ln -s "$sibling_dir" "$alias_home/.sibling"
+{
+    printf 'test/file\t%s\n' "$alias_home/.config/ghostty/config"
+    printf 'test/file\t%s\n' "$alias_home/.config/ghostty"
+    printf 'test/file\t%s\n' "$alias_home/.config/existing"
+    printf 'test/file\t%s\n' "$alias_home/.sibling/nested/file"
+    printf 'test/file\t%s\n' "$alias_home/after-alias"
+} > "$fixture/symlink.conf"
+links_home="$alias_home"
+if run_links; then
+    fail 'target aliased into repository reported success'
+fi
+for target in ghostty/config ghostty existing; do
+    grep -Fq "Error: $alias_home/.config/$target resolves inside the repository; refusing." "$test_dir/run.log" || fail "aliased target error missing: $target"
+done
+[[ ! -e "$fixture/dotfiles/test/aliased/ghostty" ]] || fail 'aliased target created inside repository'
+aliased_entries=("$fixture/dotfiles/test/aliased"/* "$fixture/dotfiles/test/aliased"/.[!.]*)
+[[ ${#aliased_entries[@]} -eq 2 ]] || fail 'unexpected entries created inside repository'
+[[ ! -L "$fixture/dotfiles/test/aliased/existing" ]] || fail 'repository file replaced through aliased parent'
+[[ "$(< "$fixture/dotfiles/test/aliased/existing")" == 'repo owned' ]] || fail 'repository file content changed through aliased parent'
+repo_backups=("$fixture/dotfiles/test/aliased"/*.bak.*)
+[[ ${#repo_backups[@]} -eq 0 ]] || fail 'repository file backed up through aliased parent'
+assert_link "$alias_home/.sibling/nested/file" "$fixture/dotfiles/test/file"
+assert_link "$alias_home/after-alias" "$fixture/dotfiles/test/file"
+printf 'PASS: targets aliased into the repository are refused while later and sibling-prefix targets link\n'
+
+printf 'test/aliased/same\t%s\n' "$alias_home/.config/same" > "$fixture/symlink.conf"
+run_links
+grep -Fq 'already points to source' "$test_dir/run.log" || fail 'correct existing alias was not skipped'
+if grep -Fq 'resolves inside the repository' "$test_dir/run.log"; then
+    fail 'correct existing alias reported as error'
+fi
+[[ ! -L "$fixture/dotfiles/test/aliased/same" ]] || fail 'source replaced through correct alias'
+unset links_home
+printf 'PASS: targets already resolving to source are skipped without error\n'

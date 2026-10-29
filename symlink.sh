@@ -188,6 +188,8 @@ fi
 # Link entries
 # ---------------------------------------------------------------------------
 link_status=0
+REPO_ROOT="$(cd -P "$SHELL_FOLDER" && pwd -P)"
+REPO_ROOT_PREFIX="${REPO_ROOT%/}/"
 for i in "${!SOURCES[@]}"; do
     source_path="${SOURCES[$i]}"
     target_path="${TARGETS[$i]}"
@@ -204,6 +206,25 @@ for i in "${!SOURCES[@]}"; do
         echo "  Skipping: ~/$rel (already points to source)"
         continue
     fi
+
+    # A linked parent can also alias a not-yet-existing target into the repository.
+    # Resolve the nearest existing ancestor physically, since mkdir -p creates the rest.
+    ancestor="$(dirname "$target_path")"
+    while [[ ! -d "$ancestor" && "$ancestor" != "$(dirname "$ancestor")" ]]; do
+        ancestor="$(dirname "$ancestor")"
+    done
+    if ! resolved_ancestor="$(cd -P "$ancestor" 2>/dev/null && pwd -P)"; then
+        echo >&2 "Error: failed to resolve parent directory of $target_path; refusing."
+        link_status=1
+        continue
+    fi
+    case "${resolved_ancestor%/}/" in
+        "$REPO_ROOT_PREFIX"*)
+            echo >&2 "Error: $target_path resolves inside the repository; refusing."
+            link_status=1
+            continue
+            ;;
+    esac
 
     # flag:skip-existing — skip if target is a real file/dir (not a symlink)
     if [[ ",$flags," == *",skip-existing,"* ]]; then
